@@ -1,0 +1,4 @@
+sgp4>=2.23
+numpy>=1.24
+matplotlib>=3.7
+skyfield>=1.46
