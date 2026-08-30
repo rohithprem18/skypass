@@ -1,0 +1,97 @@
+Catalogue 635 objects, horizon 7.0 d
+
+==========================================================================
+ 6A  Operational plan at every station (optical, weather-aware)
+==========================================================================
+  station               passes  sunlit   dark  bright  clear  cand  sched  runtime s
+  Chennai, India         12449    8093   1297     367     85    87     26      109.4
+  Bengaluru, India       12425    8111   1272     347     19    70     25      114.4
+  Leh, India             14458   10182   2002     681    517   504     95      109.2
+  Tucson, USA            14265    9869   1861     620    272   283     54      113.4
+  Singapore              12165    7846   1262     404    246   268     52      108.7
+  Reykjavik, Iceland     26955   26812   7296    2569    649   700     73      112.9
+  Svalbard, Norway       38674   38674      0       0      0     0      0      120.9
+
+==========================================================================
+ 6A'  Same catalogue, radio mode (no illumination constraint)
+==========================================================================
+  station               passes   cand  sched  runtime s
+  Chennai, India         12449  12449    708      104.9
+  Bengaluru, India       12428  12428    707      105.8
+  Leh, India             14461  14461    723      110.4
+  Tucson, USA            14277  14277    724      126.0
+  Singapore              12149  12149    708      106.2
+  Reykjavik, Iceland     26947  26947    726      135.3
+  Svalbard, Norway       38673  38673    731      148.0
+
+==========================================================================
+ 6B  Sensitivity of the timetable to the score weights
+==========================================================================
+   w_elev  w_dur  sched  Jaccard  mean elMax  mean dur s  mean cloud
+      0.0    1.0     28    0.862        57.3         490       0.459
+      0.1    0.9     27    0.893        58.8         497       0.448
+      0.3    0.7     26    0.926        59.9         500       0.451
+      0.5    0.5     26    1.000        60.3         501       0.453
+      0.7    0.3     25    0.889        62.7         512       0.450
+      0.9    0.1     25    0.700        65.0         503       0.450
+      1.0    0.0     25    0.700        65.0         503       0.450
+
+==========================================================================
+ 6C  Runtime scaling
+==========================================================================
+   objects  days  passes  propagations  propagate s  score s  sched s  total s
+        50     1     151       181,003         1.83     0.01    0.000     1.84
+        50     7    1084     1,267,832        11.01     0.05    0.000    11.06
+       150     1     449       537,392         4.85     0.04    0.000     4.89
+       150     7    3198     3,762,966        31.84     0.16    0.001    31.99
+       300     1     894     1,081,911         9.56     0.04    0.000     9.60
+       300     7    6231     7,570,726        65.10     0.25    0.001    65.35
+       635     1    1801     2,312,949        15.69     0.06    0.000    15.75
+       635     7   12438    16,180,290       103.96     0.42    0.002   104.38
+
+==========================================================================
+ 6D  Exported artefacts for the demonstration plan
+==========================================================================
+    csv  results/demo_schedule.csv
+    ics  results/demo_schedule.ics
+   json  results/demo_plan.json
+    txt  results/demo_plan.txt
+
+==============================================================================
+ SkyPass observation plan - Chennai, India
+ +12.9200 deg, +80.1200 deg, 30 m   mask 10 deg   mode optical
+ Window 2026-08-29 11:28 -> 2026-09-05 11:28 UTC
+ Weather: forecast applied (192 hourly samples)
+==============================================================================
+
+ Visibility funnel
+   element sets in catalogue         635   (+0 rejected as stale)
+   geometric passes above mask     12443
+     sunlit                         8088
+     and observer in darkness       1297
+     and brighter than limit         367
+     and forecast cloud < 50%          85   (diagnostic; scoring is continuous)
+   candidates above score floor       87
+   SCHEDULED (conflict-free)          26
+
+ Objective 3.417 of 9.584 attainable (35.6% of the conflict-ignoring upper bound)
+ Propagations 16,180,452   total runtime 87.4 s
+
+ Timetable
+Satellite               AOS (UTC)         TCA       LOS          Dur  ElMax    Az    Mag  Cloud  Score
+------------------------------------------------------------------------------------------------------
+SL-16 R/B               2026-08-31 13:09  13:15:07  13:20:27    644s  44.7   ENE    3.6    20%  0.279
+HAWK-3B                 2026-08-31 13:25  13:27:28  13:29:27    238s  18.0     E    4.8    21%  0.060
+COSMOS 2084             2026-08-31 13:43  13:47:32  13:51:29    475s  44.7   ENE    4.7    22%  0.146
+SL-14 R/B               2026-08-31 13:57  14:01:53  14:06:20    525s  59.6     E    4.6    22%  0.185
+SL-16 R/B               2026-08-31 14:22  14:27:56  14:33:27    662s  57.8   WNW    4.4    20%  0.205
+CZ-4B R/B               2026-08-31 14:38  14:44:30  14:50:03    665s  85.9   ENE    5.2    18%  0.110
+SL-8 R/B                2026-08-31 22:53  22:59:24  23:05:36    741s  63.7     W    5.4    40%  0.061
+HST                     2026-08-31 23:13  23:15:32  23:18:00    296s  16.7   NNE    4.1    52%  0.070
+HUANJING 1B (HJ-1B)     2026-08-31 23:35  23:39:46  23:44:02    516s  55.7   WNW    4.7    72%  0.059
+HRC MONOBLOCK CAMERA    2026-09-01 23:27  23:30:18  23:32:49    301s  43.9    SW    3.4    63%  0.110
+ZHANGHENG 1-01 (CSES-1) 2026-09-01 23:39  23:42:17  23:45:32    390s  31.4     W    4.8    61%  0.054
+SL-16 R/B               2026-09-01 23:50  23:56:24  00:01:54    663s  88.9   WNW    3.5    58%  0.172
+  ... 14 more
+
+  -> C:\Users\admin\Documents\projctss\SkyPass\results\exp6_pipeline.json

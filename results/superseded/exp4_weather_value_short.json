@@ -1,0 +1,718 @@
+{
+  "window": {
+    "start": "2026-08-10",
+    "end": "2026-08-23",
+    "days": 14
+  },
+  "forecast_lead_days": 1,
+  "capacity_per_night": 3,
+  "clear_threshold": 0.3,
+  "train_days": 90,
+  "n_objects": 300,
+  "historical_tle": false,
+  "sites": {
+    "tucson": {
+      "site": "Tucson, USA",
+      "lat": 32.22,
+      "lon": -110.97,
+      "budget_mode": "nightly-quota",
+      "total_budget": null,
+      "n_candidates": 715,
+      "n_geometric_passes": 14005,
+      "capacity_per_night": 3,
+      "forecast_lead_days": 1,
+      "mean_cloud_over_candidates": 0.4885277545225097,
+      "calibration": {
+        "intercept": 0.09766131721096721,
+        "slope": 0.5183019915504286,
+        "n": 990,
+        "correlation": 0.6341864639023937
+      },
+      "clear_probability": {
+        "edges": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9
+        ],
+        "probs": [
+          0.8764,
+          0.6341,
+          0.5657,
+          0.5734,
+          0.5247,
+          0.569,
+          0.6768,
+          0.5504,
+          0.5083,
+          0.2777
+        ],
+        "base_rate": 0.6182,
+        "n": 990
+      },
+      "calibration_window": [
+        "2026-05-12",
+        "2026-08-09"
+      ],
+      "arms": {
+        "blind-greedy": {
+          "n_scheduled": 42,
+          "realised_yield": 4.481594523174665,
+          "success_value": 2.660916179289956,
+          "planned_yield": 9.33559303902354,
+          "n_successful": 12,
+          "success_rate": 0.2857142857142857,
+          "mean_observed_cloud": 0.5425012781520502,
+          "runtime_s": 0.0011984002776443958
+        },
+        "blind-optimal": {
+          "n_scheduled": 42,
+          "realised_yield": 13.738506729707181,
+          "success_value": 9.254493738480988,
+          "planned_yield": 24.013173433039398,
+          "n_successful": 17,
+          "success_rate": 0.40476190476190477,
+          "mean_observed_cloud": 0.4536237045765211,
+          "runtime_s": 0.0017117997631430626
+        },
+        "skypass-raw": {
+          "n_scheduled": 42,
+          "realised_yield": 10.91301618832617,
+          "success_value": 6.332033839600923,
+          "planned_yield": 19.923194578929856,
+          "n_successful": 15,
+          "success_rate": 0.35714285714285715,
+          "mean_observed_cloud": 0.4685845788445767,
+          "runtime_s": 0.0016767997294664383
+        },
+        "skypass": {
+          "n_scheduled": 42,
+          "realised_yield": 13.398573680899139,
+          "success_value": 9.010329612617202,
+          "planned_yield": 23.126702513966464,
+          "n_successful": 17,
+          "success_rate": 0.40476190476190477,
+          "mean_observed_cloud": 0.4502975580681217,
+          "runtime_s": 0.0024764002300798893
+        },
+        "skypass-prob": {
+          "n_scheduled": 42,
+          "realised_yield": 13.58820654919858,
+          "success_value": 9.092424237496655,
+          "planned_yield": 22.981025027895914,
+          "n_successful": 17,
+          "success_rate": 0.40476190476190477,
+          "mean_observed_cloud": 0.4372516494522487,
+          "runtime_s": 0.0028014997951686382
+        },
+        "oracle-ev": {
+          "n_scheduled": 42,
+          "realised_yield": 14.693289248464238,
+          "success_value": 10.987915026380659,
+          "planned_yield": 22.68399198620559,
+          "n_successful": 22,
+          "success_rate": 0.5238095238095238,
+          "mean_observed_cloud": 0.3688991716743386,
+          "runtime_s": 0.002811300102621317
+        },
+        "oracle-clear": {
+          "n_scheduled": 27,
+          "realised_yield": 10.698224286667733,
+          "success_value": 12.688464102654319,
+          "planned_yield": 12.688464102654319,
+          "n_successful": 27,
+          "success_rate": 1.0,
+          "mean_observed_cloud": 0.1677888804734568,
+          "runtime_s": 0.002796600107103586
+        }
+      },
+      "gain_ev_pct": -2.4743085656681667,
+      "raw_gain_ev_pct": -20.56621288594174,
+      "greedy_gain_ev_pct": -67.37931849984845,
+      "oracle_gain_ev_pct": 6.94968192352741,
+      "recovered_ev": -0.35603191525811534,
+      "gain_clear_pct": -1.7512519384008522,
+      "raw_gain_clear_pct": -31.578819776258786,
+      "greedy_gain_clear_pct": -71.24730693559567,
+      "oracle_gain_clear_pct": 37.10597749820267,
+      "recovered_clear": -0.04719595214775515,
+      "gain_vs_blind_pct": -2.4743085656681667,
+      "raw_gain_vs_blind_pct": -20.56621288594174,
+      "oracle_gain_pct": 6.94968192352741,
+      "oracle_fraction_recovered": -0.35603191525811534
+    },
+    "singapore": {
+      "site": "Singapore",
+      "lat": 1.35,
+      "lon": 103.82,
+      "budget_mode": "nightly-quota",
+      "total_budget": null,
+      "n_candidates": 478,
+      "n_geometric_passes": 12288,
+      "capacity_per_night": 3,
+      "forecast_lead_days": 1,
+      "mean_cloud_over_candidates": 0.7287924058269409,
+      "calibration": {
+        "intercept": 0.5233642437435049,
+        "slope": 0.3428600342142145,
+        "n": 990,
+        "correlation": 0.3874456518359111
+      },
+      "clear_probability": {
+        "edges": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9
+        ],
+        "probs": [
+          0.281,
+          0.2478,
+          0.2907,
+          0.1319,
+          0.0821,
+          0.1143,
+          0.1209,
+          0.0902,
+          0.0522,
+          0.0388
+        ],
+        "base_rate": 0.0929,
+        "n": 990
+      },
+      "calibration_window": [
+        "2026-05-12",
+        "2026-08-09"
+      ],
+      "arms": {
+        "blind-greedy": {
+          "n_scheduled": 42,
+          "realised_yield": 3.024475255908047,
+          "success_value": 2.371754329978851,
+          "planned_yield": 8.688908541132905,
+          "n_successful": 10,
+          "success_rate": 0.23809523809523808,
+          "mean_observed_cloud": 0.6753247535213625,
+          "runtime_s": 0.0007346998900175095
+        },
+        "blind-optimal": {
+          "n_scheduled": 42,
+          "realised_yield": 4.381673565167418,
+          "success_value": 2.7095567729809877,
+          "planned_yield": 17.968522904261953,
+          "n_successful": 7,
+          "success_rate": 0.16666666666666666,
+          "mean_observed_cloud": 0.7242460665231482,
+          "runtime_s": 0.0010441001504659653
+        },
+        "skypass-raw": {
+          "n_scheduled": 42,
+          "realised_yield": 4.278251270169496,
+          "success_value": 3.1804802196694397,
+          "planned_yield": 15.748216930702206,
+          "n_successful": 9,
+          "success_rate": 0.21428571428571427,
+          "mean_observed_cloud": 0.7009082705339286,
+          "runtime_s": 0.0013143997639417648
+        },
+        "skypass": {
+          "n_scheduled": 42,
+          "realised_yield": 4.58683278217044,
+          "success_value": 3.1804802196694397,
+          "planned_yield": 17.094820696831572,
+          "n_successful": 9,
+          "success_rate": 0.21428571428571427,
+          "mean_observed_cloud": 0.6942639031232143,
+          "runtime_s": 0.0011163000017404556
+        },
+        "skypass-prob": {
+          "n_scheduled": 42,
+          "realised_yield": 4.5296889887981475,
+          "success_value": 3.067556939553859,
+          "planned_yield": 16.512039608195465,
+          "n_successful": 10,
+          "success_rate": 0.23809523809523808,
+          "mean_observed_cloud": 0.6715922350311507,
+          "runtime_s": 0.0011176997795701027
+        },
+        "oracle-ev": {
+          "n_scheduled": 42,
+          "realised_yield": 5.218959287501675,
+          "success_value": 3.6181111248311395,
+          "planned_yield": 13.101473226417166,
+          "n_successful": 12,
+          "success_rate": 0.2857142857142857,
+          "mean_observed_cloud": 0.5982958831998677,
+          "runtime_s": 0.0011049001477658749
+        },
+        "oracle-clear": {
+          "n_scheduled": 12,
+          "realised_yield": 3.2310918329916625,
+          "success_value": 3.6181111248311395,
+          "planned_yield": 3.6181111248311395,
+          "n_successful": 12,
+          "success_rate": 1.0,
+          "mean_observed_cloud": 0.11256023318865742,
+          "runtime_s": 0.001112000085413456
+        }
+      },
+      "gain_ev_pct": 4.682211350337847,
+      "raw_gain_ev_pct": -2.3603377444656943,
+      "greedy_gain_ev_pct": -30.974427671850407,
+      "oracle_gain_ev_pct": 19.108811048599083,
+      "recovered_ev": 0.2450289208695228,
+      "gain_clear_pct": 13.212499185946497,
+      "raw_gain_clear_pct": 17.380091511068564,
+      "greedy_gain_clear_pct": -12.467073817039632,
+      "oracle_gain_clear_pct": 33.531474996576016,
+      "recovered_clear": 0.3940327464656911,
+      "gain_vs_blind_pct": 4.682211350337847,
+      "raw_gain_vs_blind_pct": -2.3603377444656943,
+      "oracle_gain_pct": 19.108811048599083,
+      "oracle_fraction_recovered": 0.2450289208695228
+    },
+    "leh": {
+      "site": "Leh, India",
+      "lat": 34.16,
+      "lon": 77.58,
+      "budget_mode": "nightly-quota",
+      "total_budget": null,
+      "n_candidates": 736,
+      "n_geometric_passes": 14233,
+      "capacity_per_night": 3,
+      "forecast_lead_days": 1,
+      "mean_cloud_over_candidates": 0.7262370013847788,
+      "calibration": {
+        "intercept": 0.3765405825622592,
+        "slope": 0.4625360152690492,
+        "n": 990,
+        "correlation": 0.5430289468126493
+      },
+      "clear_probability": {
+        "edges": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9
+        ],
+        "probs": [
+          0.5353,
+          0.253,
+          0.2212,
+          0.2021,
+          0.0946,
+          0.1084,
+          0.0723,
+          0.0909,
+          0.0978,
+          0.0282
+        ],
+        "base_rate": 0.2,
+        "n": 990
+      },
+      "calibration_window": [
+        "2026-05-12",
+        "2026-08-09"
+      ],
+      "arms": {
+        "blind-greedy": {
+          "n_scheduled": 42,
+          "realised_yield": 3.2075562496217245,
+          "success_value": 1.8850883135305405,
+          "planned_yield": 10.578879084801725,
+          "n_successful": 8,
+          "success_rate": 0.19047619047619047,
+          "mean_observed_cloud": 0.6808834639888227,
+          "runtime_s": 0.0010405001230537891
+        },
+        "blind-optimal": {
+          "n_scheduled": 42,
+          "realised_yield": 7.49774901888671,
+          "success_value": 3.545928484160074,
+          "planned_yield": 23.08435513117539,
+          "n_successful": 6,
+          "success_rate": 0.14285714285714285,
+          "mean_observed_cloud": 0.7061770649731481,
+          "runtime_s": 0.0015657003968954086
+        },
+        "skypass-raw": {
+          "n_scheduled": 42,
+          "realised_yield": 6.33421200880215,
+          "success_value": 4.459391178353484,
+          "planned_yield": 18.69999480348198,
+          "n_successful": 9,
+          "success_rate": 0.21428571428571427,
+          "mean_observed_cloud": 0.6900675838918651,
+          "runtime_s": 0.0015003001317381859
+        },
+        "skypass": {
+          "n_scheduled": 42,
+          "realised_yield": 7.484608193901886,
+          "success_value": 4.191456140089703,
+          "planned_yield": 22.30519331402582,
+          "n_successful": 8,
+          "success_rate": 0.19047619047619047,
+          "mean_observed_cloud": 0.6928490074680556,
+          "runtime_s": 0.0014851000159978867
+        },
+        "skypass-prob": {
+          "n_scheduled": 42,
+          "realised_yield": 6.151263526584494,
+          "success_value": 4.466044101522656,
+          "planned_yield": 18.517406463161308,
+          "n_successful": 9,
+          "success_rate": 0.21428571428571427,
+          "mean_observed_cloud": 0.6937376326336641,
+          "runtime_s": 0.0014892001636326313
+        },
+        "oracle-ev": {
+          "n_scheduled": 42,
+          "realised_yield": 8.597814474127466,
+          "success_value": 4.9736751109978234,
+          "planned_yield": 19.99279697308915,
+          "n_successful": 10,
+          "success_rate": 0.23809523809523808,
+          "mean_observed_cloud": 0.6042640981097884,
+          "runtime_s": 0.0014709997922182083
+        },
+        "oracle-clear": {
+          "n_scheduled": 12,
+          "realised_yield": 4.385781833751074,
+          "success_value": 5.535339716164559,
+          "planned_yield": 5.535339716164559,
+          "n_successful": 12,
+          "success_rate": 1.0,
+          "mean_observed_cloud": 0.20586742169976854,
+          "runtime_s": 0.001475099939852953
+        }
+      },
+      "gain_ev_pct": -0.17526360180531475,
+      "raw_gain_ev_pct": -15.51848437649258,
+      "greedy_gain_ev_pct": -57.21974366517282,
+      "oracle_gain_ev_pct": 14.671942905393456,
+      "recovered_ev": -0.011945493717869312,
+      "gain_clear_pct": 25.948510283633958,
+      "raw_gain_clear_pct": 25.760888813012333,
+      "greedy_gain_clear_pct": -46.83794887710313,
+      "oracle_gain_clear_pct": 56.10409913486223,
+      "recovered_clear": 0.46250649567082963,
+      "gain_vs_blind_pct": -0.17526360180531475,
+      "raw_gain_vs_blind_pct": -15.51848437649258,
+      "oracle_gain_pct": 14.671942905393456,
+      "oracle_fraction_recovered": -0.011945493717869312
+    },
+    "reykjavik": {
+      "site": "Reykjavik, Iceland",
+      "lat": 64.13,
+      "lon": -21.9,
+      "budget_mode": "nightly-quota",
+      "total_budget": null,
+      "n_candidates": 1708,
+      "n_geometric_passes": 29065,
+      "capacity_per_night": 3,
+      "forecast_lead_days": 1,
+      "mean_cloud_over_candidates": 0.7878181804319884,
+      "calibration": {
+        "intercept": 0.36202282456007634,
+        "slope": 0.5336417413409367,
+        "n": 990,
+        "correlation": 0.6294501743407275
+      },
+      "clear_probability": {
+        "edges": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9
+        ],
+        "probs": [
+          0.5425,
+          0.1772,
+          0.1772,
+          0.2541,
+          0.1348,
+          0.1636,
+          0.2081,
+          0.0953,
+          0.1441,
+          0.0309
+        ],
+        "base_rate": 0.1455,
+        "n": 990
+      },
+      "calibration_window": [
+        "2026-05-12",
+        "2026-08-09"
+      ],
+      "arms": {
+        "blind-greedy": {
+          "n_scheduled": 45,
+          "realised_yield": 2.1293039973495835,
+          "success_value": 0.9942675348583705,
+          "planned_yield": 8.753092181443554,
+          "n_successful": 4,
+          "success_rate": 0.08888888888888889,
+          "mean_observed_cloud": 0.7589334023124691,
+          "runtime_s": 0.0030201999470591545
+        },
+        "blind-optimal": {
+          "n_scheduled": 45,
+          "realised_yield": 4.530395698292046,
+          "success_value": 2.881086050907396,
+          "planned_yield": 18.68622835107655,
+          "n_successful": 7,
+          "success_rate": 0.15555555555555556,
+          "mean_observed_cloud": 0.7573319805172839,
+          "runtime_s": 0.0036951997317373753
+        },
+        "skypass-raw": {
+          "n_scheduled": 27,
+          "realised_yield": 4.043328881027746,
+          "success_value": 1.2032664282720948,
+          "planned_yield": 10.31172547236157,
+          "n_successful": 3,
+          "success_rate": 0.1111111111111111,
+          "mean_observed_cloud": 0.6204169253381687,
+          "runtime_s": 0.004638700280338526
+        },
+        "skypass": {
+          "n_scheduled": 45,
+          "realised_yield": 4.260696636314432,
+          "success_value": 1.2032664282720948,
+          "planned_yield": 18.212140804960413,
+          "n_successful": 3,
+          "success_rate": 0.06666666666666667,
+          "mean_observed_cloud": 0.7632846116201234,
+          "runtime_s": 0.003500299993902445
+        },
+        "skypass-prob": {
+          "n_scheduled": 45,
+          "realised_yield": 4.442607616498181,
+          "success_value": 1.2032664282720948,
+          "planned_yield": 17.904620975531778,
+          "n_successful": 3,
+          "success_rate": 0.06666666666666667,
+          "mean_observed_cloud": 0.7474409775428396,
+          "runtime_s": 0.0035081999376416206
+        },
+        "oracle-ev": {
+          "n_scheduled": 39,
+          "realised_yield": 5.9052120557179215,
+          "success_value": 3.643112440236927,
+          "planned_yield": 13.944210143644495,
+          "n_successful": 9,
+          "success_rate": 0.23076923076923078,
+          "mean_observed_cloud": 0.5923885107797009,
+          "runtime_s": 0.005033200141042471
+        },
+        "oracle-clear": {
+          "n_scheduled": 10,
+          "realised_yield": 3.1710821389545885,
+          "success_value": 3.8920598195270104,
+          "planned_yield": 3.8920598195270104,
+          "n_successful": 10,
+          "success_rate": 1.0,
+          "mean_observed_cloud": 0.18791528815416667,
+          "runtime_s": 0.0035263001918792725
+        }
+      },
+      "gain_ev_pct": -5.953101670109976,
+      "raw_gain_ev_pct": -10.751087757034641,
+      "greedy_gain_ev_pct": -52.999602260960806,
+      "oracle_gain_ev_pct": 30.346496177898544,
+      "recovered_ev": -0.19617097259635663,
+      "gain_clear_pct": -58.235665057865,
+      "raw_gain_clear_pct": -58.235665057865,
+      "greedy_gain_clear_pct": -65.48983552416885,
+      "oracle_gain_clear_pct": 35.09002337161048,
+      "recovered_clear": -1.6596074742138949,
+      "gain_vs_blind_pct": -5.953101670109976,
+      "raw_gain_vs_blind_pct": -10.751087757034641,
+      "oracle_gain_pct": 30.346496177898544,
+      "oracle_fraction_recovered": -0.19617097259635663
+    }
+  },
+  "pooled": {
+    "blind-greedy": {
+      "realised_yield": 12.84293002605402,
+      "success_value": 7.912026357657718,
+      "planned_yield": 37.35647284640172,
+      "n_scheduled": 171,
+      "n_successful": 34,
+      "success_rate": 0.19883040935672514
+    },
+    "blind-optimal": {
+      "realised_yield": 30.148325012053355,
+      "success_value": 18.391065046529445,
+      "planned_yield": 83.7522798195533,
+      "n_scheduled": 171,
+      "n_successful": 37,
+      "success_rate": 0.21637426900584794
+    },
+    "skypass-raw": {
+      "realised_yield": 25.56880834832556,
+      "success_value": 15.175171665895942,
+      "planned_yield": 64.68313178547561,
+      "n_scheduled": 153,
+      "n_successful": 36,
+      "success_rate": 0.23529411764705882
+    },
+    "skypass": {
+      "realised_yield": 29.730711293285896,
+      "success_value": 17.58553240064844,
+      "planned_yield": 80.73885732978427,
+      "n_scheduled": 171,
+      "n_successful": 37,
+      "success_rate": 0.21637426900584794
+    },
+    "skypass-prob": {
+      "realised_yield": 28.711766681079403,
+      "success_value": 17.829291706845265,
+      "planned_yield": 75.91509207478447,
+      "n_scheduled": 171,
+      "n_successful": 39,
+      "success_rate": 0.22807017543859648
+    },
+    "oracle-ev": {
+      "realised_yield": 34.4152750658113,
+      "success_value": 23.222813702446548,
+      "planned_yield": 69.7224723293564,
+      "n_scheduled": 165,
+      "n_successful": 53,
+      "success_rate": 0.3212121212121212
+    },
+    "oracle-clear": {
+      "realised_yield": 21.486180092365057,
+      "success_value": 25.733974763177027,
+      "planned_yield": 25.733974763177027,
+      "n_scheduled": 61,
+      "n_successful": 61,
+      "success_rate": 1.0
+    }
+  },
+  "summary": {
+    "gain_ev_pct": -1.3851970834217038,
+    "raw_gain_ev_pct": -15.189953876034224,
+    "greedy_gain_ev_pct": -57.40085055830003,
+    "oracle_gain_ev_pct": 14.153191104487597,
+    "recovered_ev": -0.09787171480942519,
+    "gain_clear_pct": -3.054599275587857,
+    "raw_gain_clear_pct": -17.486172619678545,
+    "greedy_gain_clear_pct": -56.978965940035174,
+    "oracle_gain_clear_pct": 39.92650614888262,
+    "recovered_clear": -0.07650554907553167,
+    "success_rate_blind": 0.21637426900584794,
+    "success_rate_skypass": 0.21637426900584794,
+    "success_rate_skypass_prob": 0.22807017543859648,
+    "success_rate_oracle": 1.0,
+    "n_scheduled": 171
+  },
+  "lead_sweep": {},
+  "capacity_sweep": {},
+  "budget_modes": {
+    "nightly-quota": {
+      "gain_ev_pct": -1.3851970834217038,
+      "raw_gain_ev_pct": -15.189953876034224,
+      "greedy_gain_ev_pct": -57.40085055830003,
+      "oracle_gain_ev_pct": 14.153191104487597,
+      "recovered_ev": -0.09787171480942519,
+      "gain_clear_pct": -3.054599275587857,
+      "raw_gain_clear_pct": -17.486172619678545,
+      "greedy_gain_clear_pct": -56.978965940035174,
+      "oracle_gain_clear_pct": 39.92650614888262,
+      "recovered_clear": -0.07650554907553167,
+      "success_rate_blind": 0.21637426900584794,
+      "success_rate_skypass": 0.21637426900584794,
+      "success_rate_skypass_prob": 0.22807017543859648,
+      "success_rate_oracle": 1.0,
+      "n_scheduled": 171,
+      "capacity_per_night": 3,
+      "total_budget": null
+    },
+    "budget-75pct": {
+      "gain_ev_pct": 16.643026247482798,
+      "raw_gain_ev_pct": 1.193315882852964,
+      "greedy_gain_ev_pct": -61.154694190878004,
+      "oracle_gain_ev_pct": 41.588740929983445,
+      "recovered_ev": 0.4001810556251774,
+      "gain_clear_pct": 21.70555405229527,
+      "raw_gain_clear_pct": 6.73245646942343,
+      "greedy_gain_clear_pct": -57.07593897222205,
+      "oracle_gain_clear_pct": 87.62355518389498,
+      "recovered_clear": 0.24771368847956432,
+      "success_rate_blind": 0.1953125,
+      "success_rate_skypass": 0.2734375,
+      "success_rate_skypass_prob": 0.28125,
+      "success_rate_oracle": 1.0,
+      "n_scheduled": 128,
+      "capacity_per_night": 3,
+      "total_budget": 32
+    },
+    "budget-50pct": {
+      "gain_ev_pct": 27.707356031001858,
+      "raw_gain_ev_pct": 8.081482911188315,
+      "greedy_gain_ev_pct": -64.72888201845446,
+      "oracle_gain_ev_pct": 56.215813448465326,
+      "recovered_ev": 0.4928747683496921,
+      "gain_clear_pct": 44.29030251956803,
+      "raw_gain_clear_pct": 22.217723666967533,
+      "greedy_gain_clear_pct": -55.04335337875737,
+      "oracle_gain_clear_pct": 140.41794360224426,
+      "recovered_clear": 0.3154176836902499,
+      "success_rate_blind": 0.19047619047619047,
+      "success_rate_skypass": 0.34523809523809523,
+      "success_rate_skypass_prob": 0.35714285714285715,
+      "success_rate_oracle": 1.0,
+      "n_scheduled": 84,
+      "capacity_per_night": 3,
+      "total_budget": 21
+    },
+    "budget-25pct": {
+      "gain_ev_pct": 24.682803564591694,
+      "raw_gain_ev_pct": 5.997896793405999,
+      "greedy_gain_ev_pct": -77.09668903420548,
+      "oracle_gain_ev_pct": 55.369607094528725,
+      "recovered_ev": 0.44578253052170735,
+      "gain_clear_pct": 48.87616344545913,
+      "raw_gain_clear_pct": 17.980399997020882,
+      "greedy_gain_clear_pct": -70.61165479100045,
+      "oracle_gain_clear_pct": 214.18064326639833,
+      "recovered_clear": 0.22820065669831266,
+      "success_rate_blind": 0.175,
+      "success_rate_skypass": 0.3,
+      "success_rate_skypass_prob": 0.375,
+      "success_rate_oracle": 1.0,
+      "n_scheduled": 40,
+      "capacity_per_night": 3,
+      "total_budget": 10
+    }
+  },
+  "n_nights": 14,
+  "_meta": {
+    "generated_utc": "2026-08-29T16:12:39+00:00",
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "sgp4_version": "2.27"
+  }
+}

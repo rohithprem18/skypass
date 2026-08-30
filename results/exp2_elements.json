@@ -1,0 +1,162 @@
+{
+  "site": "Chennai, India",
+  "horizon_days": 2.0,
+  "part_a_epoch_age": {
+    "summary": {
+      "n": 635,
+      "mean": 0.5465777993963254,
+      "median": 0.4186403233333333,
+      "p90": 0.9476952633333333,
+      "max": 13.042473453333333
+    },
+    "histogram": {
+      "<1 d": 573,
+      "1-2 d": 53,
+      "2-3 d": 5,
+      "3-7 d": 2,
+      ">7 d": 2
+    },
+    "deciles": [
+      -2.025,
+      0.208,
+      0.231,
+      0.259,
+      0.314,
+      0.419,
+      0.486,
+      0.532,
+      0.693,
+      0.939,
+      13.042
+    ]
+  },
+  "part_b_provider_divergence": {
+    "n_common": 53,
+    "n_objects_matched": 52,
+    "d_tca_s": {
+      "n": 308,
+      "mean": 0.04113588636363636,
+      "std": 0.14324348691380037,
+      "median": 0.0,
+      "p95": 0.176181,
+      "max": 1.823643
+    },
+    "d_aos_s": {
+      "n": 308,
+      "mean": 0.04079157142857143,
+      "std": 0.142442578491783,
+      "median": 0.0,
+      "p95": 0.187399,
+      "max": 1.776496
+    },
+    "d_elmax_deg": {
+      "n": 308,
+      "mean": 0.001127055070793414,
+      "std": 0.00447966142632903,
+      "median": 5.030812982909083e-05,
+      "p95": 0.0038110943963083344,
+      "max": 0.05710037308155336
+    },
+    "by_epoch_separation": {
+      "<0.5 d": {
+        "n": 279,
+        "mean": 0.038022978494623653,
+        "std": 0.14456052452329837,
+        "median": 0.0,
+        "p95": 0.148872,
+        "max": 1.823643
+      },
+      "0.5-1 d": {
+        "n": 29,
+        "mean": 0.07108420689655172,
+        "std": 0.1260232450836173,
+        "median": 0.022171,
+        "p95": 0.317872,
+        "max": 0.568535
+      }
+    },
+    "worst_objects": [
+      {
+        "norad_id": 59112,
+        "name": "SONATE-2",
+        "epoch_sep_days": 0.192,
+        "n_passes": 5,
+        "mean_dtca_s": 0.839
+      },
+      {
+        "norad_id": 25544,
+        "name": "ISS (ZARYA)",
+        "epoch_sep_days": 0.258,
+        "n_passes": 6,
+        "mean_dtca_s": 0.254
+      },
+      {
+        "norad_id": 43770,
+        "name": "FOX-1CLIFF (AO-95)",
+        "epoch_sep_days": 0.524,
+        "n_passes": 5,
+        "mean_dtca_s": 0.223
+      },
+      {
+        "norad_id": 43803,
+        "name": "JY1SAT (JO-97)",
+        "epoch_sep_days": 0.977,
+        "n_passes": 4,
+        "mean_dtca_s": 0.156
+      },
+      {
+        "norad_id": 48274,
+        "name": "CSS (TIANHE)",
+        "epoch_sep_days": 0.448,
+        "n_passes": 8,
+        "mean_dtca_s": 0.145
+      },
+      {
+        "norad_id": 39417,
+        "name": "ZACUBE-1 (TSHEPISOSAT)",
+        "epoch_sep_days": 0.466,
+        "n_passes": 6,
+        "mean_dtca_s": 0.107
+      },
+      {
+        "norad_id": 43786,
+        "name": "ITASAT",
+        "epoch_sep_days": 0.329,
+        "n_passes": 4,
+        "mean_dtca_s": 0.087
+      },
+      {
+        "norad_id": 43678,
+        "name": "DIWATA-2B",
+        "epoch_sep_days": 0.333,
+        "n_passes": 4,
+        "mean_dtca_s": 0.071
+      },
+      {
+        "norad_id": 41603,
+        "name": "LAPAN-A3",
+        "epoch_sep_days": 0.326,
+        "n_passes": 5,
+        "mean_dtca_s": 0.056
+      },
+      {
+        "norad_id": 32953,
+        "name": "YUBILEINY (RS30)",
+        "epoch_sep_days": 0.322,
+        "n_passes": 8,
+        "mean_dtca_s": 0.05
+      }
+    ]
+  },
+  "part_c_day_over_day": {
+    "skipped": "fewer than two daily archives",
+    "n_archives": 1
+  },
+  "_meta": {
+    "generated_utc": "2026-08-29T09:34:33+00:00",
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "sgp4_version": "2.27"
+  }
+}

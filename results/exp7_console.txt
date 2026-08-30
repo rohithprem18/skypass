@@ -1,0 +1,20 @@
+
+==========================================================================
+ 7  Structure of cloud and of pass quality (30 d, 300 objects)
+==========================================================================
+  window 2026-07-25 .. 2026-08-23
+
+  station             cand  btwn SD  wthn SD  ratio  p90/mean   corr  dCloud
+  Chennai, India      1041    0.110    0.065   1.70      1.79 +0.372  +0.116
+  Bengaluru, India    1031    0.074    0.052   1.42      1.82 +0.212  +0.037
+  Leh, India          1802    0.202    0.100   2.02      1.79 +0.402  +0.169
+  Tucson, USA         1655    0.277    0.151   1.83      1.88 +0.372  +0.119
+  Singapore            998    0.269    0.124   2.16      1.82 +0.552  +0.501
+  Reykjavik, Icelan   2625    0.337    0.083   4.06      1.97 +0.574  +0.313
+
+  Pooled: cloud varies 2.2x more between nights than within one.
+          the top-decile pass is worth 1.8x the mean pass.
+          forecast/observed correlation at pass times: +0.414
+          selecting the clearest-forecast decile lowers observed cloud by 0.209.
+
+  -> C:\Users\admin\Documents\projctss\SkyPass\results\exp7_structure.json

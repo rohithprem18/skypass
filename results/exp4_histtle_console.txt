@@ -1,0 +1,119 @@
+
+==========================================================================
+ 4  Value of weather-awareness  (60 d, lead 1 d, 300 objects, 3 obs/night)
+==========================================================================
+  evaluation window 2026-06-25 .. 2026-08-23
+  using epoch-correct historical element sets
+  [space-track] authenticated
+  [space-track] 85903 element sets for 300 objects (2026-05-26 .. 2026-08-23)
+
+  Chennai, India   candidates 1784   mean observed cloud 88%
+    calibration (night, 90 d before): E[cloud|f] = 0.271 + 0.560 f   r=+0.594  n=990
+    arm             sched       EV  succVal   nOK   rate  meanCld
+    blind-greedy      180     3.69     0.66     4   2.2%      88%
+    blind-optimal     180     6.19     1.30     5   2.8%      87%
+    skypass-raw       180     6.24     1.43     6   3.3%      85%
+    skypass           180     6.32     1.33     5   2.8%      86%
+    skypass-prob      180     6.27     1.43     6   3.3%      86%
+    oracle-ev         167     8.01     1.53     6   3.6%      79%
+    oracle-clear       10     1.51     1.98    10 100.0%      24%
+    EV metric   : skypass +2.2%  oracle +29.5%  recovered 7%
+    Clear metric: skypass-prob +9.8%  oracle +52.3%  recovered 19%
+  [space-track] 85903 element sets for 300 objects (2026-05-26 .. 2026-08-23)
+
+  Bengaluru, India   candidates 1741   mean observed cloud 92%
+    calibration (night, 90 d before): E[cloud|f] = 0.262 + 0.606 f   r=+0.645  n=990
+    arm             sched       EV  succVal   nOK   rate  meanCld
+    blind-greedy      180     2.21     0.48     3   1.7%      93%
+    blind-optimal     180     3.61     0.83     3   1.7%      93%
+    skypass-raw       173     3.98     0.75     3   1.7%      90%
+    skypass           180     4.10     0.83     3   1.7%      91%
+    skypass-prob      180     4.15     0.83     3   1.7%      91%
+    oracle-ev         161     5.67     1.44     6   3.7%      84%
+    oracle-clear        6     1.14     1.44     6 100.0%      21%
+    EV metric   : skypass +13.4%  oracle +57.1%  recovered 23%
+    Clear metric: skypass-prob +0.0%  oracle +73.4%  recovered 0%
+  [space-track] 85903 element sets for 300 objects (2026-05-26 .. 2026-08-23)
+
+  Leh, India   candidates 3487   mean observed cloud 67%
+    calibration (night, 90 d before): E[cloud|f] = 0.305 + 0.532 f   r=+0.571  n=990
+    arm             sched       EV  succVal   nOK   rate  meanCld
+    blind-greedy      180    11.03     4.43    24  13.3%      66%
+    blind-optimal     180    16.44     4.75    17   9.4%      67%
+    skypass-raw       180    15.99     6.12    24  13.3%      65%
+    skypass           180    16.30     5.99    23  12.8%      65%
+    skypass-prob      180    15.96     6.16    25  13.9%      65%
+    oracle-ev         180    19.13     7.67    30  16.7%      58%
+    oracle-clear       38     7.70     9.08    38 100.0%      15%
+    EV metric   : skypass -0.9%  oracle +16.4%  recovered -5%
+    Clear metric: skypass-prob +29.8%  oracle +91.2%  recovered 33%
+  [space-track] 85903 element sets for 300 objects (2026-05-26 .. 2026-08-23)
+
+  Tucson, USA   candidates 3227   mean observed cloud 47%
+    calibration (night, 90 d before): E[cloud|f] = 0.071 + 0.605 f   r=+0.707  n=990
+    arm             sched       EV  succVal   nOK   rate  meanCld
+    blind-greedy      180    15.69    11.24    64  35.6%      50%
+    blind-optimal     180    25.33    19.77    71  39.4%      49%
+    skypass-raw       172    24.48    20.13    81  47.1%      42%
+    skypass           180    25.03    20.23    76  42.2%      47%
+    skypass-prob      180    25.64    21.30    81  45.0%      45%
+    oracle-ev         178    29.67    26.19   101  56.7%      35%
+    oracle-clear      105    24.36    26.84   105 100.0%      10%
+    EV metric   : skypass -1.2%  oracle +17.1%  recovered -7%
+    Clear metric: skypass-prob +7.7%  oracle +35.8%  recovered 22%
+  [space-track] 85903 element sets for 300 objects (2026-05-26 .. 2026-08-23)
+
+  Singapore   candidates 1826   mean observed cloud 77%
+    calibration (night, 90 d before): E[cloud|f] = 0.700 + 0.172 f   r=+0.187  n=990
+    arm             sched       EV  succVal   nOK   rate  meanCld
+    blind-greedy      180     7.10     4.04    21  11.7%      76%
+    blind-optimal     180    11.22     4.23    15   8.3%      77%
+    skypass-raw       180    11.21     5.51    23  12.8%      73%
+    skypass           180    11.95     5.26    20  11.1%      74%
+    skypass-prob      180    11.09     5.02    20  11.1%      75%
+    oracle-ev         179    14.62     7.40    32  17.9%      64%
+    oracle-clear       35     6.57     7.73    35 100.0%      16%
+    EV metric   : skypass +6.5%  oracle +30.3%  recovered 22%
+    Clear metric: skypass-prob +18.7%  oracle +82.6%  recovered 23%
+  [space-track] 85903 element sets for 300 objects (2026-05-26 .. 2026-08-23)
+
+  Reykjavik, Iceland   candidates 2079   mean observed cloud 71%
+    calibration (night, 90 d before): E[cloud|f] = 0.371 + 0.509 f   r=+0.627  n=990
+    arm             sched       EV  succVal   nOK   rate  meanCld
+    blind-greedy       93     4.77     2.91    21  22.6%      63%
+    blind-optimal      93     7.92     4.73    19  20.4%      65%
+    skypass-raw        66     7.60     4.62    23  34.8%      45%
+    skypass            93     8.23     4.80    22  23.7%      60%
+    skypass-prob       93     7.39     4.15    21  22.6%      62%
+    oracle-ev          80     9.09     5.67    25  31.2%      48%
+    oracle-clear       35     6.07     7.19    35 100.0%      16%
+    EV metric   : skypass +3.8%  oracle +14.7%  recovered 26%
+    Clear metric: skypass-prob -12.4%  oracle +52.0%  recovered -24%
+  [space-track] 85903 element sets for 300 objects (2026-05-26 .. 2026-08-23)
+
+==========================================================================
+ 4  Pooled across sites
+==========================================================================
+  arm              sched        EV  vs blind   succVal  vs blind   nOK    rate
+  blind-greedy       993     44.49    -37.1%     23.77    -33.3%   137   13.8%
+  blind-optimal      993     70.71     +0.0%     35.62     +0.0%   130   13.1%
+  skypass-raw        951     69.50     -1.7%     38.56     +8.3%   160   16.8%
+  skypass            993     71.92     +1.7%     38.43     +7.9%   149   15.0%
+  skypass-prob       993     70.51     -0.3%     38.89     +9.2%   156   15.7%
+  oracle-ev          945     86.19    +21.9%     49.91    +40.1%   200   21.2%
+  oracle-clear       229     47.36    -33.0%     54.26    +52.4%   229  100.0%
+
+  Expected-value model : SkyPass +1.7%, oracle +21.9%, recovered 8%
+  Threshold model      : SkyPass +9.2%, oracle +52.4%, recovered 18%
+  clear-sky success rate: blind 13.1%  ->  SkyPass-prob 15.7%  (oracle 100.0%)
+
+==========================================================================
+ 4D  Nightly quota versus a nightly cap plus a window budget
+==========================================================================
+  mode                    budget    EV sky   EV orc    CL sky   CL orc   clear
+  nightly-quota             None     +1.7%   +21.9%     +9.2%   +52.4%   15.7%
+  budget-75pct               135     +9.3%   +42.4%    +19.9%   +75.0%   19.3%
+  budget-50pct                90    +19.0%   +62.5%    +33.2%  +117.5%   23.1%
+  budget-25pct                45    +45.1%  +112.2%    +75.9%  +242.5%   29.3%
+
+  -> C:\Users\admin\Documents\projctss\SkyPass\results\exp4_weather_value_histtle.json

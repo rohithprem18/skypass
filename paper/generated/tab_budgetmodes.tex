@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\caption{The decisive design choice. A fixed nightly quota forces the station out every night, so the forecast can only reorder passes within a night and buys nothing. Giving it the same nightly cap but a limited budget for the window lets it skip cloudy nights, and the forecast becomes valuable. Gains are against the weather-blind exact planner under the same budget.}
+\label{tab:budgetmodes}
+\centering
+\begin{tabular}{lrrrrrr}
+\toprule
+& & \multicolumn{2}{c}{Expected value} & \multicolumn{2}{c}{Threshold} & \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Budget & $B$ & SkyPass & Oracle & SkyPass & Oracle & Clear \\
+\midrule
+Nightly quota & -- & -1.5\% & +12.0\% & -0.2\% & +31.6\% & 16\% \\
+75\% of nights & 135 & +7.8\% & +30.1\% & +17.7\% & +60.3\% & 19\% \\
+50\% of nights & 90 & +19.0\% & +46.0\% & +37.6\% & +106.7\% & 23\% \\
+25\% of nights & 45 & +19.2\% & +61.7\% & +55.0\% & +179.1\% & 28\% \\
+\bottomrule
+\end{tabular}
+\end{table*}

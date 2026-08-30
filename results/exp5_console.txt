@@ -1,0 +1,39 @@
+
+==========================================================================
+ 5A  Exactness against exhaustive search
+==========================================================================
+  instances                2000   setup gap 5.0 min
+  DP == exhaustive optimum 2000/2000 (100.00%)
+
+  heuristic                  mean ratio     min  optimal in
+  greedy-max-elevation           0.9539   0.094       62.7%
+  greedy-highest-value           0.9995   0.859       98.9%
+  greedy-longest-duration        0.9507   0.246       61.1%
+  greedy-earliest-finish         0.9554   0.293       63.5%
+
+==========================================================================
+ 5B  Exact DP versus a genetic algorithm on real instances
+==========================================================================
+  site                     n    DP obj    DP ms    GA obj     GA ms   GA/DP  speedup
+  Chennai, India         200    15.806     0.27    15.757    9448.2  0.9969   35163x
+  Bengaluru, India       202    16.570     0.31    16.560    9620.8  0.9994   30630x
+  Leh, India             312    22.496     0.38    22.435   15470.5  0.9973   40884x
+  Tucson, USA            306    23.379     0.39    23.288   15820.5  0.9961   40441x
+  Singapore              209    17.934     0.26    17.934    8244.3  1.0000   31624x
+  Reykjavik, Iceland    1224    48.505     2.28    48.034  124833.2  0.9903   54790x
+
+  GA reaches on average 99.67% of the optimum, taking 38922x longer.
+
+==========================================================================
+ 5C  Dynamic-program scaling
+==========================================================================
+         n   mean ms   std ms  us per pass
+       100      0.12     0.02         1.20
+       500      0.61     0.05         1.23
+      1000      1.16     0.21         1.16
+      5000      8.04     0.19         1.61
+     10000     18.97     1.24         1.90
+     50000    124.41     9.11         2.49
+    100000    285.31    14.73         2.85
+
+  -> C:\Users\admin\Documents\projctss\SkyPass\results\exp5_scheduling.json

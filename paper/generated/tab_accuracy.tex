@@ -1,0 +1,17 @@
+\begin{table}[t]
+\caption{Pass-timing agreement over the full catalogue (635 objects, 1761 matched passes, 24\,h horizon). Values in seconds.}
+\label{tab:accuracy}
+\centering
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{vs.\ 1\,s dense scan} & \multicolumn{2}{c}{vs.\ Skyfield} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Quantity & mean & p95 & mean & p95 \\
+\midrule
+$|\Delta t_\mathrm{AOS}|$ & 0.504 & 0.954 & 0.060 & 0.157 \\
+$|\Delta t_\mathrm{TCA}|$ & 0.248 & 0.476 & 0.055 & 0.110 \\
+$|\Delta t_\mathrm{LOS}|$ & 0.502 & 0.956 & 0.059 & 0.156 \\
+$|\Delta \varepsilon_\mathrm{max}|$ (deg) & 0.0008 & 0.0022 & 0.0034 & 0.0102 \\
+\bottomrule
+\end{tabular}
+\end{table}

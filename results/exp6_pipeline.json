@@ -1,0 +1,644 @@
+{
+  "horizon_days": 7.0,
+  "n_objects": 635,
+  "part_a_optical": {
+    "chennai": {
+      "site": "Chennai, India",
+      "lat_deg": 12.92,
+      "lon_deg": 80.12,
+      "t0": "2026-08-29T10:39:36",
+      "t1": "2026-09-05T10:39:36",
+      "horizon_days": 7.0,
+      "mode": "optical",
+      "weather_used": true,
+      "weather_hours": 192,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 12449,
+        "sunlit": 8093,
+        "dark_sky": 1297,
+        "bright_enough": 367,
+        "cloud_clear": 85,
+        "above_floor": 87,
+        "scheduled": 26
+      },
+      "objective": 3.4167,
+      "upper_bound": 9.5843,
+      "scheduled": 26,
+      "propagations": 16180675,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.83,
+        "propagate": 108.146,
+        "score": 0.451,
+        "schedule": 0.001,
+        "total": 109.428
+      }
+    },
+    "bengaluru": {
+      "site": "Bengaluru, India",
+      "lat_deg": 12.97,
+      "lon_deg": 77.59,
+      "t0": "2026-08-29T10:41:26",
+      "t1": "2026-09-05T10:41:26",
+      "horizon_days": 7.0,
+      "mode": "optical",
+      "weather_used": true,
+      "weather_hours": 192,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 12425,
+        "sunlit": 8111,
+        "dark_sky": 1272,
+        "bright_enough": 347,
+        "cloud_clear": 19,
+        "above_floor": 70,
+        "scheduled": 25
+      },
+      "objective": 2.6546,
+      "upper_bound": 6.5863,
+      "scheduled": 25,
+      "propagations": 16179767,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.819,
+        "propagate": 113.083,
+        "score": 0.511,
+        "schedule": 0.002,
+        "total": 114.414
+      }
+    },
+    "leh": {
+      "site": "Leh, India",
+      "lat_deg": 34.16,
+      "lon_deg": 77.58,
+      "t0": "2026-08-29T10:43:20",
+      "t1": "2026-09-05T10:43:20",
+      "horizon_days": 7.0,
+      "mode": "optical",
+      "weather_used": true,
+      "weather_hours": 192,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 14458,
+        "sunlit": 10182,
+        "dark_sky": 2002,
+        "bright_enough": 681,
+        "cloud_clear": 517,
+        "above_floor": 504,
+        "scheduled": 95
+      },
+      "objective": 23.604,
+      "upper_bound": 80.769,
+      "scheduled": 95,
+      "propagations": 16260755,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.772,
+        "propagate": 107.954,
+        "score": 0.5,
+        "schedule": 0.002,
+        "total": 109.228
+      }
+    },
+    "tucson": {
+      "site": "Tucson, USA",
+      "lat_deg": 32.22,
+      "lon_deg": -110.97,
+      "t0": "2026-08-29T10:45:10",
+      "t1": "2026-09-05T10:45:10",
+      "horizon_days": 7.0,
+      "mode": "optical",
+      "weather_used": true,
+      "weather_hours": 192,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 14265,
+        "sunlit": 9869,
+        "dark_sky": 1861,
+        "bright_enough": 620,
+        "cloud_clear": 272,
+        "above_floor": 283,
+        "scheduled": 54
+      },
+      "objective": 14.8976,
+      "upper_bound": 49.2389,
+      "scheduled": 54,
+      "propagations": 16253102,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.708,
+        "propagate": 111.943,
+        "score": 0.715,
+        "schedule": 0.002,
+        "total": 113.368
+      }
+    },
+    "singapore": {
+      "site": "Singapore",
+      "lat_deg": 1.35,
+      "lon_deg": 103.82,
+      "t0": "2026-08-29T10:47:03",
+      "t1": "2026-09-05T10:47:03",
+      "horizon_days": 7.0,
+      "mode": "optical",
+      "weather_used": true,
+      "weather_hours": 192,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 12165,
+        "sunlit": 7846,
+        "dark_sky": 1262,
+        "bright_enough": 404,
+        "cloud_clear": 246,
+        "above_floor": 268,
+        "scheduled": 52
+      },
+      "objective": 12.4403,
+      "upper_bound": 42.5944,
+      "scheduled": 52,
+      "propagations": 16169488,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.771,
+        "propagate": 107.447,
+        "score": 0.496,
+        "schedule": 0.003,
+        "total": 108.717
+      }
+    },
+    "reykjavik": {
+      "site": "Reykjavik, Iceland",
+      "lat_deg": 64.13,
+      "lon_deg": -21.9,
+      "t0": "2026-08-29T10:48:52",
+      "t1": "2026-09-05T10:48:52",
+      "horizon_days": 7.0,
+      "mode": "optical",
+      "weather_used": true,
+      "weather_hours": 192,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 26955,
+        "sunlit": 26812,
+        "dark_sky": 7296,
+        "bright_enough": 2569,
+        "cloud_clear": 649,
+        "above_floor": 700,
+        "scheduled": 73
+      },
+      "objective": 14.485,
+      "upper_bound": 91.3562,
+      "scheduled": 73,
+      "propagations": 16756789,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.789,
+        "propagate": 111.137,
+        "score": 0.949,
+        "schedule": 0.004,
+        "total": 112.879
+      }
+    },
+    "svalbard": {
+      "site": "Svalbard, Norway",
+      "lat_deg": 78.23,
+      "lon_deg": 15.39,
+      "t0": "2026-08-29T10:50:45",
+      "t1": "2026-09-05T10:50:45",
+      "horizon_days": 7.0,
+      "mode": "optical",
+      "weather_used": true,
+      "weather_hours": 192,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 38674,
+        "sunlit": 38674,
+        "dark_sky": 0,
+        "bright_enough": 0,
+        "cloud_clear": 0,
+        "above_floor": 0,
+        "scheduled": 0
+      },
+      "objective": 0.0,
+      "upper_bound": 0,
+      "scheduled": 0,
+      "propagations": 17229150,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.842,
+        "propagate": 118.49,
+        "score": 1.55,
+        "schedule": 0.005,
+        "total": 120.888
+      }
+    }
+  },
+  "part_a_radio": {
+    "chennai": {
+      "site": "Chennai, India",
+      "lat_deg": 12.92,
+      "lon_deg": 80.12,
+      "t0": "2026-08-29T10:52:45",
+      "t1": "2026-09-05T10:52:45",
+      "horizon_days": 7.0,
+      "mode": "radio",
+      "weather_used": false,
+      "weather_hours": 0,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 12449,
+        "sunlit": 12449,
+        "dark_sky": 12449,
+        "bright_enough": 12449,
+        "cloud_clear": 12449,
+        "above_floor": 12449,
+        "scheduled": 708
+      },
+      "objective": 664.3785,
+      "upper_bound": 8514.5136,
+      "scheduled": 708,
+      "propagations": 16180723,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.0,
+        "propagate": 104.64,
+        "score": 0.285,
+        "schedule": 0.02,
+        "total": 104.945
+      }
+    },
+    "bengaluru": {
+      "site": "Bengaluru, India",
+      "lat_deg": 12.97,
+      "lon_deg": 77.59,
+      "t0": "2026-08-29T10:54:30",
+      "t1": "2026-09-05T10:54:30",
+      "horizon_days": 7.0,
+      "mode": "radio",
+      "weather_used": false,
+      "weather_hours": 0,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 12428,
+        "sunlit": 12428,
+        "dark_sky": 12428,
+        "bright_enough": 12428,
+        "cloud_clear": 12428,
+        "above_floor": 12428,
+        "scheduled": 707
+      },
+      "objective": 667.5952,
+      "upper_bound": 8516.9077,
+      "scheduled": 707,
+      "propagations": 16179851,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.0,
+        "propagate": 105.512,
+        "score": 0.265,
+        "schedule": 0.023,
+        "total": 105.799
+      }
+    },
+    "leh": {
+      "site": "Leh, India",
+      "lat_deg": 34.16,
+      "lon_deg": 77.58,
+      "t0": "2026-08-29T10:56:16",
+      "t1": "2026-09-05T10:56:16",
+      "horizon_days": 7.0,
+      "mode": "radio",
+      "weather_used": false,
+      "weather_hours": 0,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 14461,
+        "sunlit": 14461,
+        "dark_sky": 14461,
+        "bright_enough": 14461,
+        "cloud_clear": 14461,
+        "above_floor": 14461,
+        "scheduled": 723
+      },
+      "objective": 688.2638,
+      "upper_bound": 9977.2934,
+      "scheduled": 723,
+      "propagations": 16260850,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.0,
+        "propagate": 110.007,
+        "score": 0.41,
+        "schedule": 0.03,
+        "total": 110.447
+      }
+    },
+    "tucson": {
+      "site": "Tucson, USA",
+      "lat_deg": 32.22,
+      "lon_deg": -110.97,
+      "t0": "2026-08-29T10:58:07",
+      "t1": "2026-09-05T10:58:07",
+      "horizon_days": 7.0,
+      "mode": "radio",
+      "weather_used": false,
+      "weather_hours": 0,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 14277,
+        "sunlit": 14277,
+        "dark_sky": 14277,
+        "bright_enough": 14277,
+        "cloud_clear": 14277,
+        "above_floor": 14277,
+        "scheduled": 724
+      },
+      "objective": 683.4183,
+      "upper_bound": 9847.5286,
+      "scheduled": 724,
+      "propagations": 16253490,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.0,
+        "propagate": 125.783,
+        "score": 0.183,
+        "schedule": 0.017,
+        "total": 125.983
+      }
+    },
+    "singapore": {
+      "site": "Singapore",
+      "lat_deg": 1.35,
+      "lon_deg": 103.82,
+      "t0": "2026-08-29T11:00:13",
+      "t1": "2026-09-05T11:00:13",
+      "horizon_days": 7.0,
+      "mode": "radio",
+      "weather_used": false,
+      "weather_hours": 0,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 12149,
+        "sunlit": 12149,
+        "dark_sky": 12149,
+        "bright_enough": 12149,
+        "cloud_clear": 12149,
+        "above_floor": 12149,
+        "scheduled": 708
+      },
+      "objective": 667.1069,
+      "upper_bound": 8438.0258,
+      "scheduled": 708,
+      "propagations": 16168989,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.0,
+        "propagate": 105.891,
+        "score": 0.31,
+        "schedule": 0.022,
+        "total": 106.222
+      }
+    },
+    "reykjavik": {
+      "site": "Reykjavik, Iceland",
+      "lat_deg": 64.13,
+      "lon_deg": -21.9,
+      "t0": "2026-08-29T11:01:59",
+      "t1": "2026-09-05T11:01:59",
+      "horizon_days": 7.0,
+      "mode": "radio",
+      "weather_used": false,
+      "weather_hours": 0,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 26947,
+        "sunlit": 26947,
+        "dark_sky": 26947,
+        "bright_enough": 26947,
+        "cloud_clear": 26947,
+        "above_floor": 26947,
+        "scheduled": 726
+      },
+      "objective": 716.8218,
+      "upper_bound": 18209.3452,
+      "scheduled": 726,
+      "propagations": 16756492,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.0,
+        "propagate": 134.385,
+        "score": 0.849,
+        "schedule": 0.07,
+        "total": 135.305
+      }
+    },
+    "svalbard": {
+      "site": "Svalbard, Norway",
+      "lat_deg": 78.23,
+      "lon_deg": 15.39,
+      "t0": "2026-08-29T11:04:14",
+      "t1": "2026-09-05T11:04:14",
+      "horizon_days": 7.0,
+      "mode": "radio",
+      "weather_used": false,
+      "weather_hours": 0,
+      "funnel": {
+        "catalogue": 635,
+        "stale_elements": 0,
+        "geometric": 38673,
+        "sunlit": 38673,
+        "dark_sky": 38673,
+        "bright_enough": 38673,
+        "cloud_clear": 38673,
+        "above_floor": 38673,
+        "scheduled": 731
+      },
+      "objective": 780.7586,
+      "upper_bound": 29521.0457,
+      "scheduled": 731,
+      "propagations": 17229264,
+      "runtime": {
+        "load_tle": 0.0,
+        "weather": 0.0,
+        "propagate": 147.116,
+        "score": 0.826,
+        "schedule": 0.065,
+        "total": 148.007
+      }
+    }
+  },
+  "part_b_weight_sensitivity": [
+    {
+      "w_elev": 0.0,
+      "w_dur": 1.0,
+      "n_scheduled": 28,
+      "jaccard_vs_default": 0.8620689655172413,
+      "mean_el_max_deg": 57.32616681641205,
+      "mean_duration_s": 489.8592323214286,
+      "mean_cloud": 0.45889285714285716
+    },
+    {
+      "w_elev": 0.1,
+      "w_dur": 0.9,
+      "n_scheduled": 27,
+      "jaccard_vs_default": 0.8928571428571429,
+      "mean_el_max_deg": 58.844528406665056,
+      "mean_duration_s": 497.21109566666667,
+      "mean_cloud": 0.44825925925925925
+    },
+    {
+      "w_elev": 0.3,
+      "w_dur": 0.7,
+      "n_scheduled": 26,
+      "jaccard_vs_default": 0.9259259259259259,
+      "mean_el_max_deg": 59.88012509825284,
+      "mean_duration_s": 500.1396913076923,
+      "mean_cloud": 0.45134615384615384
+    },
+    {
+      "w_elev": 0.5,
+      "w_dur": 0.5,
+      "n_scheduled": 26,
+      "jaccard_vs_default": 1.0,
+      "mean_el_max_deg": 60.288848505548295,
+      "mean_duration_s": 501.0719938461538,
+      "mean_cloud": 0.45326923076923076
+    },
+    {
+      "w_elev": 0.7,
+      "w_dur": 0.30000000000000004,
+      "n_scheduled": 25,
+      "jaccard_vs_default": 0.8888888888888888,
+      "mean_el_max_deg": 62.71470087555961,
+      "mean_duration_s": 512.33931692,
+      "mean_cloud": 0.45020000000000004
+    },
+    {
+      "w_elev": 0.9,
+      "w_dur": 0.09999999999999998,
+      "n_scheduled": 25,
+      "jaccard_vs_default": 0.7,
+      "mean_el_max_deg": 64.99136018778681,
+      "mean_duration_s": 503.33305784,
+      "mean_cloud": 0.4498
+    },
+    {
+      "w_elev": 1.0,
+      "w_dur": 0.0,
+      "n_scheduled": 25,
+      "jaccard_vs_default": 0.7,
+      "mean_el_max_deg": 64.99136045125951,
+      "mean_duration_s": 503.32591564,
+      "mean_cloud": 0.4498
+    }
+  ],
+  "part_c_scaling": [
+    {
+      "n_objects": 50,
+      "days": 1,
+      "n_passes": 151,
+      "propagations": 181003,
+      "propagate_s": 1.831292700022459,
+      "score_s": 0.007241799961775541,
+      "schedule_s": 4.269974306225777e-05,
+      "total_s": 1.838579399511218
+    },
+    {
+      "n_objects": 50,
+      "days": 7,
+      "n_passes": 1084,
+      "propagations": 1267832,
+      "propagate_s": 11.007872899994254,
+      "score_s": 0.048908500000834465,
+      "schedule_s": 0.00028319982811808586,
+      "total_s": 11.057065700180829
+    },
+    {
+      "n_objects": 150,
+      "days": 1,
+      "n_passes": 449,
+      "propagations": 537392,
+      "propagate_s": 4.847647299990058,
+      "score_s": 0.0420743003487587,
+      "schedule_s": 0.00013490021228790283,
+      "total_s": 4.889862700831145
+    },
+    {
+      "n_objects": 150,
+      "days": 7,
+      "n_passes": 3198,
+      "propagations": 3762966,
+      "propagate_s": 31.83551159966737,
+      "score_s": 0.1576944999396801,
+      "schedule_s": 0.0005728998221457005,
+      "total_s": 31.993784099351615
+    },
+    {
+      "n_objects": 300,
+      "days": 1,
+      "n_passes": 894,
+      "propagations": 1081911,
+      "propagate_s": 9.558391499798745,
+      "score_s": 0.041460500098764896,
+      "schedule_s": 0.0001543997786939144,
+      "total_s": 9.600012199487537
+    },
+    {
+      "n_objects": 300,
+      "days": 7,
+      "n_passes": 6231,
+      "propagations": 7570726,
+      "propagate_s": 65.09881349978969,
+      "score_s": 0.2482396000996232,
+      "schedule_s": 0.0009666001424193382,
+      "total_s": 65.34802299970761
+    },
+    {
+      "n_objects": 635,
+      "days": 1,
+      "n_passes": 1801,
+      "propagations": 2312949,
+      "propagate_s": 15.690470200031996,
+      "score_s": 0.0596390999853611,
+      "schedule_s": 0.00021460000425577164,
+      "total_s": 15.750329399947077
+    },
+    {
+      "n_objects": 635,
+      "days": 7,
+      "n_passes": 12438,
+      "propagations": 16180290,
+      "propagate_s": 103.95851289993152,
+      "score_s": 0.42372489999979734,
+      "schedule_s": 0.0020551998168230057,
+      "total_s": 104.38429919956252
+    }
+  ],
+  "part_d_artefacts": {
+    "csv": "results/demo_schedule.csv",
+    "ics": "results/demo_schedule.ics",
+    "json": "results/demo_plan.json",
+    "txt": "results/demo_plan.txt"
+  },
+  "_meta": {
+    "generated_utc": "2026-08-29T11:29:45+00:00",
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "sgp4_version": "2.27"
+  }
+}

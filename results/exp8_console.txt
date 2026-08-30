@@ -1,0 +1,24 @@
+
+==========================================================================
+ 8  Prediction degradation with element-set age (60 LEO objects, 60 d of history)
+==========================================================================
+  [space-track] authenticated
+  [space-track] 11547 element sets for 60 objects (2026-06-30 .. 2026-08-29)
+
+  objects with a fresh reference : 60
+  aged comparisons               : 33223
+
+    age of element set      N  mean |dTCA|    median       p95  mean |dEl|
+                 0-1 d    592         0.05      0.01      0.20      0.0017
+                 1-2 d    847         0.09      0.03      0.23      0.0042
+                 2-3 d    703         0.10      0.03      0.36      0.0069
+                 3-5 d    921         0.20      0.04      0.52      0.0112
+                 5-7 d   1162         0.47      0.07      1.93      0.0199
+                7-14 d   4590         4.31      0.70     18.08      0.1034
+               14-30 d   8369        16.23      2.04     80.53      0.3856
+               30-90 d  16039        75.31     13.69    334.50      1.8609
+
+  overall |dTCA|: mean=41.068  median=4.151  p95=193.592  max=1787.000
+  growth rate: 1.29 s of culmination error per day of element-set age
+
+  -> C:\Users\admin\Documents\projctss\SkyPass\results\exp8_tle_age.json

@@ -1,0 +1,239 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//SkyPass//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:skypass-26070-20260831T131507Z-0@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260831T130943Z
+DTEND:20260831T132027Z
+SUMMARY:SL-16 R/B pass (45 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 44.7 deg toward ENE\nRise N -> set SE\nDuration 644 s, range at TCA 1138 km\nPredicted magnitude 3.6\nForecast cloud cover 20%\nSkyPass score 0.279
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-48931-20260831T132728Z-1@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260831T132529Z
+DTEND:20260831T132927Z
+SUMMARY:HAWK-3B pass (18 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 18.0 deg toward E\nRise NE -> set SSE\nDuration 238 s, range at TCA 928 km\nPredicted magnitude 4.8\nForecast cloud cover 21%\nSkyPass score 0.060
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-20663-20260831T134732Z-2@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260831T134334Z
+DTEND:20260831T135129Z
+SUMMARY:COSMOS 2084 pass (45 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 44.7 deg toward ENE\nRise N -> set SE\nDuration 475 s, range at TCA 764 km\nPredicted magnitude 4.7\nForecast cloud cover 22%\nSkyPass score 0.146
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-16496-20260831T140153Z-3@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260831T135734Z
+DTEND:20260831T140620Z
+SUMMARY:SL-14 R/B pass (60 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 59.6 deg toward E\nRise N -> set SSE\nDuration 525 s, range at TCA 721 km\nPredicted magnitude 4.6\nForecast cloud cover 22%\nSkyPass score 0.185
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-17590-20260831T142756Z-4@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260831T142225Z
+DTEND:20260831T143327Z
+SUMMARY:SL-16 R/B pass (58 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 57.8 deg toward WNW\nRise SSW -> set N\nDuration 662 s, range at TCA 971 km\nPredicted magnitude 4.4\nForecast cloud cover 20%\nSkyPass score 0.205
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-25732-20260831T144430Z-5@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260831T143858Z
+DTEND:20260831T145003Z
+SUMMARY:CZ-4B R/B pass (86 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 85.9 deg toward ENE\nRise SSE -> set N\nDuration 665 s, range at TCA 861 km\nPredicted magnitude 5.2\nForecast cloud cover 18%\nSkyPass score 0.110
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-21088-20260831T225924Z-6@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260831T225315Z
+DTEND:20260831T230536Z
+SUMMARY:SL-8 R/B pass (64 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 63.7 deg toward W\nRise SSW -> set N\nDuration 741 s, range at TCA 1076 km\nPredicted magnitude 5.4\nForecast cloud cover 40%\nSkyPass score 0.061
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-20580-20260831T231532Z-7@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260831T231303Z
+DTEND:20260831T231800Z
+SUMMARY:HST pass (17 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 16.7 deg toward NNE\nRise NNW -> set ENE\nDuration 296 s, range at TCA 1262 km\nPredicted magnitude 4.1\nForecast cloud cover 52%\nSkyPass score 0.070
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-33321-20260831T233946Z-8@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260831T233526Z
+DTEND:20260831T234402Z
+SUMMARY:HUANJING 1B (HJ-1B) pass (56 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 55.7 deg toward WNW\nRise N -> set SSW\nDuration 516 s, range at TCA 755 km\nPredicted magnitude 4.7\nForecast cloud cover 72%\nSkyPass score 0.059
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-66052-20260901T233018Z-9@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260901T232748Z
+DTEND:20260901T233249Z
+SUMMARY:HRC MONOBLOCK CAMERA pass (44 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 43.9 deg toward SW\nRise NW -> set SSE\nDuration 301 s, range at TCA 429 km\nPredicted magnitude 3.4\nForecast cloud cover 63%\nSkyPass score 0.110
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-43194-20260901T234217Z-10@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260901T233902Z
+DTEND:20260901T234532Z
+SUMMARY:ZHANGHENG 1-01 (CSES-1) pass (31 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 31.4 deg toward W\nRise SSW -> set NW\nDuration 390 s, range at TCA 869 km\nPredicted magnitude 4.8\nForecast cloud cover 61%\nSkyPass score 0.054
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-19120-20260901T235624Z-11@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260901T235052Z
+DTEND:20260902T000154Z
+SUMMARY:SL-16 R/B pass (89 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 88.9 deg toward WNW\nRise SSW -> set NNE\nDuration 663 s, range at TCA 820 km\nPredicted magnitude 3.5\nForecast cloud cover 58%\nSkyPass score 0.172
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-58648-20260902T132338Z-12@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260902T132005Z
+DTEND:20260902T132711Z
+SUMMARY:TIANMU-1 14 pass (81 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 81.2 deg toward E\nRise SSE -> set N\nDuration 426 s, range at TCA 488 km\nPredicted magnitude 4.2\nForecast cloud cover 78%\nSkyPass score 0.062
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-67686-20260902T134014Z-13@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260902T133728Z
+DTEND:20260902T134259Z
+SUMMARY:UITMSAT-2 pass (89 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 88.7 deg toward NW\nRise SW -> set NE\nDuration 332 s, range at TCA 329 km\nPredicted magnitude 3.5\nForecast cloud cover 81%\nSkyPass score 0.067
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-17590-20260902T135340Z-14@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260902T134804Z
+DTEND:20260902T135917Z
+SUMMARY:SL-16 R/B pass (74 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 74.4 deg toward WNW\nRise SSW -> set NNE\nDuration 673 s, range at TCA 869 km\nPredicted magnitude 3.9\nForecast cloud cover 84%\nSkyPass score 0.056
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-41884-20260903T131909Z-15@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260903T131559Z
+DTEND:20260903T132218Z
+SUMMARY:CYGFM05 pass (78 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 77.9 deg toward SW\nRise WNW -> set SE\nDuration 379 s, range at TCA 391 km\nPredicted magnitude 4.1\nForecast cloud cover 19%\nSkyPass score 0.225
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-40701-20260903T133125Z-16@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260903T132812Z
+DTEND:20260903T133437Z
+SUMMARY:GAOFEN-8 pass (77 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 76.6 deg toward E\nRise NNE -> set S\nDuration 385 s, range at TCA 436 km\nPredicted magnitude 3.8\nForecast cloud cover 23%\nSkyPass score 0.250
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-41038-20260903T135034Z-17@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260903T134620Z
+DTEND:20260903T135449Z
+SUMMARY:YAOGAN-29 pass (60 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 59.9 deg toward ENE\nRise SSE -> set N\nDuration 509 s, range at TCA 708 km\nPredicted magnitude 4.6\nForecast cloud cover 28%\nSkyPass score 0.168
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-32289-20260903T140427Z-18@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260903T140016Z
+DTEND:20260903T140838Z
+SUMMARY:YAOGAN-3 pass (89 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 89.3 deg toward WSW\nRise SSE -> set NNW\nDuration 502 s, range at TCA 597 km\nPredicted magnitude 4.7\nForecast cloud cover 32%\nSkyPass score 0.152
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-40894-20260903T143132Z-19@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260903T142717Z
+DTEND:20260903T143550Z
+SUMMARY:GAOFEN-9 01 pass (54 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 54.2 deg toward W\nRise S -> set NNW\nDuration 514 s, range at TCA 764 km\nPredicted magnitude 5.9\nForecast cloud cover 41%\nSkyPass score 0.056
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-20580-20260903T231733Z-20@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260903T231351Z
+DTEND:20260903T232114Z
+SUMMARY:HST pass (65 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 65.4 deg toward NNE\nRise WNW -> set ESE\nDuration 444 s, range at TCA 513 km\nPredicted magnitude 1.2\nForecast cloud cover 89%\nSkyPass score 0.086
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-23088-20260904T000151Z-21@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260903T235616Z
+DTEND:20260904T000728Z
+SUMMARY:SL-16 R/B pass (69 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 68.8 deg toward WNW\nRise SSW -> set N\nDuration 672 s, range at TCA 895 km\nPredicted magnitude 3.4\nForecast cloud cover 88%\nSkyPass score 0.052
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-43010-20260904T225800Z-22@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260904T225241Z
+DTEND:20260904T230319Z
+SUMMARY:FENGYUN 3D pass (68 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 67.7 deg toward WNW\nRise N -> set SSW\nDuration 639 s, range at TCA 886 km\nPredicted magnitude 4.6\nForecast cloud cover 40%\nSkyPass score 0.141
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-20465-20260904T231316Z-23@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260904T230930Z
+DTEND:20260904T231704Z
+SUMMARY:COSMOS 2058 pass (51 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 50.9 deg toward W\nRise NNW -> set S\nDuration 453 s, range at TCA 668 km\nPredicted magnitude 4.3\nForecast cloud cover 39%\nSkyPass score 0.157
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-23088-20260904T234656Z-24@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260904T234119Z
+DTEND:20260904T235233Z
+SUMMARY:SL-16 R/B pass (74 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 73.7 deg toward WNW\nRise SSW -> set N\nDuration 674 s, range at TCA 873 km\nPredicted magnitude 3.3\nForecast cloud cover 35%\nSkyPass score 0.288
+END:VEVENT
+BEGIN:VEVENT
+UID:skypass-67687-20260905T000542Z-25@skypass
+DTSTAMP:20260829T112945Z
+DTSTART:20260905T000308Z
+DTEND:20260905T000817Z
+SUMMARY:LEOPARD pass (28 deg)
+LOCATION:Chennai, India
+DESCRIPTION:Max elevation 27.8 deg toward SW\nRise WNW -> set S\nDuration 309 s, range at TCA 696 km\nPredicted magnitude 4.4\nForecast cloud cover 34%\nSkyPass score 0.099
+END:VEVENT
+END:VCALENDAR

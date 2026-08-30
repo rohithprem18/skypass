@@ -1,0 +1,170 @@
+{
+  "part_a_exactness": {
+    "n_instances": 2000,
+    "gap_min": 5.0,
+    "dp_optimal_fraction": 1.0,
+    "heuristics": {
+      "greedy-max-elevation": {
+        "mean_ratio_to_optimum": 0.9539070711994236,
+        "min_ratio": 0.09414251958711603,
+        "optimal_fraction": 0.627,
+        "mean_shortfall_pct": 4.609292880057636
+      },
+      "greedy-highest-value": {
+        "mean_ratio_to_optimum": 0.9995010626262996,
+        "min_ratio": 0.8590773065143178,
+        "optimal_fraction": 0.989,
+        "mean_shortfall_pct": 0.049893737370043656
+      },
+      "greedy-longest-duration": {
+        "mean_ratio_to_optimum": 0.9507219247038085,
+        "min_ratio": 0.2459143566404634,
+        "optimal_fraction": 0.611,
+        "mean_shortfall_pct": 4.927807529619155
+      },
+      "greedy-earliest-finish": {
+        "mean_ratio_to_optimum": 0.9554048450593171,
+        "min_ratio": 0.29332888839500687,
+        "optimal_fraction": 0.6345,
+        "mean_shortfall_pct": 4.459515494068289
+      }
+    }
+  },
+  "part_b_vs_genetic": [
+    {
+      "site": "Chennai, India",
+      "n_candidates": 200,
+      "ga_population": 60,
+      "ga_generations": 120,
+      "dp_objective": 15.805841685140868,
+      "dp_runtime_s": 0.00026869960129261017,
+      "dp_count": 67,
+      "ga_objective": 15.757492230643308,
+      "ga_runtime_s": 9.44816209981218,
+      "ga_count": 65,
+      "ga_ratio": 0.9969410389234119,
+      "ga_slowdown": 35162.546034161256
+    },
+    {
+      "site": "Bengaluru, India",
+      "n_candidates": 202,
+      "ga_population": 60,
+      "ga_generations": 120,
+      "dp_objective": 16.570060498630706,
+      "dp_runtime_s": 0.0003140997141599655,
+      "dp_count": 69,
+      "ga_objective": 16.559882538749616,
+      "ga_runtime_s": 9.620817499700934,
+      "ga_count": 68,
+      "ga_ratio": 0.9993857620566967,
+      "ga_slowdown": 30629.81934074992
+    },
+    {
+      "site": "Leh, India",
+      "n_candidates": 312,
+      "ga_population": 60,
+      "ga_generations": 120,
+      "dp_objective": 22.49634926929666,
+      "dp_runtime_s": 0.0003783996216952801,
+      "dp_count": 91,
+      "ga_objective": 22.434964030983434,
+      "ga_runtime_s": 15.470495600253344,
+      "ga_count": 89,
+      "ga_ratio": 0.9972713244456511,
+      "ga_slowdown": 40884.01444732817
+    },
+    {
+      "site": "Tucson, USA",
+      "n_candidates": 306,
+      "ga_population": 60,
+      "ga_generations": 120,
+      "dp_objective": 23.379042858829532,
+      "dp_runtime_s": 0.0003912001848220825,
+      "dp_count": 92,
+      "ga_objective": 23.28832896696809,
+      "ga_runtime_s": 15.820477299857885,
+      "ga_count": 89,
+      "ga_ratio": 0.9961198628870651,
+      "ga_slowdown": 40440.87378704338
+    },
+    {
+      "site": "Singapore",
+      "n_candidates": 209,
+      "ga_population": 60,
+      "ga_generations": 120,
+      "dp_objective": 17.93443048786562,
+      "dp_runtime_s": 0.0002607000060379505,
+      "dp_count": 63,
+      "ga_objective": 17.934430487865615,
+      "ga_runtime_s": 8.244327300228179,
+      "ga_count": 63,
+      "ga_ratio": 0.9999999999999998,
+      "ga_slowdown": 31623.809395033302
+    },
+    {
+      "site": "Reykjavik, Iceland",
+      "n_candidates": 1224,
+      "ga_population": 60,
+      "ga_generations": 120,
+      "dp_objective": 48.50502960238136,
+      "dp_runtime_s": 0.002278400119394064,
+      "dp_count": 176,
+      "ga_objective": 48.0344811822428,
+      "ga_runtime_s": 124.83324469998479,
+      "ga_count": 170,
+      "ga_ratio": 0.9902989767453835,
+      "ga_slowdown": 54789.86927598299
+    }
+  ],
+  "part_c_scaling": [
+    {
+      "n": 100,
+      "mean_s": 0.00012010000646114349,
+      "std_s": 1.5699234100060087e-05,
+      "us_per_pass": 1.201000064611435
+    },
+    {
+      "n": 500,
+      "mean_s": 0.0006146400235593319,
+      "std_s": 4.577366922800651e-05,
+      "us_per_pass": 1.2292800471186638
+    },
+    {
+      "n": 1000,
+      "mean_s": 0.0011577199213206768,
+      "std_s": 0.0002064853673083771,
+      "us_per_pass": 1.1577199213206768
+    },
+    {
+      "n": 5000,
+      "mean_s": 0.008039479982107878,
+      "std_s": 0.00018663556871760723,
+      "us_per_pass": 1.6078959964215755
+    },
+    {
+      "n": 10000,
+      "mean_s": 0.01896858010441065,
+      "std_s": 0.0012427424035554963,
+      "us_per_pass": 1.8968580104410648
+    },
+    {
+      "n": 50000,
+      "mean_s": 0.1244080800563097,
+      "std_s": 0.009105766399232716,
+      "us_per_pass": 2.488161601126194
+    },
+    {
+      "n": 100000,
+      "mean_s": 0.28531366009265186,
+      "std_s": 0.01472579471735236,
+      "us_per_pass": 2.8531366009265184
+    }
+  ],
+  "_meta": {
+    "generated_utc": "2026-08-29T10:38:35+00:00",
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "sgp4_version": "2.27"
+  }
+}
