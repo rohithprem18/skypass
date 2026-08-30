@@ -1,0 +1,761 @@
+/* SkyPass -- view styles.
+ *
+ * Everything here reads the band tokens defined in styles.css and never a
+ * literal colour, so each block below works identically on the black and the
+ * white ground. The accent appears only where it carries meaning: scheduled,
+ * optimal, recommended, live.
+ */
+
+/* ------------------------------------------------------ section heads -- */
+.sec-head { max-width: 68ch; margin-block-end: var(--s-6); }
+.sec-lede { margin-block-start: var(--s-3); max-width: 62ch; }
+
+.boot { display: flex; flex-direction: column; align-items: center;
+  gap: var(--s-3); text-align: center; }
+
+.app-foot { margin-block-start: auto; }
+.app-foot-in { display: flex; justify-content: space-between; gap: var(--s-4);
+  flex-wrap: wrap; }
+
+/* --------------------------------------------------------------- hero -- */
+.hero {
+  display: grid; gap: clamp(var(--s-6), 4vw, var(--s-8));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+@media (min-width: 1040px) {
+  .hero { grid-template-columns: minmax(0, 0.86fr) minmax(0, 1fr); }
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.11em;
+  text-transform: uppercase; color: var(--accent);
+  margin-block-end: var(--s-4);
+}
+.hero-call { margin-block-end: var(--s-4); }
+.hero-reason { max-width: 52ch; color: var(--muted); }
+
+.hero-metrics {
+  display: grid; gap: var(--s-4) var(--s-6);
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  margin-block: var(--s-6);
+  padding-block-start: var(--s-5);
+  border-block-start: 1px solid var(--line);
+}
+.hero-actions { display: flex; gap: var(--s-3); flex-wrap: wrap; }
+
+/* ------------------------------------------------------ hero geometry -- */
+.viz { margin: 0; border: 1px solid var(--border-dark); border-radius: var(--r);
+  overflow: hidden; background: #000; }
+.viz-svg { display: block; inline-size: 100%; block-size: auto; }
+
+.viz-earth { fill: #0A0A0A; stroke: #FFFFFF; stroke-width: 1.25; }
+.viz-atmos { fill: none; stroke: #333333; stroke-width: 1;
+  stroke-dasharray: 3 5; }
+.viz-orbit { fill: none; stroke: #757575; stroke-width: 1.25;
+  stroke-dasharray: 5 4; }
+.viz-orbit-sel { fill: none; stroke: var(--accent); stroke-width: 2.25;
+  stroke-linecap: round; }
+.viz-cone { fill: none; stroke: #333333; stroke-width: 1; }
+.viz-los { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 3;
+  opacity: 0.8; }
+.viz-term { fill: none; stroke: #333333; stroke-width: 1;
+  stroke-dasharray: 6 5; }
+.viz-sat { fill: var(--accent); }
+.viz-obs { fill: #FFFFFF; }
+.viz-tick { fill: #757575; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.09em; font-family: var(--font); }
+
+.viz-cap {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4);
+  justify-content: space-between;
+  padding: var(--s-3) var(--s-4);
+  border-block-start: 1px solid var(--border-dark); color: #FFFFFF;
+}
+.viz-cap-name { font-size: 15px; font-weight: 700; }
+.viz-cap-grid { display: flex; gap: var(--s-5); flex-wrap: wrap; }
+.viz-cap-v { font-size: 15px; font-weight: 700; }
+
+/* ----------------------------------------------------------- pipeline -- */
+.pipe-band { border-block-start: 1px solid var(--line); }
+.pipe-stages { display: flex; align-items: stretch; gap: 0;
+  overflow-x: auto; scrollbar-width: none; }
+.pipe-stages::-webkit-scrollbar { display: none; }
+.pipe-stage { display: flex; align-items: center; gap: var(--s-3);
+  padding-inline-end: var(--s-3); flex: none; }
+.pipe-arrow { inline-size: 18px; block-size: 1px; background: var(--line);
+  position: relative; flex: none; margin-inline-end: var(--s-3); }
+.pipe-arrow::after {
+  content: ""; position: absolute; inset-inline-end: 0; inset-block-start: -2px;
+  border-block: 2.5px solid transparent;
+  border-inline-start: 4px solid var(--line);
+}
+.pipe-body { display: flex; flex-direction: column; gap: 2px; }
+.pipe-k { font-size: 10px; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.pipe-v { display: flex; align-items: center; gap: var(--s-2);
+  font-size: 13px; font-weight: 500; white-space: nowrap; color: var(--muted); }
+.pipe-stage.is-on .pipe-v { color: var(--fg); font-weight: 700; }
+.pipe-note { margin-block-start: var(--s-3); }
+
+/* ------------------------------------------------------- night list -- */
+/* A vertical list beside the timeline. As columns it ran off the page at a
+   seven-night horizon and pushed the timeline below the fold; stacked, the
+   choice and its consequence stay on screen together at any horizon. */
+.planner { display: grid; gap: var(--s-6);
+  grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 1040px) {
+  .planner { grid-template-columns: 268px minmax(0, 1fr); gap: var(--s-7); }
+}
+.planner-nights {
+  display: flex; flex-direction: column; min-block-size: 0;
+}
+.planner-nights-k { margin-block-end: var(--s-2); flex: none; }
+.planner-main { min-inline-size: 0; }
+
+.nights {
+  border: 1px solid var(--line); border-radius: var(--r);
+  max-block-size: min(48dvh, 520px); overflow-y: auto;
+  overscroll-behavior: contain; scrollbar-gutter: stable;
+}
+.nights::-webkit-scrollbar { inline-size: 10px; }
+.nights::-webkit-scrollbar-track { background: var(--panel); }
+.nights::-webkit-scrollbar-thumb {
+  background: var(--line); border: 2px solid var(--panel);
+}
+.nights::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+.nights > li + li { border-block-start: 1px solid var(--line); }
+@media (min-width: 1040px) {
+  .planner-nights {
+    position: sticky; inset-block-start: calc(var(--nav-h) + var(--s-5));
+    max-block-size: calc(100dvh - var(--nav-h) - var(--s-6));
+  }
+  .nights { max-block-size: none; flex: 1 1 auto; }
+}
+
+.night {
+  position: relative; inline-size: 100%;
+  display: flex; flex-direction: column; gap: var(--s-2);
+  padding: var(--s-3) var(--s-4); padding-inline-start: calc(var(--s-4) + 3px);
+  text-align: start; cursor: pointer; background: transparent; border: 0;
+  transition: background var(--t-fast) var(--ease);
+}
+.night:hover { background: var(--hover); }
+.night.is-active { background: var(--hover); }
+
+/* Recommended nights carry an accent rule; poor nights stay monochrome. */
+.night-rule { position: absolute; inset-block: 0; inset-inline-start: 0;
+  inline-size: 3px; background: transparent; }
+.night-best .night-rule { background: var(--accent); }
+.night-good .night-rule { background: var(--accent); opacity: 0.42; }
+.night.is-active .night-rule { inline-size: 4px; }
+
+.night-head { display: flex; align-items: baseline;
+  justify-content: space-between; gap: var(--s-3); }
+.night-date { display: flex; align-items: baseline; gap: var(--s-2); }
+.night-dow { font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  color: var(--muted); }
+.night-day { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+
+.night-tag { display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.night-good .night-tag, .night-skip .night-tag { color: var(--muted); }
+
+.night-stats { display: flex; align-items: baseline; gap: var(--s-2);
+  font-size: 13px; color: var(--muted); }
+.night-dot { opacity: 0.6; }
+
+.night-sel { display: flex; align-items: center; gap: var(--s-2);
+  font-size: 13px; font-weight: 700; }
+.night-skip .night-sel, .night-sel:has(.num:only-child) { color: var(--muted); }
+
+/* --------------------------------------------------- research insight -- */
+.insight { display: grid; gap: clamp(var(--s-5), 5vw, var(--s-8));
+  grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 900px) {
+  .insight { grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1fr); }
+}
+.insight-eyebrow { color: var(--accent); margin-block-end: var(--s-3); }
+.insight-figure { font-size: clamp(52px, 9vw, 88px); font-weight: 700;
+  line-height: 0.92; letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums; }
+.insight-cap { margin-block-start: var(--s-2); color: var(--muted);
+  max-width: 26ch; }
+
+.insight-bars { display: flex; flex-direction: column; gap: var(--s-4);
+  margin-block-end: var(--s-5); }
+.ibar-head { display: flex; align-items: baseline;
+  justify-content: space-between; gap: var(--s-3); margin-block-end: var(--s-2); }
+.ibar-v { font-size: 19px; font-weight: 700; }
+.ibar-track { block-size: 14px; background: var(--panel);
+  border: 1px solid var(--line); }
+.ibar-fill { display: block; block-size: 100%; background: var(--accent); }
+.ibar-muted { background: var(--muted); opacity: 0.55; }
+.insight-note { max-width: 60ch; color: var(--muted);
+  margin-block-end: var(--s-4); }
+
+/* ----------------------------------------------------------- settings -- */
+/* An overlay, not a section. In normal flow it shoved the whole console down
+   by its own height every time it opened, and being sticky it then slid up
+   under the navigation as the page scrolled. Fixed below the bar, it changes
+   nothing behind it. */
+.settings-scrim {
+  position: fixed; inset-block-start: calc(var(--nav-h) + 1px);
+  inset-inline: 0; inset-block-end: 0; z-index: 29;
+  background: rgba(0, 0, 0, 0.45);
+}
+.settings {
+  position: fixed; inset-block-start: calc(var(--nav-h) + 1px);
+  inset-inline: 0; z-index: 30;
+  max-block-size: calc(100dvh - var(--nav-h) - 1px); overflow-y: auto;
+  border-block-end: 1px solid var(--border-dark);
+}
+.settings-in { padding-block: var(--s-5); }
+.settings-grid { display: grid; gap: var(--s-4);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.settings-run { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+.settings-foot { display: flex; align-items: flex-start; gap: var(--s-5);
+  flex-wrap: wrap; margin-block-start: var(--s-4);
+  padding-block-start: var(--s-4); border-block-start: 1px solid var(--line); }
+.settings-note { max-width: 62ch; }
+
+/* ----------------------------------------------------------- timeline -- */
+.tl-head { display: flex; align-items: flex-end; justify-content: space-between;
+  gap: var(--s-4); flex-wrap: wrap; margin-block-end: var(--s-4); }
+.tl-facts { display: flex; gap: var(--s-5); flex-wrap: wrap; }
+.tl-fact-v { font-size: 22px; font-weight: 700; }
+
+/* A static label gutter beside a scrolling chart. The labels used to float
+   over the chart, which put them on top of the darkness band and on top of
+   the chart's own axis text; as a real column they stay legible and the rows
+   line up with what they name. */
+.tl { display: grid; grid-template-columns: 108px minmax(0, 1fr);
+  border: 1px solid var(--line); border-radius: var(--r); }
+
+.tl-gutter { position: relative; border-inline-end: 1px solid var(--line);
+  background: var(--bg); }
+.tl-row-k {
+  position: absolute; inset-inline: var(--s-3) var(--s-2);
+  display: flex; align-items: center;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--muted); line-height: 1.2;
+}
+.tl-axis-v { position: absolute; inset-inline-end: var(--s-2);
+  font-size: 9px; font-weight: 500; color: var(--muted);
+  font-variant-numeric: tabular-nums; }
+
+.tl-scroll { overflow-x: auto; min-inline-size: 0; }
+.tl-svg { display: block; }
+
+/* Painted lightest to darkest; each band sits inside the previous one, so the
+   opacity ramp reads as the sky actually darkening rather than four blocks. */
+.tl-daylight { fill: var(--panel); }
+.tl-band { fill: var(--fg); }
+.tl-band-day { opacity: 0.14; }
+.tl-band-civil { opacity: 0.34; }
+.tl-band-nautical { opacity: 0.60; }
+.tl-band-astronomical { opacity: 0.88; }
+.tl-phase { fill: var(--bg); font-size: 8.5px; font-weight: 700;
+  letter-spacing: 0.08em; font-family: var(--font); }
+
+.tl-cloud { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.tl-cloud-area { fill: var(--muted); opacity: 0.14; }
+
+.tl-link { fill: none; stroke: var(--muted); stroke-width: 1;
+  stroke-dasharray: 3 3; opacity: 0.75; }
+
+.tl-pass { cursor: pointer; }
+.tl-int { fill: var(--panel); stroke: var(--line); stroke-width: 1;
+  transition: fill var(--t-fast) var(--ease); }
+.tl-int.is-conf { fill: none; stroke: var(--muted); stroke-dasharray: 3 2; }
+.tl-int.is-sel { fill: var(--accent); stroke: var(--accent); }
+.tl-int.is-focus { stroke: var(--fg); stroke-width: 2; }
+.tl-pass:hover .tl-int { fill: var(--accent-hover); stroke: var(--accent-hover); }
+.tl-int-t { fill: var(--muted); font-size: 9.5px; font-family: var(--font);
+  pointer-events: none; }
+/* The run-sheet number under each scheduled block: always fits, never
+   collides, and ties the timeline to the numbered plan on the Schedule view. */
+.tl-int-n { fill: var(--fg); font-size: 9px; font-weight: 700;
+  font-family: var(--font); font-variant-numeric: tabular-nums;
+  pointer-events: none; }
+
+.tl-legend { display: flex; gap: var(--s-5); flex-wrap: wrap;
+  margin-block-start: var(--s-4); font-size: 12px; color: var(--muted); }
+.tl-legend li { display: flex; align-items: center; gap: var(--s-2); }
+.lg { inline-size: 16px; block-size: 9px; flex: none; display: block; }
+.lg-sel { background: var(--accent); }
+.lg-conf { border: 1px dashed var(--muted); }
+.lg-cand { background: var(--panel); border: 1px solid var(--line); }
+.lg-dark { background: var(--fg); opacity: 0.88; }
+.lg-twi { background: var(--fg); opacity: 0.34; }
+
+/* ----------------------------------------------------- pass explorer -- */
+.explorer-bar { display: flex; gap: var(--s-4); flex-wrap: wrap;
+  align-items: center; margin-block-end: var(--s-3); }
+.explorer-search { max-inline-size: 320px; }
+.explorer-chips { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+.explorer-count { margin-block-end: var(--s-2); }
+.explorer-table { max-block-size: 62vh; overflow-y: auto; }
+.explorer-empty { padding: var(--s-6); text-align: center; }
+.ta-end { text-align: end; }
+
+/* -------------------------------------------------- pass inspector -- */
+/* A fixed right-hand inspector: the table stays where it was, so comparing
+   two passes does not mean losing your place in three hundred rows. */
+.inspector {
+  position: fixed; inset-block: 0; inset-inline-end: 0; z-index: 50;
+  inline-size: min(420px, 100vw);
+  background: var(--white); color: var(--black);
+  border-inline-start: 1px solid var(--border-light);
+  display: flex; flex-direction: column;
+  animation: slide-in var(--t-base) var(--ease);
+}
+@keyframes slide-in { from { transform: translateX(12px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .inspector { animation: none; }
+}
+
+.inspector-head {
+  display: flex; align-items: flex-start; gap: var(--s-3);
+  padding: var(--s-4); background: var(--black); color: var(--white);
+  flex-wrap: wrap;
+}
+.inspector-title { flex: 1 1 auto; min-inline-size: 0; }
+.inspector-status { display: flex; align-items: center; gap: var(--s-2);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; flex-basis: 100%; }
+
+.inspector-body { flex: 1 1 auto; overflow-y: auto; padding: var(--s-4);
+  display: flex; flex-direction: column; gap: var(--s-4); }
+.inspector-specs { display: grid; gap: var(--s-3);
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); }
+.inspector-v { font-size: 15px; font-weight: 700;
+  font-variant-numeric: tabular-nums; margin: 0; }
+.inspector-conflict { padding-block-start: var(--s-3);
+  border-block-start: 1px solid var(--border-light); }
+.inspector-foot { display: flex; gap: var(--s-2); padding: var(--s-4);
+  border-block-start: 1px solid var(--border-light); }
+
+.curve { border: 1px solid var(--border-light); }
+.curve-empty { padding: var(--s-5); text-align: center;
+  border: 1px solid var(--border-light); }
+
+/* ------------------------------------------------ scheduler decision -- */
+.decision {
+  position: fixed; inset-block: 0; inset-inline-end: 0; z-index: 60;
+  inline-size: min(460px, 100vw); overflow-y: auto;
+  border-inline-start: 1px solid var(--border-dark);
+  animation: slide-in var(--t-base) var(--ease);
+}
+@media (prefers-reduced-motion: reduce) { .decision { animation: none; } }
+.decision-in { padding: var(--s-5); display: flex; flex-direction: column;
+  gap: var(--s-3); min-block-size: 100%; }
+.decision-head { display: flex; align-items: center;
+  justify-content: space-between; }
+.decision-name { margin-block-start: var(--s-2); }
+.decision-status { display: flex; align-items: center; gap: var(--s-2);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; }
+.decision-score { font-size: 56px; font-weight: 700; line-height: 1;
+  letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+  margin-block-start: var(--s-3); }
+
+.decision-table { inline-size: 100%; border-collapse: collapse;
+  margin-block-start: var(--s-4); font-size: 13px; }
+.decision-table th, .decision-table td {
+  padding: 8px var(--s-2); text-align: end;
+  border-block-end: 1px solid var(--line); }
+.decision-table thead th { font-size: 11px; font-weight: 700;
+  color: var(--muted); }
+.decision-table thead th.is-win { color: var(--accent); }
+.decision-table tbody th { text-align: start; }
+.decision-table td.is-win { color: var(--accent); font-weight: 700; }
+.decision-rival { border: 0; background: none; cursor: pointer; padding: 0;
+  font: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+.decision-why-k { margin-block-start: var(--s-4); }
+.decision-why { display: flex; flex-direction: column; gap: var(--s-2);
+  font-size: 14px; }
+.decision-why li { display: flex; align-items: center; gap: var(--s-2); }
+.decision-solo { color: var(--muted); margin-block-start: var(--s-4);
+  max-width: 46ch; }
+
+.decision-foot { display: flex; align-items: center; gap: var(--s-2);
+  flex-wrap: wrap; margin-block-start: auto; padding-block-start: var(--s-5);
+  border-block-start: 1px solid var(--line); }
+
+/* ----------------------------------------------------- weather matrix -- */
+.matrix-wrap { overflow-x: auto; border: 1px solid var(--line);
+  border-radius: var(--r); }
+.matrix { inline-size: 100%; border-collapse: collapse; font-size: 13px; }
+.matrix th, .matrix td { padding: 10px var(--s-3); text-align: center;
+  border-block-end: 1px solid var(--line); white-space: nowrap; }
+.matrix thead th { background: var(--panel); font-weight: 700; }
+.matrix tbody th { text-align: start; position: sticky;
+  inset-inline-start: 0; background: var(--bg); z-index: 1; }
+.matrix td.is-good { background: var(--accent-dim); font-weight: 700; }
+.matrix tbody tr:last-child td, .matrix tbody tr:last-child th {
+  border-block-end: 0; }
+
+/* ------------------------------------------------ forecast reliability -- */
+.reliability { display: grid; gap: clamp(var(--s-5), 5vw, var(--s-8));
+  grid-template-columns: minmax(0, 1fr); align-items: center; }
+@media (min-width: 940px) {
+  .reliability { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr); }
+}
+.reliability-facts { display: flex; gap: var(--s-6); flex-wrap: wrap;
+  margin-block-start: var(--s-5); }
+.reliability-chart { margin: 0; }
+.rel-marker { stroke: var(--fg); stroke-width: 1; stroke-dasharray: 4 3; }
+
+/* ---------------------------------------------------------- run sheet -- */
+.sched-head { display: flex; align-items: flex-start;
+  justify-content: space-between; gap: var(--s-6); flex-wrap: wrap; }
+.sched-title-col { min-inline-size: 0; }
+.sched-title { margin-block: var(--s-2) var(--s-5); }
+.sched-actions { display: flex; align-items: center; gap: var(--s-5);
+  flex-wrap: wrap; }
+.sched-actions-note { max-width: 54ch; margin-block-start: var(--s-3); }
+.sched-facts { display: flex; gap: var(--s-6); flex-wrap: wrap; }
+.sched-v { font-size: 19px; font-weight: 700; margin: 0; }
+
+.runsheet { display: flex; flex-direction: column;
+  border-block-start: 1px solid var(--line); }
+.run {
+  inline-size: 100%; display: grid; gap: var(--s-4);
+  grid-template-columns: 44px 96px minmax(0, 1fr);
+  align-items: start; text-align: start; cursor: pointer;
+  padding: var(--s-5) var(--s-2); background: transparent; border: 0;
+  border-block-end: 1px solid var(--line);
+  transition: background var(--t-fast) var(--ease);
+}
+.run:hover { background: var(--hover); }
+.run-n { font-size: 22px; font-weight: 700; color: var(--muted); }
+.run-when { display: flex; flex-direction: column; gap: 1px; }
+.run-time { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.run-body { display: flex; flex-direction: column; gap: 2px; }
+.run-name { font-size: 18px; font-weight: 700; }
+.run-grid { grid-column: 1 / -1; display: grid; gap: var(--s-3);
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  padding-block-start: var(--s-3); border-block-start: 1px solid var(--line); }
+.run-v { font-size: 15px; font-weight: 700;
+  font-variant-numeric: tabular-nums; }
+@media (min-width: 900px) {
+  .run { grid-template-columns: 44px 108px minmax(180px, 0.7fr) minmax(0, 1.6fr); }
+  .run-grid { grid-column: auto; padding-block-start: 0; border-block-start: 0; }
+}
+
+.btn.is-off { opacity: 0.4; pointer-events: none; }
+
+/* One event per link, because that is all Google's template URL accepts. It
+   sits inside the row it belongs to rather than competing with the export. */
+.run-item { position: relative; }
+.run-gcal {
+  position: absolute; inset-block-end: var(--s-3); inset-inline-end: var(--s-2);
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; color: var(--muted);
+  text-decoration: none; padding: 4px 8px; border-radius: var(--r);
+  border: 1px solid transparent;
+  transition: color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease);
+}
+.run-gcal:hover { color: var(--accent); border-color: var(--accent); }
+.run-gcal:focus-visible { color: var(--accent); border-color: var(--accent); }
+
+@media (max-width: 700px) {
+  .run-gcal { position: static; margin: 0 var(--s-2) var(--s-4);
+    border-color: var(--line); }
+}
+
+/* ----------------------------------------------------------- analysis -- */
+.analysis-title { max-width: 20ch; }
+.finding { display: grid; gap: clamp(var(--s-5), 5vw, var(--s-8));
+  grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 900px) {
+  .finding { grid-template-columns: minmax(240px, 0.6fr) minmax(0, 1fr); }
+}
+.finding-figure { font-size: clamp(46px, 7vw, 72px); font-weight: 700;
+  line-height: 0.95; letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums; margin-block: var(--s-3) var(--s-2); }
+.finding-facts { display: flex; gap: var(--s-6); flex-wrap: wrap;
+  margin-block: var(--s-5); }
+.finding-note { max-width: 64ch; color: var(--muted); }
+
+.abars { display: flex; flex-direction: column; gap: var(--s-3); }
+.abar-head { display: flex; align-items: baseline;
+  justify-content: space-between; gap: var(--s-3); margin-block-end: 5px; }
+.abar-v { font-size: 17px; font-weight: 700; }
+.abar-track { block-size: 12px; background: var(--panel);
+  border: 1px solid var(--line); }
+.abar-fill { display: block; block-size: 100%; background: var(--accent); }
+.abar-muted { background: var(--muted); opacity: 0.5; }
+
+/* ------------------------------------------------------------ TLE age -- */
+.age { display: flex; flex-direction: column;
+  border-block-start: 1px solid var(--line); }
+.age-row { display: grid; gap: var(--s-4); align-items: center;
+  grid-template-columns: minmax(120px, 160px) minmax(0, 1fr) 80px;
+  padding-block: var(--s-4); border-block-end: 1px solid var(--line); }
+.age-k { display: flex; flex-direction: column; gap: 2px; }
+.age-track { block-size: 16px; background: var(--panel);
+  border: 1px solid var(--line); }
+.age-fill { display: block; block-size: 100%; background: var(--accent); }
+.age-warn .age-fill { background: var(--warning); }
+.age-bad .age-fill { background: var(--error); }
+.age-v { font-size: 19px; font-weight: 700; text-align: end;
+  font-variant-numeric: tabular-nums; }
+.age-foot { margin-block-start: var(--s-4); }
+
+/* --------------------------------------------------------- experiments -- */
+.exps { border-block-start: 1px solid var(--line); }
+.exp { border-block-end: 1px solid var(--line); }
+.exp-row {
+  inline-size: 100%; display: grid; gap: var(--s-4); align-items: center;
+  grid-template-columns: 62px minmax(0, 1fr);
+  padding: var(--s-5) var(--s-2); text-align: start; cursor: pointer;
+  background: transparent; border: 0;
+  transition: background var(--t-fast) var(--ease);
+}
+.exp-row:hover { background: var(--hover); }
+.exp-n { display: flex; align-items: center; gap: var(--s-2);
+  font-size: 17px; font-weight: 700; color: var(--muted); }
+/* The mark appears on hover: a small confirmation the row is live. */
+.exp-sq { inline-size: 8px; block-size: 8px; background: var(--accent);
+  opacity: 0; transition: opacity var(--t-fast) var(--ease); flex: none; }
+.exp-row:hover .exp-sq, .exp-row.is-open .exp-sq { opacity: 1; }
+.exp-body { display: flex; flex-direction: column; gap: 2px; min-inline-size: 0; }
+.exp-title { font-size: 19px; font-weight: 700; }
+.exp-method { max-width: 56ch; }
+.exp-findings { display: flex; gap: var(--s-5); flex-wrap: wrap;
+  grid-column: 2; }
+.exp-v { font-size: 15px; font-weight: 700;
+  font-variant-numeric: tabular-nums; }
+.exp-cta { grid-column: 2; font-size: 13px; font-weight: 700;
+  color: var(--muted); }
+.exp-row:hover .exp-cta { color: var(--accent); }
+.exp-detail { padding: 0 var(--s-2) var(--s-5) calc(62px + var(--s-4));
+  display: flex; flex-direction: column; gap: var(--s-4); max-width: 76ch; }
+.exp-detail-facts { display: flex; gap: var(--s-6); flex-wrap: wrap; }
+
+@media (min-width: 900px) {
+  .exp-row { grid-template-columns: 62px minmax(200px, 1fr) minmax(0, 1fr) 140px; }
+  .exp-findings { grid-column: auto; }
+  .exp-cta { grid-column: auto; text-align: end; }
+}
+
+/* --------------------------------------------------- observation mode -- */
+/* Read at arm's length in the dark: very large type, three numbers, no chrome. */
+.live { min-block-size: 100dvh; background: var(--black); color: var(--white);
+  display: flex; flex-direction: column;
+  padding: clamp(var(--s-4), 3vw, var(--s-6)); }
+.live-top { display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4); }
+.live-brand { display: flex; align-items: baseline; gap: var(--s-3);
+  flex-wrap: wrap; }
+.live-tag { display: inline-flex; align-items: center; gap: var(--s-2);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent); }
+
+.live-main { flex: 1 1 auto; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: var(--s-3);
+  text-align: center; }
+.live-name { font-size: clamp(28px, 5vw, 46px); font-weight: 700;
+  letter-spacing: -0.02em; }
+.live-event { color: var(--muted-dark); }
+.live-clock { font-size: clamp(56px, 15vw, 148px); font-weight: 700;
+  line-height: 0.94; letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums; }
+
+.live-traj { inline-size: min(100%, 680px); block-size: auto;
+  margin-block: var(--s-4); }
+.live-traj-empty { block-size: 40px; }
+.live-horizon { stroke: var(--border-dark); stroke-width: 1; }
+.live-path { fill: none; stroke: var(--accent); stroke-width: 2.5;
+  stroke-linecap: round; }
+.live-now { fill: var(--white); stroke: var(--accent); stroke-width: 2.5; }
+
+.live-grid { display: grid; gap: var(--s-6);
+  grid-template-columns: repeat(3, minmax(90px, 1fr));
+  inline-size: min(100%, 620px); }
+.live-v { font-size: clamp(24px, 4.5vw, 40px); font-weight: 700;
+  letter-spacing: -0.02em; font-variant-numeric: tabular-nums; margin: 0; }
+
+.live-foot { display: flex; align-items: flex-end;
+  justify-content: space-between; gap: var(--s-5); flex-wrap: wrap;
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--border-dark); }
+.live-foot-right { display: flex; gap: var(--s-6); }
+.live-foot-v { font-size: 17px; font-weight: 700;
+  font-variant-numeric: tabular-nums; }
+
+/* --------------------------------------------------------- responsive -- */
+@media (max-width: 1180px) {
+  .nav-hide-md { display: none; }
+}
+@media (max-width: 860px) {
+  /* The links move to their own scrollable row. Without wrapping and an auto
+     height they were squeezed into the 64px bar, which left one link visible
+     and the other six unreachable. */
+  .nav-in { gap: var(--s-3); flex-wrap: wrap; block-size: auto;
+    padding-block: var(--s-2); row-gap: var(--s-1); }
+  .nav-links { order: 3; flex-basis: 100%; block-size: 40px; }
+  .nav-link { padding-inline: var(--s-2); }
+  .hero-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tl-rows { display: none; }
+  .decision, .inspector { inline-size: 100vw; }
+}
+
+/* A phone gets the four columns that decide whether to go outside, not the
+   eleven-column research table. The rest stay in the inspector, one tap away. */
+@media (max-width: 760px) {
+  .explorer-table th:nth-child(2),  .explorer-table td:nth-child(2),
+  .explorer-table th:nth-child(4),  .explorer-table td:nth-child(4),
+  .explorer-table th:nth-child(5),  .explorer-table td:nth-child(5),
+  .explorer-table th:nth-child(7),  .explorer-table td:nth-child(7),
+  .explorer-table th:nth-child(8),  .explorer-table td:nth-child(8),
+  .explorer-table th:nth-child(9),  .explorer-table td:nth-child(9),
+  .explorer-table th:nth-child(10), .explorer-table td:nth-child(10) {
+    display: none;
+  }
+}
+@media (max-width: 620px) {
+  /* A fixed 108px gutter took a third of a phone screen from the chart. */
+  .tl { grid-template-columns: 72px minmax(0, 1fr); }
+  .tl-row-k { inset-inline: var(--s-2) 4px; font-size: 9px;
+    letter-spacing: 0.06em; }
+  .tl-axis-v { font-size: 8px; }
+  .explorer-search { max-inline-size: none; flex: 1 1 100%; }
+  .live-grid { gap: var(--s-4); }
+  .run { grid-template-columns: 36px minmax(0, 1fr); }
+  .run-when { grid-column: 2; }
+  .run-body { grid-column: 2; }
+  .age-row { grid-template-columns: minmax(0, 1fr) 70px;
+    row-gap: var(--s-2); }
+  .age-track { grid-column: 1 / -1; }
+}
+
+/* --------------------------------------------------------------- landing -- */
+/* The entry page. Same bands, same accent, same angular geometry as the
+   console, so arriving at the planner is a continuation rather than a jump to
+   a different product. */
+/* The page is dark end to end, so the filler space that pushes the footer to
+   the bottom has to be dark too -- otherwise the body's white ground shows
+   through between the hero and the footer. */
+.landing { display: flex; flex-direction: column; min-block-size: 100dvh;
+  background: var(--black); position: relative; isolation: isolate; }
+
+/* Background video layer. Sits under everything and never receives a click. */
+.lp-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden;
+  background: var(--black); pointer-events: none; }
+.lp-bg-video {
+  position: absolute; inset: 0;
+  inline-size: 100%; block-size: 100%;
+  object-fit: cover; object-position: center;
+}
+/* Two scrims, not one: a horizontal ramp so the headline side stays near-solid
+   while the video reads through on the right, and a vertical one so the top
+   bar and footer keep their own ground. Without both, white text at this size
+   sits on whatever the video happens to be doing. */
+/* The dish antenna -- the most recognisable thing in the frame -- sits at
+   mid-left, which is exactly where a left-weighted scrim was crushing it. So
+   the veil is now light and even, and the text carries its own legibility
+   instead of demanding a dark slab behind it. */
+.lp-bg-scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg,
+      rgba(0, 0, 0, 0.52) 0%,
+      rgba(0, 0, 0, 0.44) 38%,
+      rgba(0, 0, 0, 0.30) 66%,
+      rgba(0, 0, 0, 0.22) 100%),
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.72) 0%,
+      rgba(0, 0, 0, 0.10) 22%,
+      rgba(0, 0, 0, 0.10) 70%,
+      rgba(0, 0, 0, 0.80) 100%);
+}
+
+/* Legibility, not decoration: a tight shadow that only exists to hold the
+   glyph edges against whatever the video is doing behind them. */
+.lp-hero-text .hero-eyebrow,
+.lp-title,
+.lp-lede,
+.lp-proof .metric-k,
+.lp-proof-v {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.92), 0 2px 16px rgba(0, 0, 0, 0.72);
+}
+.lp-proof { border-block-start-color: rgba(255, 255, 255, 0.28); }
+
+/* The bands sit above the video, so they must not paint their own ground. */
+.landing > header.band-dark,
+.landing > section.band-dark,
+.landing > footer.band-dark { background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-bg-video { display: none; }
+}
+.landing > footer { margin-block-start: auto; }
+
+/* Centred, not baseline-aligned. Baseline alignment lines the two labels up
+   with each other but says nothing about where the pair sits in the bar, which
+   left the wordmark 18px above centre. */
+.lp-top { display: flex; align-items: center; gap: var(--s-4);
+  block-size: var(--nav-h); border-block-end: 1px solid var(--line); }
+
+.lp-hero { display: grid; gap: clamp(var(--s-6), 5vw, var(--s-8));
+  grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 1000px) {
+  .lp-hero { grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.85fr); }
+}
+
+.lp-title {
+  font-size: clamp(40px, 6.4vw, 76px); font-weight: 700;
+  line-height: 1.02; letter-spacing: -0.03em; margin-block: var(--s-4);
+}
+.lp-lede { max-width: 52ch; color: var(--muted); }
+.lp-proof { display: grid; gap: var(--s-5);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin-block-start: var(--s-7); padding-block-start: var(--s-5);
+  border-block-start: 1px solid var(--line); }
+.lp-proof-v { font-size: 26px; font-weight: 700; letter-spacing: -0.02em;
+  margin: 0; }
+
+/* The form is the hero's product image, so it gets the one panel treatment
+   on the page: a bordered surface with the accent mark in its corner. */
+.lp-form {
+  position: relative; display: flex; flex-direction: column; gap: var(--s-4);
+  padding: var(--s-6); background: var(--surface-dark);
+  border: 1px solid var(--border-dark); border-radius: var(--r);
+}
+.lp-form::before {
+  content: ""; position: absolute; inset-block-start: -1px;
+  inset-inline-start: -1px; inline-size: 12px; block-size: 12px;
+  background: var(--accent);
+}
+.lp-form-k { margin-block-end: var(--s-1); }
+.lp-form-row { display: grid; gap: var(--s-4);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.lp-form-check { margin-block-start: var(--s-1); }
+.lp-go { inline-size: 100%; padding-block: 14px; font-size: 16px;
+  margin-block-start: var(--s-2); }
+.lp-go .spinner { border-top-color: currentColor; }
+/* Working is not the same as unavailable: the button stays at full strength
+   while it runs, and only blocks a second click. */
+.btn.is-busy[disabled] { opacity: 1; cursor: progress; }
+/* The phrase changes width as it cycles; a fixed-width elapsed counter pinned
+   to the end stops the whole label shuffling every couple of seconds. */
+.lp-go-phrase { flex: 0 1 auto; min-inline-size: 0; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap; }
+.lp-go-clock { flex: none; inline-size: 4ch; text-align: end;
+  opacity: 0.65; font-weight: 500; }
+.lp-error { display: flex; align-items: flex-start; gap: var(--s-2);
+  font-size: 13px; color: var(--error); margin: 0; }
+.lp-form-note { max-width: 46ch; }
+
+/* The wordmark is a control now: it returns to the planning setup. */
+.nav-brand { border: 0; background: none; padding: 0; cursor: pointer;
+  border-radius: var(--r); }
+.nav-brand:hover .nav-mark { color: var(--accent); }
+.nav-mark { transition: color var(--t-fast) var(--ease); }

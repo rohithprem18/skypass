@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Weather-aware satellite pass planning for a small ground station.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="SkyPass">
+<title>SkyPass</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="global-nav">
+  <span class="wordmark">SkyPass</span>
+  <nav>
+    <a href="#plan">Plan</a>
+    <a href="#timetable">Timetable</a>
+    <a href="#funnel">Why so few</a>
+  </nav>
+</header>
+
+<div class="sub-nav">
+  <span class="category">Tonight</span>
+  <span class="caption muted" id="siteLabel">&mdash;</span>
+  <span class="spacer"></span>
+  <button class="btn btn-primary" id="planBtn" type="button">Plan</button>
+</div>
+
+<!-- hero ------------------------------------------------------------- -->
+<section class="tile tile-light">
+  <div class="inner">
+    <h1 class="hero-display">Know which passes are worth your night.</h1>
+    <p class="lead">Every satellite over your head, filtered by what you can
+      actually see &mdash; sunlight, darkness, brightness, and the forecast above
+      you.</p>
+    <p class="actions">
+      <button class="btn btn-primary" id="heroPlan" type="button">Plan tonight</button>
+      <a class="btn btn-ghost" href="#funnel">How it filters</a>
+    </p>
+
+    <!-- Next pass: the one thing an observer checks most often. -->
+    <div class="nextup" id="nextUp" hidden>
+      <div>
+        <div class="caption muted">Next pass</div>
+        <div class="count" id="nextCount">&mdash;</div>
+      </div>
+      <div class="min0">
+        <div class="tagline" id="nextName">&mdash;</div>
+        <div class="caption muted" id="nextDetail">&mdash;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- planner ---------------------------------------------------------- -->
+<section class="tile tile-parchment" id="plan">
+  <div class="inner">
+    <h2 class="display-lg">Your station</h2>
+    <p class="caption muted lede">
+      Pick a preset, use your device location, or type coordinates.
+    </p>
+
+    <div class="chips group" id="stationChips"></div>
+
+    <div class="form-grid group">
+      <div class="field">
+        <label for="lat">Latitude</label>
+        <input class="input" id="lat" type="number" step="0.0001"
+               inputmode="decimal" placeholder="12.9200">
+      </div>
+      <div class="field">
+        <label for="lon">Longitude</label>
+        <input class="input" id="lon" type="number" step="0.0001"
+               inputmode="decimal" placeholder="80.1200">
+      </div>
+      <div class="field">
+        <label for="days">Horizon</label>
+        <select id="days">
+          <option value="1">Next 24 hours</option>
+          <option value="2" selected>Next 2 days</option>
+          <option value="3">Next 3 days</option>
+          <option value="7">Next 7 days</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="mode">Mode</label>
+        <select id="mode">
+          <option value="optical" selected>Optical &mdash; visible to the eye</option>
+          <option value="radio">Radio &mdash; daylight is fine</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="capacity">Observations per night</label>
+        <select id="capacity">
+          <option value="0" selected>No limit</option>
+          <option value="1">1 &mdash; only the best</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="mask">Horizon mask</label>
+        <select id="mask">
+          <option value="5">5&deg; &mdash; open horizon</option>
+          <option value="10" selected>10&deg; &mdash; typical</option>
+          <option value="20">20&deg; &mdash; buildings/trees</option>
+          <option value="30">30&deg; &mdash; narrow view</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="actions">
+      <button class="btn btn-primary" id="runBtn" type="button">Show my passes</button>
+      <button class="btn btn-pearl" id="geoBtn" type="button">Use my location</button>
+      <label class="switch">
+        <input type="checkbox" id="weather" checked>
+        Use cloud forecast
+      </label>
+    </p>
+
+    <div class="status" id="status"></div>
+  </div>
+</section>
+
+<!-- timetable -------------------------------------------------------- -->
+<section class="tile tile-light" id="timetable">
+  <div class="inner-wide">
+    <h2 class="display-lg">Your timetable</h2>
+    <p class="caption muted lede" id="timetableSub">
+      Run a plan to see the passes worth your time.
+    </p>
+
+    <div class="toolbar group" id="sortBar" hidden>
+      <span class="caption muted toolbar-label">Sort by</span>
+      <button class="chip" data-sort="time" aria-pressed="true" type="button">Time</button>
+      <button class="chip" data-sort="bright" aria-pressed="false" type="button">Brightness</button>
+      <button class="chip" data-sort="high" aria-pressed="false" type="button">Highest</button>
+      <button class="chip" data-sort="clear" aria-pressed="false" type="button">Clearest</button>
+    </div>
+
+    <div id="results"></div>
+  </div>
+</section>
+
+<!-- funnel ----------------------------------------------------------- -->
+<section class="tile tile-dark" id="funnel">
+  <div class="inner-wide split">
+    <div class="split-pin">
+      <h2 class="display-lg">Why so few?</h2>
+      <p class="lead on-dark-muted">
+        Most passes are not observable. Each stage removes the ones that are
+        not &mdash; geometry, sunlight, darkness, brightness, and the sky
+        itself.
+      </p>
+      <p class="caption on-dark-muted group" id="funnelNote"></p>
+    </div>
+    <div class="bento reveal" id="funnelGrid"></div>
+  </div>
+</section>
+
+<!-- export ----------------------------------------------------------- -->
+<section class="tile tile-parchment">
+  <div class="inner">
+    <h2 class="display-lg">Take it outside</h2>
+    <p class="lead">
+      Send the timetable to your calendar so each pass arrives as a reminder,
+      with where to look already written down.
+    </p>
+    <p class="actions">
+      <a class="btn btn-primary" id="icsBtn" href="#">Add to calendar</a>
+      <button class="btn btn-ghost" id="shareBtn" type="button" hidden>Share</button>
+    </p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="inner-wide">
+    <div class="cols">
+      <div>
+        <div class="caption-strong">SkyPass</div>
+        <div class="dense">
+          <a href="#plan">Plan a night</a>
+          <a href="#timetable">Timetable</a>
+          <a href="#funnel">How it filters</a>
+        </div>
+      </div>
+      <div>
+        <div class="caption-strong">Data</div>
+        <div class="dense">
+          <a href="https://celestrak.org/" target="_blank" rel="noopener">CelesTrak elements</a>
+          <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo forecast</a>
+          <a href="https://www.space-track.org/" target="_blank" rel="noopener">Space-Track history</a>
+        </div>
+      </div>
+      <div>
+        <div class="caption-strong">Method</div>
+        <div class="dense">
+          <a href="#funnel">Visibility model</a>
+          <a href="#plan">Observing budget</a>
+        </div>
+      </div>
+    </div>
+    <p class="legal">
+      Positions from SGP4 on public two-line elements; cloud cover from a public
+      forecast, calibrated against reanalysis. Predictions degrade as elements
+      age &mdash; refresh them daily. Times shown in your device's time zone.
+    </p>
+  </div>
+</footer>
+
+<!-- floating sticky bar: next pass + the primary action --------------- -->
+<div class="sticky-bar" id="stickyBar" data-show="0">
+  <div class="what">
+    <div class="t" id="barTitle">&mdash;</div>
+    <div class="s" id="barSub">&mdash;</div>
+  </div>
+  <span class="spacer"></span>
+  <a class="btn btn-primary" id="barIcs" href="#">Add to calendar</a>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

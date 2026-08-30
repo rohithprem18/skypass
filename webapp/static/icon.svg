@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SkyPass">
+  <rect width="512" height="512" rx="114" fill="#000000"/>
+  <!-- horizon rings: the polar sky chart, which is the app's signature -->
+  <circle cx="256" cy="256" r="150" fill="none" stroke="#3a3a3c" stroke-width="10"/>
+  <circle cx="256" cy="256" r="96" fill="none" stroke="#3a3a3c" stroke-width="8"/>
+  <circle cx="256" cy="256" r="42" fill="none" stroke="#3a3a3c" stroke-width="6"/>
+  <!-- a pass arc across the sky -->
+  <path d="M126 316 C 176 150, 336 150, 386 316"
+        fill="none" stroke="#2997ff" stroke-width="22"
+        stroke-linecap="round"/>
+  <circle cx="256" cy="186" r="26" fill="#2997ff"/>
+</svg>

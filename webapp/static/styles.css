@@ -1,0 +1,444 @@
+/* SkyPass web -- Apple-design-analysis tokens, applied literally.
+   Single accent (Action Blue). No gradients. Exactly one shadow, reserved for
+   the sky chart, which is this app's "product photography".
+
+   Light theme only. Sections separate through the light/parchment alternation
+   the design system defines, rather than through dark tiles. */
+
+:root {
+  color-scheme: light;
+
+  --primary: #0066cc;
+  --primary-focus: #0071e3;
+  --ink: #1d1d1f;
+  --body-on-dark: #ffffff;
+  --body-muted: #cccccc;
+  --ink-muted-80: #333333;
+  --ink-muted-48: #7a7a7a;
+  --divider-soft: #f0f0f0;
+  --hairline: #e0e0e0;
+  --canvas: #ffffff;
+  --parchment: #f5f5f7;
+  --pearl: #fafafc;
+  --tile-1: #272729;
+  --tile-2: #2a2a2c;
+  --tile-3: #252527;
+  --black: #000000;
+  --chip: #d2d2d7;
+
+  --chart-bg: #ffffff;
+  --chart-ring: #e0e0e0;
+  --chart-label: #7a7a7a;
+
+  --r-xs: 5px; --r-sm: 8px; --r-md: 11px; --r-lg: 18px; --r-pill: 9999px;
+  --s-xxs: 4px; --s-xs: 8px; --s-sm: 12px; --s-md: 17px;
+  --s-lg: 24px; --s-xl: 32px; --s-xxl: 48px; --s-section: 80px;
+
+  --product-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0;
+
+  --font-display: "SF Pro Display", system-ui, -apple-system,
+    BlinkMacSystemFont, "Inter", sans-serif;
+  --font-text: "SF Pro Text", system-ui, -apple-system, BlinkMacSystemFont,
+    "Inter", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 17px;                 /* 17, not 16 -- the brand reading pace */
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom);
+  transition: background-color .25s ease, color .25s ease;
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; }
+
+/* ---------------------------------------------------------------- nav --- */
+.global-nav {
+  position: sticky; top: 0; z-index: 40;
+  height: 44px; background: var(--parchment); color: var(--ink);
+  border-block-end: 1px solid var(--divider-soft);
+  display: flex; align-items: center; gap: var(--s-lg);
+  padding: 0 var(--s-lg);
+  font-size: 12px; line-height: 1; letter-spacing: -0.12px;
+}
+.global-nav .wordmark { font-weight: 600; letter-spacing: -0.2px;
+  color: var(--ink); }
+.global-nav nav { display: flex; gap: var(--s-lg); margin-inline-start: auto; }
+.global-nav a { color: var(--ink); text-decoration: none; opacity: .85; }
+
+.sub-nav {
+  position: sticky; top: 44px; z-index: 30;
+  min-height: 52px;
+  display: flex; align-items: center; gap: var(--s-sm);
+  padding: 0 var(--s-lg);
+  background: color-mix(in srgb, var(--parchment) 80%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--divider-soft);
+}
+.sub-nav .category {
+  font-family: var(--font-display);
+  font-size: 21px; font-weight: 600; line-height: 1.19; letter-spacing: .231px;
+}
+.sub-nav .spacer { margin-inline-start: auto; }
+
+.icon-btn {
+  width: 44px; height: 44px; border: 0; background: transparent;
+  color: var(--ink); cursor: pointer; border-radius: var(--r-pill);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: transform .12s ease;
+}
+.icon-btn:active { transform: scale(0.95); }
+.icon-btn:focus-visible { outline: 2px solid var(--primary-focus); outline-offset: 2px; }
+
+/* ------------------------------------------------------------- tiles --- */
+.tile {
+  padding-block: var(--s-section);
+  /* Inline safe areas matter in landscape on notched phones, where a notch
+     eats into the side the content would otherwise start at. */
+  padding-inline: max(var(--s-lg), env(safe-area-inset-left))
+                  max(var(--s-lg), env(safe-area-inset-right));
+}
+.tile-light { background: var(--canvas); color: var(--ink); }
+.tile-parchment { background: var(--parchment); color: var(--ink); }
+.tile-dark { background: var(--parchment); color: var(--ink); }
+.inner { max-width: 980px; margin: 0 auto; }
+.inner-wide { max-width: 1440px; margin: 0 auto; }
+
+.hero-display {
+  font-family: var(--font-display);
+  /* The 2-line rule is a property of the box, not a hand-placed <br>:
+     "Know which passes are worth your night." is 39 characters, so a 20ch
+     measure breaks it to exactly two lines from 320px to 1440px. */
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 600; line-height: 1.05; letter-spacing: -0.03em;
+  max-width: 20ch; text-wrap: balance;
+}
+.display-lg { font-family: var(--font-display);
+  font-size: 40px; font-weight: 600; line-height: 1.1; }
+.lead { font-family: var(--font-display);
+  font-size: 28px; font-weight: 400; line-height: 1.14; letter-spacing: .196px;
+  margin: var(--s-md) 0 0; }
+.tagline { font-family: var(--font-display);
+  font-size: 21px; font-weight: 600; line-height: 1.19; letter-spacing: .231px; }
+.caption { font-size: 14px; line-height: 1.43; letter-spacing: -0.224px; }
+.caption-strong { font-size: 14px; font-weight: 600; line-height: 1.29;
+  letter-spacing: -0.224px; }
+.muted { color: var(--ink-muted-48); }
+.on-dark-muted { color: var(--ink-muted-80); }
+
+/* ----------------------------------------------------------- buttons --- */
+.btn {
+  font-family: var(--font-text);
+  font-size: 17px; font-weight: 400; letter-spacing: -0.374px;
+  border: 0; cursor: pointer; transition: transform .12s ease;
+  min-height: 44px; display: inline-flex; align-items: center;
+  justify-content: center; text-decoration: none;
+}
+.btn:active { transform: scale(0.95); }   /* the system micro-interaction */
+.btn:focus-visible { outline: 2px solid var(--primary-focus); outline-offset: 2px; }
+.btn[disabled] { opacity: .45; cursor: default; }
+.btn[disabled]:active { transform: none; }
+
+.btn-primary { background: var(--primary); color: #fff;
+  border-radius: var(--r-pill); padding: 11px 22px; }
+.btn-ghost { background: transparent; color: var(--primary);
+  border: 1px solid var(--primary); border-radius: var(--r-pill);
+  padding: 11px 22px; }
+.btn-pearl { background: var(--pearl); color: var(--ink-muted-80);
+  font-size: 14px; border: 3px solid var(--divider-soft);
+  border-radius: var(--r-md); padding: 8px 14px; min-height: 40px; }
+.link { color: var(--primary); text-decoration: none; }
+
+/* ------------------------------------------------------------- forms --- */
+.field { display: flex; flex-direction: column; gap: var(--s-xs); }
+.field label { font-size: 14px; font-weight: 600; letter-spacing: -0.224px; }
+.input, select {
+  font-family: var(--font-text); font-size: 17px; letter-spacing: -0.374px;
+  color: var(--ink); background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill); padding: 12px 20px; height: 44px; width: 100%;
+  appearance: none;
+}
+.input:focus, select:focus { outline: 2px solid var(--primary-focus);
+  outline-offset: 1px; }
+.form-grid { display: grid; gap: var(--s-md);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--s-sm); }
+.chip {
+  background: var(--canvas); color: var(--ink);
+  font-size: 14px; letter-spacing: -0.224px;
+  border: 1px solid var(--hairline); border-radius: var(--r-pill);
+  padding: 12px 16px; cursor: pointer; min-height: 44px;
+  transition: transform .12s ease;
+}
+.chip:active { transform: scale(0.95); }
+.chip[aria-pressed="true"] { border: 2px solid var(--primary-focus); }
+.chip:focus-visible { outline: 2px solid var(--primary-focus); outline-offset: 2px; }
+
+/* ------------------------------------------------------------- cards --- */
+.card-grid {
+  display: grid; gap: var(--s-lg);
+  /* auto-fill already collapses exactly when a 300px card stops fitting, so
+     no width-keyed breakpoint is needed and two columns survive on a tablet
+     that can genuinely hold them. */
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+}
+.pass-card {
+  background: var(--canvas); color: var(--ink);
+  border: 1px solid var(--hairline); border-radius: var(--r-lg);
+  padding: var(--s-lg); display: flex; flex-direction: column; gap: var(--s-sm);
+}
+.pass-card.is-next { border: 2px solid var(--primary); }
+.pass-head { display: flex; align-items: baseline; gap: var(--s-sm);
+  flex-wrap: wrap; }
+.pass-name { font-size: 17px; font-weight: 600; letter-spacing: -0.374px;
+  min-width: 0; overflow-wrap: anywhere; }
+.pass-when { font-size: 14px; letter-spacing: -0.224px; color: var(--ink-muted-80);
+  margin-inline-start: auto; font-variant-numeric: tabular-nums; }
+.badge {
+  font-size: 12px; letter-spacing: -0.12px; line-height: 1;
+  padding: 5px 10px; border-radius: var(--r-pill);
+  background: var(--primary); color: #fff; align-self: flex-start;
+}
+.badge-quiet { background: var(--pearl); color: var(--ink-muted-80); }
+
+.spec-row { display: grid; gap: var(--s-sm);
+  /* Six specs reflow from 3 columns to 2 when a translated label needs the
+     room, rather than being clipped at a fixed column count. */
+  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+  font-size: 14px; letter-spacing: -0.224px; }
+.spec-row .k { color: var(--ink-muted-48); display: block; font-size: 12px; }
+.spec-row .v { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* The sky chart is this app's product image, so it carries the one shadow. */
+.skychart { width: 100%; height: auto; border-radius: var(--r-sm);
+  filter: drop-shadow(var(--product-shadow)); }
+
+.night-head { font-family: var(--font-display);
+  font-size: 21px; font-weight: 600; letter-spacing: .231px;
+  margin: var(--s-xl) 0 var(--s-md); }
+
+/* ----------------------------------------------------------- next-up --- */
+.nextup {
+  display: flex; align-items: center; gap: var(--s-lg); flex-wrap: wrap;
+  padding: var(--s-lg); border-radius: var(--r-lg);
+  background: var(--pearl); border: 1px solid var(--hairline);
+  margin-top: var(--s-lg);
+}
+.nextup .count {
+  font-family: var(--font-display); font-size: 40px; font-weight: 600;
+  line-height: 1.1; font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------- sticky bar --- */
+.sticky-bar {
+  position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 35;
+  min-height: 64px; padding: var(--s-sm) var(--s-xl);
+  padding-bottom: calc(var(--s-sm) + env(safe-area-inset-bottom));
+  display: flex; align-items: center; gap: var(--s-md);
+  background: color-mix(in srgb, var(--parchment) 80%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid var(--divider-soft);
+  transform: translateY(110%); transition: transform .28s ease;
+}
+.sticky-bar[data-show="1"] { transform: translateY(0); }
+.sticky-bar .what { min-width: 0; }
+.sticky-bar .what .t { font-size: 17px; font-weight: 600;
+  letter-spacing: -0.374px; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; }
+.sticky-bar .what .s { font-size: 14px; letter-spacing: -0.224px;
+  color: var(--ink-muted-48); font-variant-numeric: tabular-nums; }
+.sticky-bar .spacer { margin-inline-start: auto; }
+@media (prefers-reduced-motion: reduce) { .sticky-bar { transition: none; } }
+
+/* ------------------------------------------------------------ funnel --- */
+.funnel { display: grid; gap: var(--s-lg);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.funnel .n { font-family: var(--font-display);
+  font-size: 40px; font-weight: 600; line-height: 1.1;
+  font-variant-numeric: tabular-nums; }
+.funnel .l { font-size: 14px; letter-spacing: -0.224px; color: var(--ink-muted-80); }
+.bar { height: 6px; border-radius: var(--r-pill);
+  background: var(--divider-soft); overflow: hidden; margin-top: var(--s-xs); }
+.bar > i { display: block; height: 100%; background: var(--primary);
+  transition: width .5s ease; }
+
+/* ------------------------------------------------------------ status --- */
+.status { display: flex; align-items: center; gap: var(--s-sm);
+  font-size: 14px; letter-spacing: -0.224px; color: var(--ink-muted-48);
+  min-height: 22px; }
+.spinner { width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--hairline); border-top-color: var(--primary);
+  animation: spin .8s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+  .skeleton { animation: none !important; }
+  .btn, .chip, .icon-btn { transition: none; }
+}
+
+/* Skeletons keep the layout from jumping while a plan computes. */
+.skeleton { border-radius: var(--r-lg); background: var(--pearl);
+  border: 1px solid var(--hairline); height: 320px;
+  animation: pulse 1.6s ease-in-out infinite; }
+
+.empty { padding: var(--s-xxl) 0; text-align: center; color: var(--ink-muted-48); }
+
+.toolbar { display: flex; align-items: center; gap: var(--s-sm);
+  flex-wrap: wrap; margin-top: var(--s-md); }
+
+/* ------------------------------------------------------------ footer --- */
+.footer { background: var(--parchment); color: var(--ink-muted-80);
+  padding: 64px var(--s-lg) calc(64px + 72px); }
+.footer a { color: var(--ink-muted-80); text-decoration: none; }
+.footer .cols { display: grid; gap: var(--s-lg);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.footer .dense a { display: block; font-size: 17px; line-height: 2.41; }
+.footer .legal { margin-top: var(--s-xl); color: var(--ink-muted-48);
+  font-size: 12px; line-height: 1.3; }
+
+/* -------------------------------------------------------- responsive --- */
+@media (max-width: 833px) {
+  .tile { padding-block: var(--s-xxl); }
+  .global-nav nav { display: none; }
+  .sticky-bar { padding-inline: var(--s-md); }
+}
+@media (max-width: 640px) {
+  .lead { font-size: 21px; }
+  .display-lg { font-size: 32px; }
+  .sub-nav .category { font-size: 17px; }
+  .funnel .n, .nextup .count { font-size: 32px; }
+}
+@media (max-width: 419px) {
+  .tile { padding-block: var(--s-xl); }
+  .sticky-bar .what .s { display: none; }
+}
+
+/* ------------------------------------------------- layout utilities --- */
+/* One spacing ladder, used instead of ad-hoc inline margins. Intra-group
+   spacing is 12px and inter-group is 32px, so groups separate at well over
+   the 2x ratio that makes grouping read as intentional rather than noisy. */
+.stack-xs  > * + * { margin-block-start: var(--s-xs); }
+.stack-sm  > * + * { margin-block-start: var(--s-sm); }
+.stack-md  > * + * { margin-block-start: var(--s-md); }
+.stack-lg  > * + * { margin-block-start: var(--s-lg); }
+.stack-xl  > * + * { margin-block-start: var(--s-xl); }
+
+.lede { margin-block-start: var(--s-xs); }
+.group { margin-block-start: var(--s-xl); }
+.group-lg { margin-block-start: var(--s-xxl); }
+
+/* Actions sit on one shared edge with 12px between adjacent filled controls. */
+.actions { display: flex; flex-wrap: wrap; gap: var(--s-sm);
+  align-items: center; margin-block-start: var(--s-xl); }
+
+/* A checkbox and its label are one control: keep them tight to each other and
+   far from their neighbours, so the pairing is unambiguous. */
+.switch { display: inline-flex; align-items: center; gap: var(--s-xs);
+  font-size: 14px; letter-spacing: -0.224px; min-height: 44px; }
+.switch input { inline-size: 20px; block-size: 20px; accent-color: var(--primary); }
+
+.toolbar-label { margin-inline-end: var(--s-xxs); }
+.min0 { min-width: 0; }
+
+/* ================================================================ motion ==
+   Scroll behaviour built on IntersectionObserver and position:sticky rather
+   than a motion library: this app ships with zero dependencies and must work
+   offline as an installed PWA. Every effect below is opt-out under
+   prefers-reduced-motion, because a satellite pass has a hard start time and
+   nobody should fight an animation to read it. */
+
+.reveal {
+  opacity: 0; transform: translateY(24px) scale(.98);
+  transition: opacity .7s cubic-bezier(.22,.61,.36,1),
+              transform .7s cubic-bezier(.22,.61,.36,1);
+  will-change: opacity, transform;
+}
+.reveal.is-in { opacity: 1; transform: none; }
+/* Image Scale & Fade: cards dim as they leave, so the live one holds focus. */
+.reveal.is-out { opacity: .25; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .reveal.is-out { opacity: 1; }
+}
+
+/* -- Hover physics: the chart lifts inside a clipped frame ---------------- */
+.chart-frame { overflow: hidden; border-radius: var(--r-sm); }
+.pass-card .skychart {
+  transition: transform .7s cubic-bezier(.22,.61,.36,1);
+}
+@media (hover: hover) {
+  .pass-card:hover .skychart { transform: scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pass-card .skychart, .pass-card:hover .skychart {
+    transition: none; transform: none; }
+}
+
+/* -- Pinned split scroll: the heading holds while the stats move past ----- */
+.split { display: grid; gap: var(--s-xxl);
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); }
+.split-pin { align-self: start; }
+@media (min-width: 834px) {
+  .split { grid-template-columns: 5fr 7fr; }
+  .split-pin { position: sticky; top: 140px; }
+}
+
+/* -- Gapless bento: proven zero-void at 4x3, collapsing to 2 then 1 ------- */
+.bento {
+  display: grid; gap: 1px;
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.bento .cell {
+  background: var(--canvas); color: var(--ink);
+  padding: var(--s-lg); min-height: 128px;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 2px;
+}
+.bento .cell-lead { grid-column: span 2; grid-row: span 2;
+  background: var(--parchment); }
+.bento .cell-wide { grid-column: 1 / -1; background: var(--parchment); }
+.bento .cell .n { font-family: var(--font-display);
+  font-size: 32px; font-weight: 600; line-height: 1.1;
+  font-variant-numeric: tabular-nums; }
+.bento .cell-lead .n { font-size: clamp(2.5rem, 6vw, 4rem); color: var(--primary); }
+.bento .cell-wide .n { color: var(--primary); }
+.bento .cell .l { font-size: 14px; letter-spacing: -0.224px;
+  color: var(--ink-muted-80); }
+.bento .cell .pct { font-size: 12px; color: var(--ink-muted-48); }
+
+@media (max-width: 833px) {
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bento .cell-lead { grid-column: span 2; grid-row: span 1; }
+}
+@media (max-width: 419px) {
+  .bento { grid-template-columns: minmax(0, 1fr); }
+  .bento .cell-lead { grid-column: span 1; }
+}
+
+/* -- Section rhythm: chapters, not a continuous scroll -------------------- */
+.tile { padding-block: clamp(var(--s-xxl), 10vw, 128px); }
+
+/* Utilities replacing the last inline styles in rendered markup. */
+.night-count { font-weight: 400; }
+.tight { margin: 0; }
+.empty-tight { padding-block: var(--s-xl); }

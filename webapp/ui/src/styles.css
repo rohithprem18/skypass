@@ -1,0 +1,353 @@
+/* SkyPass -- scientific planning console.
+ *
+ * The interface is built from alternating black and white *bands*. Each band
+ * redefines a small set of surface tokens; every component below is written
+ * against those tokens alone, never against a literal colour. That is what
+ * lets the same panel, table or chart sit on either ground and stay correct,
+ * and it is what makes the black/white rhythm a structural property of the
+ * page rather than a per-element decision.
+ *
+ * One accent, #76B900, and it always means something: chosen, optimal,
+ * recommended, live. Never decoration.
+ */
+
+/* ------------------------------------------------------------- tokens -- */
+:root {
+  color-scheme: light;
+
+  --accent: #76B900;
+  --accent-hover: #5A8D00;
+  --accent-dim: rgba(118, 185, 0, 0.14);
+
+  --black: #000000;
+  --surface-dark: #0A0A0A;
+  --elevated-dark: #1A1A1A;
+  --white: #FFFFFF;
+  --soft-white: #F7F7F7;
+  --border-light: #CCCCCC;
+  --border-dark: #333333;
+  --muted-light: #757575;
+  --muted-dark: rgba(255, 255, 255, 0.70);
+
+  --warning: #DF6500;
+  --error: #E52020;
+
+  /* Band-scoped surfaces. Overridden by .band-dark; every component reads
+     these and nothing else. */
+  --bg: var(--white);
+  --fg: var(--black);
+  --muted: var(--muted-light);
+  --line: var(--border-light);
+  --panel: var(--soft-white);
+  --panel-line: var(--border-light);
+  --hover: var(--soft-white);
+
+  --r: 2px;
+  --nav-h: 64px;
+
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px;
+
+  --font: Inter, "Inter var", system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  --t-fast: 120ms;
+  --t-base: 160ms;
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.band-dark {
+  /* Paints as well as flips: used alone this must still put a dark surface
+     under the light-on-dark tokens it defines, or its text disappears. */
+  background: var(--black);
+  color: var(--white);
+  --bg: var(--black);
+  --fg: var(--white);
+  --muted: var(--muted-dark);
+  --line: var(--border-dark);
+  --panel: var(--surface-dark);
+  --panel-line: var(--border-dark);
+  --hover: var(--elevated-dark);
+}
+
+/* -------------------------------------------------------------- reset -- */
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, p, figure, dl, dd, ol, ul { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+
+::selection { background: var(--accent); color: var(--black); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute; inline-size: 1px; block-size: 1px; padding: 0;
+  margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ---------------------------------------------------------- typography -- */
+.t-hero { font-size: clamp(34px, 5vw, 48px); font-weight: 700;
+  line-height: 1.04; letter-spacing: -0.022em; text-wrap: balance; }
+.t-page { font-size: clamp(26px, 3.4vw, 36px); font-weight: 700;
+  line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.t-section { font-size: 24px; font-weight: 700; line-height: 1.15;
+  letter-spacing: -0.015em; }
+.t-panel { font-size: 19px; font-weight: 700; line-height: 1.2;
+  letter-spacing: -0.01em; }
+.t-body { font-size: 16px; font-weight: 400; line-height: 1.55; }
+.t-meta { font-size: 12px; font-weight: 500; color: var(--muted); }
+
+/* Uppercase technical labels. Used sparingly, per the design language. */
+.t-label {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--muted);
+}
+.t-label-lg { font-size: 14px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; }
+
+/* Every measured quantity lines up in a column. */
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+.accent { color: var(--accent); }
+.muted { color: var(--muted); }
+
+/* The signature mark. Meaning-bearing: chosen, optimal, live, ready. */
+.sq {
+  display: inline-block; inline-size: 10px; block-size: 10px;
+  background: var(--accent); flex: none; vertical-align: baseline;
+}
+.sq-sm { inline-size: 8px; block-size: 8px; }
+.sq-muted { background: var(--muted); }
+.sq-err { background: var(--error); }
+
+/* ------------------------------------------------------------- layout -- */
+.app { display: flex; flex-direction: column; min-height: 100%; }
+
+.band { background: var(--bg); color: var(--fg); }
+.wrap { max-width: 1440px; margin-inline: auto;
+  padding-inline: clamp(var(--s-4), 3.5vw, var(--s-8)); }
+.pad-lg { padding-block: clamp(var(--s-7), 7vw, var(--s-9)); }
+.pad-md { padding-block: clamp(var(--s-6), 5vw, var(--s-7)); }
+.pad-sm { padding-block: var(--s-5); }
+
+.rule { border: 0; border-block-start: 1px solid var(--line); margin: 0; }
+
+/* ---------------------------------------------------------------- nav -- */
+.nav {
+  position: sticky; inset-block-start: 0; z-index: 40;
+  background: var(--black); color: var(--white);
+  border-block-end: 1px solid var(--border-dark);
+}
+.nav-in {
+  block-size: var(--nav-h); display: flex; align-items: center;
+  gap: var(--s-4); min-inline-size: 0;
+}
+.nav-brand { display: flex; align-items: center; flex: none;
+  block-size: var(--nav-h); padding-inline-end: var(--s-5);
+  margin-inline-end: var(--s-1);
+  border-inline-end: 1px solid var(--border-dark); }
+.nav-mark { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
+
+.nav-links { display: flex; align-items: stretch; gap: 0;
+  block-size: var(--nav-h); overflow-x: auto; scrollbar-width: none;
+  flex: none; }
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-link {
+  display: inline-flex; align-items: center; padding-inline: var(--s-3);
+  border: 0; background: none; cursor: pointer; white-space: nowrap;
+  font-size: 14px; font-weight: 500; color: rgba(255, 255, 255, 0.68);
+  border-block-end: 2px solid transparent;
+  transition: color var(--t-fast) var(--ease);
+}
+.nav-link:hover { color: var(--white); }
+.nav-link.is-on { color: var(--white); font-weight: 700;
+  border-block-end-color: var(--accent); }
+
+.nav-meta { margin-inline-start: auto; display: flex; align-items: center;
+  gap: var(--s-4); min-inline-size: 0; }
+.nav-field { display: flex; flex-direction: column; gap: 1px;
+  min-inline-size: 0; }
+.nav-k { font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(255, 255, 255, 0.45); }
+.nav-v { font-size: 13px; font-weight: 500; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; }
+.nav-status { display: flex; align-items: center; gap: var(--s-2);
+  font-size: 12px; color: rgba(255, 255, 255, 0.68); white-space: nowrap; }
+
+.icon-btn {
+  inline-size: 34px; block-size: 34px; border: 1px solid transparent;
+  background: none; cursor: pointer; border-radius: var(--r);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: inherit; flex: none;
+  transition: border-color var(--t-fast) var(--ease),
+              background var(--t-fast) var(--ease);
+}
+.icon-btn:hover { border-color: currentColor; }
+.icon-btn.is-on { border-color: var(--accent); color: var(--accent); }
+
+/* ------------------------------------------------------------ buttons -- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--s-2); border-radius: var(--r); cursor: pointer;
+  padding: 11px 22px; font-size: 15px; font-weight: 700;
+  border: 1px solid transparent; text-decoration: none; white-space: nowrap;
+  transition: background var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+.btn-primary { background: var(--accent); color: var(--black);
+  border-color: var(--accent); }
+.btn-primary:hover { background: var(--accent-hover);
+  border-color: var(--accent-hover); color: var(--white); }
+.btn-outline { background: transparent; color: var(--fg);
+  border-color: currentColor; }
+.btn-outline:hover { background: var(--fg); color: var(--bg); }
+.btn-quiet { background: transparent; color: var(--fg);
+  border-color: var(--line); }
+.btn-quiet:hover { border-color: var(--fg); }
+.btn-sm { padding: 7px 14px; font-size: 13px; }
+.btn[disabled] { opacity: 0.45; cursor: default; pointer-events: none; }
+
+.btn-link {
+  border: 0; background: none; cursor: pointer; padding: 0;
+  font-size: 14px; font-weight: 700; color: var(--fg);
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  transition: color var(--t-fast) var(--ease);
+}
+.btn-link:hover { color: var(--accent); }
+
+.metric { display: flex; flex-direction: column; gap: var(--s-1); }
+.metric-k { font-size: 11px; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--muted); }
+.metric-v { font-size: 24px; font-weight: 700; letter-spacing: -0.015em;
+  font-variant-numeric: tabular-nums; line-height: 1.1; }
+
+/* ------------------------------------------------------------- inputs -- */
+.field { display: flex; flex-direction: column; gap: var(--s-1); min-width: 0; }
+.field-k { font-size: 11px; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--muted); }
+.input, .select {
+  appearance: none; font: inherit; font-size: 14px;
+  background: var(--bg); color: var(--fg);
+  border: 1px solid var(--line); border-radius: var(--r);
+  padding: 8px 12px; block-size: 36px; inline-size: 100%; cursor: pointer;
+  transition: border-color var(--t-fast) var(--ease);
+}
+.input { cursor: text; }
+.select { padding-inline-end: 26px;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+                    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: right 13px center, right 8px center;
+  background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+.input:hover, .select:hover { border-color: var(--fg); }
+.input:focus, .select:focus { outline: 2px solid var(--accent);
+  outline-offset: -1px; border-color: var(--accent); }
+
+.check { display: inline-flex; align-items: center; gap: var(--s-2);
+  cursor: pointer; font-size: 14px; white-space: nowrap; }
+.check input { inline-size: 15px; block-size: 15px; margin: 0;
+  accent-color: var(--accent); cursor: pointer; }
+
+/* Filter chips: a filter is either on or off, so it reads as a switch. */
+.chip {
+  border: 1px solid var(--line); border-radius: var(--r); background: var(--bg);
+  color: var(--fg); padding: 6px 12px; font-size: 13px; font-weight: 500;
+  cursor: pointer; display: inline-flex; align-items: center; gap: var(--s-2);
+  white-space: nowrap;
+  transition: border-color var(--t-fast) var(--ease),
+              background var(--t-fast) var(--ease);
+}
+.chip:hover { border-color: var(--fg); }
+.chip.is-on { border-color: var(--accent); background: var(--accent-dim);
+  font-weight: 700; }
+
+/* -------------------------------------------------------------- table -- */
+.tablewrap { overflow-x: auto; border: 1px solid var(--line);
+  border-radius: var(--r); }
+table.data { inline-size: 100%; border-collapse: collapse; font-size: 13px; }
+table.data th {
+  text-align: start; padding: 9px var(--s-3); white-space: nowrap;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--muted);
+  border-block-end: 1px solid var(--line); background: var(--panel);
+  position: sticky; inset-block-start: 0; z-index: 1;
+}
+table.data th.sortable { cursor: pointer; user-select: none; }
+table.data th.sortable:hover { color: var(--fg); }
+table.data td {
+  padding: 9px var(--s-3); white-space: nowrap;
+  border-block-end: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+table.data td.txt { font-variant-numeric: normal; }
+table.data tbody tr { cursor: pointer;
+  transition: background var(--t-fast) var(--ease); }
+table.data tbody tr:hover { background: var(--hover); }
+table.data tbody tr.is-sel { background: var(--accent-dim); }
+/* A thin green left border marks a scheduled row without a coloured badge. */
+table.data tbody tr td:first-child { border-inline-start: 2px solid transparent; }
+table.data tbody tr.is-scheduled td:first-child {
+  border-inline-start-color: var(--accent); }
+table.data tbody tr.is-conflict td:first-child {
+  border-inline-start-color: var(--border-light); }
+
+.status { display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; }
+
+/* ------------------------------------------------------------- charts -- */
+/* Publication-quality: gray axes, one accent series, no containers. */
+.chart { display: block; inline-size: 100%; block-size: auto; }
+.c-axis { stroke: var(--line); stroke-width: 1; }
+.c-grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4;
+  opacity: 0.7; }
+.c-label { fill: var(--muted); font-size: 10px; font-family: var(--font);
+  font-weight: 500; }
+.c-label-strong { fill: var(--fg); font-size: 11px; font-weight: 700;
+  font-family: var(--font); }
+.c-series { fill: none; stroke: var(--accent); stroke-width: 2;
+  stroke-linejoin: round; stroke-linecap: round; }
+.c-compare { fill: none; stroke: var(--muted); stroke-width: 1.5;
+  stroke-dasharray: 4 3; }
+.c-dot { fill: var(--accent); }
+.c-area { fill: var(--accent); opacity: 0.12; }
+
+/* ------------------------------------------------------------ spinner -- */
+.spinner {
+  inline-size: 14px; block-size: 14px; flex: none;
+  border: 2px solid var(--line); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.banner {
+  display: flex; align-items: flex-start; gap: var(--s-3);
+  padding: var(--s-3) 0; font-size: 14px;
+  border-block-end: 1px solid var(--line);
+}
+.banner-error { color: var(--error); }
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+  * { transition-duration: 1ms !important; }
+}
