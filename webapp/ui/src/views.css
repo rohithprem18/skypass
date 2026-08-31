@@ -809,12 +809,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding-inline: var(--s-5);
+  padding-inline: var(--s-6);
   padding-block: var(--s-2);
   user-select: none;
 }
 
-.skypass-orbit-svg {
+.skypass-orbit-ring {
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
@@ -831,6 +831,106 @@
 @keyframes orbitRingDash {
   from { stroke-dashoffset: 0; }
   to { stroke-dashoffset: -120; }
+}
+
+.sat-orbit-mover {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  margin-block-start: -16px;
+  margin-inline-start: -16px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.sat-orbit-mover.is-animated {
+  animation: sat3dRevolve 7s linear infinite;
+}
+
+@keyframes sat3dRevolve {
+  /* 0% (Front Center, bottom): moving right, beam points straight UP (-90deg) to SkyPass */
+  0% {
+    transform: translate(0px, 13px) rotate(-90deg) scale(1.15);
+    z-index: 10;
+    opacity: 1;
+    filter: drop-shadow(0 4px 12px rgba(118, 185, 0, 0.8));
+  }
+  /* 8.3% (Front Right-Center) */
+  8.3% {
+    transform: translate(37px, 8px) rotate(-130deg) scale(1.08);
+    z-index: 10;
+    opacity: 0.95;
+  }
+  /* 16.6% (Front Right) */
+  16.6% {
+    transform: translate(64px, 2px) rotate(-160deg) scale(1.0);
+    z-index: 10;
+    opacity: 0.9;
+  }
+  /* 25% (Far Right Tip): turning smoothly around right curve, beam points LEFT (174deg) to SkyPass */
+  25% {
+    transform: translate(72px, -7.5px) rotate(174deg) scale(0.92);
+    z-index: 10;
+    opacity: 0.85;
+    filter: drop-shadow(0 2px 6px rgba(118, 185, 0, 0.5));
+  }
+  /* 33.3% (Back Right) */
+  33.3% {
+    transform: translate(61px, -11px) rotate(165deg) scale(0.84);
+    z-index: 0;
+    opacity: 0.75;
+  }
+  /* 41.6% (Back Right-Center) */
+  41.6% {
+    transform: translate(35px, -15px) rotate(135deg) scale(0.78);
+    z-index: 0;
+    opacity: 0.65;
+  }
+  /* 50% (Back Center, top): moving left behind text, beam points straight DOWN (+90deg) to SkyPass */
+  50% {
+    transform: translate(0px, -13px) rotate(90deg) scale(0.75);
+    z-index: 0;
+    opacity: 0.55;
+    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.2));
+  }
+  /* 58.3% (Back Left-Center) */
+  58.3% {
+    transform: translate(-35px, -8px) rotate(45deg) scale(0.78);
+    z-index: 0;
+    opacity: 0.65;
+  }
+  /* 66.6% (Back Left) */
+  66.6% {
+    transform: translate(-61px, -2px) rotate(15deg) scale(0.84);
+    z-index: 0;
+    opacity: 0.75;
+  }
+  /* 75% (Far Left Tip): turning smoothly around left curve, beam points RIGHT (-6deg) to SkyPass */
+  75% {
+    transform: translate(-72px, 7.5px) rotate(-6deg) scale(0.92);
+    z-index: 10;
+    opacity: 0.85;
+    filter: drop-shadow(0 2px 6px rgba(118, 185, 0, 0.5));
+  }
+  /* 83.3% (Front Left) */
+  83.3% {
+    transform: translate(-61px, 11px) rotate(-30deg) scale(1.0);
+    z-index: 10;
+    opacity: 0.9;
+  }
+  /* 91.6% (Front Left-Center) */
+  91.6% {
+    transform: translate(-35px, 15px) rotate(-60deg) scale(1.08);
+    z-index: 10;
+    opacity: 0.95;
+  }
+  /* 100% (Front Center) */
+  100% {
+    transform: translate(0px, 13px) rotate(-90deg) scale(1.15);
+    z-index: 10;
+    opacity: 1;
+    filter: drop-shadow(0 4px 12px rgba(118, 185, 0, 0.8));
+  }
 }
 
 .sat-beam-line {
@@ -877,12 +977,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sat-orbit-mover.is-animated,
   .orbit-ellipse-line,
   .sat-beam-line,
   .sat-emitter {
     animation: none;
   }
 }
+
 
 
 
