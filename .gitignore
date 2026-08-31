@@ -37,3 +37,8 @@ figures/*.png
 # `npm run build`; the Python server falls back to webapp/static/ without it.
 webapp/ui/node_modules/
 webapp/ui/dist/
+
+# Document & presentation review files
+*.docx
+*.pptx
+

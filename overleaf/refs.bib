@@ -1,0 +1,505 @@
+% ---------------------------------------------------------------------------
+% Orbit propagation and the SGP4 model
+% ---------------------------------------------------------------------------
+@techreport{hoots1980spacetrack,
+  author      = {Hoots, Felix R. and Roehrich, Ronald L.},
+  title       = {Models for Propagation of {NORAD} Element Sets},
+  institution = {Aerospace Defense Command, United States Air Force},
+  number      = {Spacetrack Report No. 3},
+  year        = {1980}
+}
+
+@inproceedings{vallado2006revisiting,
+  author    = {Vallado, David A. and Crawford, Paul and Hujsak, Richard
+               and Kelso, T. S.},
+  title     = {Revisiting Spacetrack Report \#3},
+  booktitle = {AIAA/AAS Astrodynamics Specialist Conference and Exhibit},
+  year      = {2006},
+  pages     = {AIAA 2006--6753},
+  doi       = {10.2514/6.2006-6753}
+}
+
+@book{vallado2013fundamentals,
+  author    = {Vallado, David A.},
+  title     = {Fundamentals of Astrodynamics and Applications},
+  edition   = {4th},
+  publisher = {Microcosm Press},
+  address   = {Hawthorne, CA},
+  year      = {2013}
+}
+
+@article{kelso2007validation,
+  author  = {Kelso, T. S.},
+  title   = {Validation of {SGP4} and {IS-GPS-200D} Against {GPS} Precision
+             Ephemerides},
+  journal = {Advances in the Astronautical Sciences},
+  volume  = {127},
+  pages   = {427--440},
+  year    = {2007}
+}
+
+@article{wang2009accuracy,
+  author  = {Wang, Ronglan and Liu, Jianye and Zhang, Qingming},
+  title   = {Propagation Errors Analysis of {TLE} Data},
+  journal = {Advances in Space Research},
+  volume  = {43},
+  number  = {7},
+  pages   = {1065--1069},
+  year    = {2009},
+  doi     = {10.1016/j.asr.2008.11.017}
+}
+
+@misc{celestrak,
+  author       = {Kelso, T. S.},
+  title        = {{CelesTrak}: Current {NORAD} Two-Line Element Sets},
+  howpublished = {\url{https://celestrak.org/}},
+  year         = {2026},
+  note         = {Accessed 2026-08-29}
+}
+
+@misc{rhodes2020skyfield,
+  author       = {Rhodes, Brandon},
+  title        = {Skyfield: High Precision Research-Grade Positions for
+                  Planets and {E}arth Satellites},
+  howpublished = {Astrophysics Source Code Library, ascl:1907.024},
+  year         = {2019}
+}
+
+@article{seidelmann1982iau,
+  author  = {Aoki, S. and Guinot, B. and Kaplan, G. H. and Kinoshita, H.
+             and McCarthy, D. D. and Seidelmann, P. K.},
+  title   = {The New Definition of Universal Time},
+  journal = {Astronomy and Astrophysics},
+  volume  = {105},
+  pages   = {359--361},
+  year    = {1982}
+}
+
+@article{bennett1982refraction,
+  author  = {Bennett, G. G.},
+  title   = {The Calculation of Astronomical Refraction in Marine Navigation},
+  journal = {Journal of Navigation},
+  volume  = {35},
+  number  = {2},
+  pages   = {255--259},
+  year    = {1982},
+  doi     = {10.1017/S0373463300022037}
+}
+
+% ---------------------------------------------------------------------------
+% Satellite photometry and optical visibility
+% ---------------------------------------------------------------------------
+@inproceedings{hejduk2011phase,
+  author    = {Hejduk, M. D.},
+  title     = {Specular and Diffuse Components in Spherical Satellite
+               Photometric Modeling},
+  booktitle = {Advanced Maui Optical and Space Surveillance Technologies
+               (AMOS) Conference},
+  year      = {2011}
+}
+
+@article{mclean2019brightness,
+  author  = {Cole, Richard E.},
+  title   = {A Sky Brightness Model for the {S}tarlink `{V}isorsat'
+             Spacecraft},
+  journal = {Research Notes of the AAS},
+  volume  = {5},
+  number  = {2},
+  pages   = {42},
+  year    = {2021},
+  doi     = {10.3847/2515-5172/abe9b5}
+}
+
+@article{lawler2022visibility,
+  author  = {Lawler, Samantha M. and Boley, Aaron C. and Rein, Hanno},
+  title   = {Visibility Predictions for Near-Future Satellite Megaconstellations:
+             Latitudes near 50 Degrees will Experience the Worst Light
+             Pollution},
+  journal = {The Astronomical Journal},
+  volume  = {163},
+  number  = {1},
+  pages   = {21},
+  year    = {2022},
+  doi     = {10.3847/1538-3881/ac341b}
+}
+
+@article{mallama2021starlink,
+  author  = {Mallama, Anthony},
+  title   = {The Brightness of {VisorSat}-Design {S}tarlink Satellites},
+  journal = {arXiv preprint arXiv:2101.00374},
+  year    = {2021}
+}
+
+% ---------------------------------------------------------------------------
+% Scheduling: algorithms
+% ---------------------------------------------------------------------------
+@book{kleinberg2006algorithm,
+  author    = {Kleinberg, Jon and Tardos, {\'E}va},
+  title     = {Algorithm Design},
+  publisher = {Pearson/Addison-Wesley},
+  address   = {Boston},
+  year      = {2006}
+}
+
+@book{cormen2009introduction,
+  author    = {Cormen, Thomas H. and Leiserson, Charles E. and
+               Rivest, Ronald L. and Stein, Clifford},
+  title     = {Introduction to Algorithms},
+  edition   = {3rd},
+  publisher = {MIT Press},
+  year      = {2009}
+}
+
+@article{bar2001unified,
+  author  = {Bar-Noy, Amotz and Bar-Yehuda, Reuven and Freund, Ari and
+             Naor, Joseph and Schieber, Baruch},
+  title   = {A Unified Approach to Approximating Resource Allocation and
+             Scheduling},
+  journal = {Journal of the ACM},
+  volume  = {48},
+  number  = {5},
+  pages   = {1069--1090},
+  year    = {2001},
+  doi     = {10.1145/502102.502107}
+}
+
+@article{kolen2007interval,
+  author  = {Kolen, Antoon W. J. and Lenstra, Jan Karel and Papadimitriou,
+             Christos H. and Spieksma, Frits C. R.},
+  title   = {Interval Scheduling: A Survey},
+  journal = {Naval Research Logistics},
+  volume  = {54},
+  number  = {5},
+  pages   = {530--543},
+  year    = {2007},
+  doi     = {10.1002/nav.20231}
+}
+
+% ---------------------------------------------------------------------------
+% Scheduling: satellite ground stations and spacecraft tasking
+% ---------------------------------------------------------------------------
+@article{barbulescu2004satellite,
+  author  = {Barbulescu, Laura and Watson, Jean-Paul and Whitley, L. Darrell
+             and Howe, Adele E.},
+  title   = {Scheduling Space-Ground Communications for the Air Force
+             Satellite Control Network},
+  journal = {Journal of Scheduling},
+  volume  = {7},
+  number  = {1},
+  pages   = {7--34},
+  year    = {2004},
+  doi     = {10.1023/B:JOSH.0000013053.32600.3c}
+}
+
+@article{marinelli2011lagrangian,
+  author  = {Marinelli, Fabrizio and Nocella, Salvatore and Rossi, Fabrizio
+             and Smriglio, Stefano},
+  title   = {A {L}agrangian Heuristic for Satellite Range Scheduling with
+             Resource Constraints},
+  journal = {Computers \& Operations Research},
+  volume  = {38},
+  number  = {11},
+  pages   = {1572--1583},
+  year    = {2011},
+  doi     = {10.1016/j.cor.2011.01.016}
+}
+
+@article{vazquez2015ground,
+  author  = {V{\'a}zquez, A. J. and Erwin, R. Scott},
+  title   = {On the Tractability of Satellite Range Scheduling},
+  journal = {Optimization Letters},
+  volume  = {9},
+  number  = {2},
+  pages   = {311--327},
+  year    = {2015},
+  doi     = {10.1007/s11590-014-0744-8}
+}
+
+@article{spangelo2015optimization,
+  author  = {Spangelo, Sara and Cutler, James and Gilson, Kyle and Cohn, Amy},
+  title   = {Optimization-Based Scheduling for the Single-Satellite,
+             Multi-Ground Station Communication Problem},
+  journal = {Computers \& Operations Research},
+  volume  = {57},
+  pages   = {1--16},
+  year    = {2015},
+  doi     = {10.1016/j.cor.2014.11.004}
+}
+
+@article{wang2011priority,
+  author  = {Wang, Jianjiang and Zhu, Xiaomin and Yang, Laurence T. and
+             Zhu, Jianghan and Ma, Manhao},
+  title   = {Towards Dynamic Real-Time Scheduling for Multiple Earth
+             Observation Satellites},
+  journal = {Journal of Computer and System Sciences},
+  volume  = {81},
+  number  = {1},
+  pages   = {110--124},
+  year    = {2015},
+  doi     = {10.1016/j.jcss.2014.06.016}
+}
+
+@article{lemaitre2002selecting,
+  author  = {Lema{\^i}tre, Michel and Verfaillie, G{\'e}rard and Jouhaud,
+             Frank and Lachiver, Jean-Michel and Bataille, Nicolas},
+  title   = {Selecting and Scheduling Observations of Agile Satellites},
+  journal = {Aerospace Science and Technology},
+  volume  = {6},
+  number  = {5},
+  pages   = {367--381},
+  year    = {2002},
+  doi     = {10.1016/S1270-9638(02)01173-2}
+}
+
+@article{wang2020review,
+  author  = {Wang, Xinwei and Wu, Guohua and Xing, Lining and Pedrycz, Witold},
+  title   = {Agile Earth Observation Satellite Scheduling over 20 Years:
+             Formulations, Methods, and Future Directions},
+  journal = {IEEE Systems Journal},
+  volume  = {15},
+  number  = {3},
+  pages   = {3881--3892},
+  year    = {2021},
+  doi     = {10.1109/JSYST.2020.2997050}
+}
+
+@article{chen2019mixed,
+  author  = {Chen, Xiaoyu and Reinelt, Gerhard and Dai, Guangming and
+             Spitz, Andreas},
+  title   = {A Mixed Integer Linear Programming Model for Multi-Satellite
+             Scheduling},
+  journal = {European Journal of Operational Research},
+  volume  = {275},
+  number  = {2},
+  pages   = {694--707},
+  year    = {2019},
+  doi     = {10.1016/j.ejor.2018.11.058}
+}
+
+@article{song2019learning,
+  author  = {Song, Yanjie and Ou, Junwei and Wu, Jian and Wu, Yutong and
+             Xing, Lining and Chen, Yingwu},
+  title   = {A Cluster-Based Genetic Optimization Method for Satellite Range
+             Scheduling System},
+  journal = {Swarm and Evolutionary Computation},
+  volume  = {79},
+  pages   = {101316},
+  year    = {2023},
+  doi     = {10.1016/j.swevo.2023.101316}
+}
+
+@article{wang2019cloud,
+  author  = {Wang, Jianjiang and Demeulemeester, Erik and Qiu, Dishan},
+  title   = {A Pure Proactive Scheduling Algorithm for Multiple Earth
+             Observation Satellites under Uncertainties of Clouds},
+  journal = {Computers \& Operations Research},
+  volume  = {74},
+  pages   = {1--13},
+  year    = {2016},
+  doi     = {10.1016/j.cor.2016.04.014}
+}
+
+@article{liao2007imaging,
+  author  = {Liao, Dah-Yuh and Yang, Yang-Terng},
+  title   = {Imaging Order Scheduling of an {E}arth Observation Satellite},
+  journal = {IEEE Transactions on Systems, Man, and Cybernetics, Part C},
+  volume  = {37},
+  number  = {5},
+  pages   = {794--802},
+  year    = {2007},
+  doi     = {10.1109/TSMCC.2007.900646}
+}
+
+@article{valicka2019mixed,
+  author  = {Valicka, Christopher G. and Garcia, Deanna and Staid, Andrea and
+             Watson, Jean-Paul and Hackebeil, Gabriel and Rathinam, Sivakumar
+             and Ntaimo, Lewis},
+  title   = {Mixed-Integer Programming Models for Optimal Constellation
+             Scheduling Given Cloud Cover Uncertainty},
+  journal = {European Journal of Operational Research},
+  volume  = {275},
+  number  = {2},
+  pages   = {431--445},
+  year    = {2019},
+  doi     = {10.1016/j.ejor.2018.11.043}
+}
+
+% ---------------------------------------------------------------------------
+% Meteorology: forecasts, reanalysis, verification
+% ---------------------------------------------------------------------------
+@article{hersbach2020era5,
+  author  = {Hersbach, Hans and Bell, Bill and Berrisford, Paul and others},
+  title   = {The {ERA5} Global Reanalysis},
+  journal = {Quarterly Journal of the Royal Meteorological Society},
+  volume  = {146},
+  number  = {730},
+  pages   = {1999--2049},
+  year    = {2020},
+  doi     = {10.1002/qj.3803}
+}
+
+@misc{openmeteo,
+  author       = {Zippenfenig, Patrick},
+  title        = {Open-Meteo.com Weather {API}},
+  year         = {2023},
+  doi          = {10.5281/zenodo.7970649},
+  howpublished = {\url{https://open-meteo.com/}}
+}
+
+@book{wilks2011statistical,
+  author    = {Wilks, Daniel S.},
+  title     = {Statistical Methods in the Atmospheric Sciences},
+  edition   = {3rd},
+  publisher = {Academic Press},
+  year      = {2011}
+}
+
+@article{heidke1926skill,
+  author  = {Heidke, Paul},
+  title   = {Berechnung des {E}rfolges und der {G}{\"u}te der
+             {W}indst{\"a}rkevorhersagen im {S}turmwarnungsdienst},
+  journal = {Geografiska Annaler},
+  volume  = {8},
+  number  = {4},
+  pages   = {301--349},
+  year    = {1926},
+  doi     = {10.1080/20014422.1926.11881138}
+}
+
+@article{gneiting2007probabilistic,
+  author  = {Gneiting, Tilmann and Balabdaoui, Fadoua and Raftery, Adrian E.},
+  title   = {Probabilistic Forecasts, Calibration and Sharpness},
+  journal = {Journal of the Royal Statistical Society: Series B},
+  volume  = {69},
+  number  = {2},
+  pages   = {243--268},
+  year    = {2007},
+  doi     = {10.1111/j.1467-9868.2007.00587.x}
+}
+
+@article{gneiting2005weather,
+  author  = {Gneiting, Tilmann and Raftery, Adrian E.},
+  title   = {Weather Forecasting with Ensemble Methods},
+  journal = {Science},
+  volume  = {310},
+  number  = {5746},
+  pages   = {248--249},
+  year    = {2005},
+  doi     = {10.1126/science.1115255}
+}
+
+@article{bauer2015quiet,
+  author  = {Bauer, Peter and Thorpe, Alan and Brunet, Gilbert},
+  title   = {The Quiet Revolution of Numerical Weather Prediction},
+  journal = {Nature},
+  volume  = {525},
+  number  = {7567},
+  pages   = {47--55},
+  year    = {2015},
+  doi     = {10.1038/nature14956}
+}
+
+@article{zhu2002economic,
+  author  = {Zhu, Yuejian and Toth, Zoltan and Wobus, Richard and
+             Richardson, David and Mylne, Kenneth},
+  title   = {The Economic Value of Ensemble-Based Weather Forecasts},
+  journal = {Bulletin of the American Meteorological Society},
+  volume  = {83},
+  number  = {1},
+  pages   = {73--83},
+  year    = {2002},
+  doi     = {10.1175/1520-0477(2002)083<0073:TEVOEB>2.3.CO;2}
+}
+
+@article{richardson2000skill,
+  author  = {Richardson, David S.},
+  title   = {Skill and Relative Economic Value of the {ECMWF} Ensemble
+             Prediction System},
+  journal = {Quarterly Journal of the Royal Meteorological Society},
+  volume  = {126},
+  number  = {563},
+  pages   = {649--667},
+  year    = {2000},
+  doi     = {10.1002/qj.49712656313}
+}
+
+% ---------------------------------------------------------------------------
+% Observatory / telescope scheduling with weather
+% ---------------------------------------------------------------------------
+@article{denny2004automatic,
+  author  = {Denny, Robert B.},
+  title   = {Automatic Scheduling of Telescopic Observations},
+  journal = {Society for Astronomical Sciences Annual Symposium},
+  volume  = {23},
+  pages   = {35},
+  year    = {2004}
+}
+
+@inproceedings{lampoudi2015scheduling,
+  author    = {Lampoudi, Sotiria and Saunders, Eric and Eastman, Jason},
+  title     = {An Optimal Scheduler for {L}as {C}umbres {O}bservatory
+               {G}lobal {T}elescope Network},
+  booktitle = {Proceedings of the International Conference on Operations
+               Research and Enterprise Systems (ICORES)},
+  pages     = {129--140},
+  year      = {2015},
+  doi       = {10.5220/0005222001290140}
+}
+
+@article{solar2016autonomous,
+  author  = {Solar, Mauricio and Michelon, Paulo and Avarias, Jorge and
+             Garc{\'e}s, Mat{\'\i}as},
+  title   = {Optimization of the Observation Scheduling in {ALMA}},
+  journal = {Astronomy and Computing},
+  volume  = {16},
+  pages   = {1--10},
+  year    = {2016},
+  doi     = {10.1016/j.ascom.2016.03.003}
+}
+
+@article{colome2012research,
+  author  = {Colom{\'e}, Josep and Colomer, Pau and Campreci{\'o}s, Jordi and
+             Coiffard, Thierry and de Le{\'o}n, Jorge and Mart{\'\i}nez, Carlos},
+  title   = {Research on Schedulers for Astronomical Observatories},
+  journal = {Proceedings of SPIE},
+  volume  = {8448},
+  pages   = {84480V},
+  year    = {2012},
+  doi     = {10.1117/12.926370}
+}
+
+% ---------------------------------------------------------------------------
+% Small ground stations, amateur and educational operations
+% ---------------------------------------------------------------------------
+@article{cutler2010systems,
+  author  = {Cutler, James W. and Fox, Armando},
+  title   = {A Framework for Robust and Flexible Ground Station Networks},
+  journal = {Journal of Aerospace Computing, Information, and Communication},
+  volume  = {3},
+  number  = {3},
+  pages   = {73--92},
+  year    = {2006},
+  doi     = {10.2514/1.16019}
+}
+
+@article{leveque2020satnogs,
+  author  = {Papadeas, Pierros and others},
+  title   = {{SatNOGS}: Towards a Modular, Open-Source, Crowd-Sourced Ground
+             Station Network},
+  journal = {Proceedings of the AMSAT-NA Space Symposium},
+  year    = {2016}
+}
+
+@article{barza2010cubesat,
+  author  = {Klofas, Bryan and Anderson, Jason and Leveque, Kyle},
+  title   = {A Survey of {C}ube{S}at Communication Systems},
+  journal = {CubeSat Developers' Workshop},
+  year    = {2008}
+}
+
+@article{mccants,
+  author  = {McCants, Mike},
+  title   = {Satellite Tracking Data and Intrinsic Magnitude Files},
+  journal = {Distributed with the \texttt{quicksat} tracking program},
+  year    = {2020}
+}

@@ -1,0 +1,18 @@
+\begin{table}[t]
+\caption{Scheduling quality on 2\,000 randomised instances small enough to enumerate exhaustively ($n \le 14$, setup gap 5\,min).}
+\label{tab:scheduling}
+\centering
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrr}
+\toprule
+Algorithm & Mean \% of opt. & Optimal in \% \\
+\midrule
+Exact DP (SkyPass) & 100.00 & 100.00 \\
+\midrule
+Greedy, max-elevation & 95.39 & 62.70 \\
+Greedy, highest-value & 99.95 & 98.90 \\
+Greedy, longest-duration & 95.07 & 61.10 \\
+Greedy, earliest-finish & 95.54 & 63.45 \\
+\bottomrule
+\end{tabular}
+\end{table}
