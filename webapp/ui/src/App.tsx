@@ -9,9 +9,8 @@ import { PassDetail } from './components/PassDetail';
 import { DecisionPanel } from './components/DecisionPanel';
 import { Weather } from './components/Weather';
 import { Schedule } from './components/Schedule';
-import { Analysis } from './components/Analysis';
-import { Experiments } from './components/Experiments';
 import { LiveMode } from './components/LiveMode';
+
 import { verdictFor } from './lib/verdict';
 import { fetchPlan, fetchStations, fetchTrack, icsUrl } from './lib/api';
 import { utc } from './lib/time';
@@ -277,10 +276,8 @@ export default function App() {
             <Schedule night={night} siteName={plan.site.name} passes={nightPasses}
               icsHref={icsUrl(settings)} onSelect={pick} onRecalculate={run} />
           )}
-
-          {view === 'analysis' && <Analysis />}
-          {view === 'experiments' && <Experiments />}
         </main>
+
       )}
 
       {selected && (

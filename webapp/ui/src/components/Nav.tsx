@@ -11,9 +11,8 @@ const VIEWS: [View, string][] = [
   ['passes', 'Passes'],
   ['weather', 'Weather'],
   ['schedule', 'Schedule'],
-  ['analysis', 'Analysis'],
-  ['experiments', 'Experiments'],
 ];
+
 
 interface Props {
   view: View;

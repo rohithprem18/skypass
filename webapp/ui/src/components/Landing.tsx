@@ -2,6 +2,8 @@ import type { Settings, Station } from '../types';
 import { useEffect, useRef } from 'react';
 import { usePlanningStatus } from '../lib/loading';
 import { PROPAGATION, SCHEDULER, WEATHER } from '../lib/research';
+import { Analysis } from './Analysis';
+import { Experiments } from './Experiments';
 
 /* The front door.
  *
@@ -30,6 +32,10 @@ export function Landing({ settings: s, stations, busy, error,
   const video = useRef<HTMLVideoElement>(null);
   useEffect(() => { if (video.current) video.current.playbackRate = 0.45; }, []);
 
+  const scrollToResearch = () => {
+    document.getElementById('landing-research')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="landing">
       {/* The subject of the product, behind the page that sells it. Muted and
@@ -45,8 +51,11 @@ export function Landing({ settings: s, stations, busy, error,
 
       {/* ------------------------------------------------------------ top -- */}
       <header className="band band-dark">
-        <div className="wrap lp-top">
+        <div className="wrap lp-top" style={{ justifyContent: 'space-between' }}>
           <span className="nav-mark">SkyPass</span>
+          <button type="button" className="btn btn-quiet btn-sm" onClick={scrollToResearch}>
+            Research & Experiments ↓
+          </button>
         </div>
       </header>
 
@@ -175,11 +184,22 @@ export function Landing({ settings: s, stations, busy, error,
                 <span className="sq sq-sm sq-err" aria-hidden="true" />{error}
               </p>
             )}
-
-            
           </form>
         </div>
+
+        <div className="wrap lp-explore-wrap">
+          <button type="button" className="btn btn-outline lp-explore-btn" onClick={scrollToResearch}>
+            <span>Explore Research Analysis & Experiments</span>
+            <span className="lp-explore-arrow" aria-hidden="true">↓</span>
+          </button>
+        </div>
       </section>
+
+      {/* ------------------------------------------- research & experiments -- */}
+      <div id="landing-research" className="lp-research-sec">
+        <Analysis />
+        <Experiments />
+      </div>
 
       <footer className="band band-dark">
         <div className="wrap pad-sm app-foot-in">
@@ -195,3 +215,4 @@ export function Landing({ settings: s, stations, busy, error,
     </div>
   );
 }
+

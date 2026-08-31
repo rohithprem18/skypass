@@ -101,5 +101,5 @@ export interface Settings {
 }
 
 export type View =
-  | 'overview' | 'planner' | 'passes' | 'weather'
-  | 'schedule' | 'analysis' | 'experiments';
+  | 'overview' | 'planner' | 'passes' | 'weather' | 'schedule';
+
