@@ -841,95 +841,336 @@
   margin-inline-start: -16px;
   pointer-events: none;
   z-index: 5;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.sat-orbit-svg {
+  overflow: visible;
+}
+
+.sat-beam-cone {
+  animation: satBeamCone 1.8s ease-in-out infinite;
+}
+
+@keyframes satBeamCone {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
 }
 
 .sat-orbit-mover.is-animated {
-  animation: sat3dRevolve 7s linear infinite;
+  animation:
+    sat3dRevolve 7s linear infinite,
+    satDepthLayer 7s step-end infinite;
+}
+
+@keyframes satDepthLayer {
+  0% { z-index: 6; }
+  25% { z-index: 0; }
+  75% { z-index: 6; }
 }
 
 @keyframes sat3dRevolve {
-  /* 0% (Front Center, bottom): moving right, beam points straight UP (-90deg) to SkyPass */
   0% {
-    transform: translate(0px, 13px) rotate(-90deg) scale(1.15);
-    z-index: 10;
+    transform: translate3d(1.57px, 14.92px, 0) rotate(174deg) scale(1.16);
     opacity: 1;
-    filter: drop-shadow(0 4px 12px rgba(118, 185, 0, 0.8));
+    filter: drop-shadow(0 0 12px rgba(118, 185, 0, 0.8));
   }
-  /* 8.3% (Front Right-Center) */
-  8.3% {
-    transform: translate(37px, 8px) rotate(-130deg) scale(1.08);
-    z-index: 10;
-    opacity: 0.95;
+  0.556% {
+    transform: translate3d(4.34px, 14.62px, 0) rotate(163.45deg) scale(1.16);
+    opacity: 1;
+    filter: drop-shadow(0 0 12px rgba(118, 185, 0, 0.8));
   }
-  /* 16.6% (Front Right) */
-  16.6% {
-    transform: translate(64px, 2px) rotate(-160deg) scale(1.0);
-    z-index: 10;
-    opacity: 0.9;
+  1.111% {
+    transform: translate3d(7.11px, 14.3px, 0) rotate(153.55deg) scale(1.159);
+    opacity: 0.999;
+    filter: drop-shadow(0 0 12px rgba(118, 185, 0, 0.8));
   }
-  /* 25% (Far Right Tip): turning smoothly around right curve, beam points LEFT (174deg) to SkyPass */
-  25% {
-    transform: translate(72px, -7.5px) rotate(174deg) scale(0.92);
-    z-index: 10;
-    opacity: 0.85;
-    filter: drop-shadow(0 2px 6px rgba(118, 185, 0, 0.5));
+  1.806% {
+    transform: translate3d(10.56px, 13.88px, 0) rotate(142.71deg) scale(1.159);
+    opacity: 0.999;
+    filter: drop-shadow(0 0 12px rgba(118, 185, 0, 0.8));
   }
-  /* 33.3% (Back Right) */
-  33.3% {
-    transform: translate(61px, -11px) rotate(165deg) scale(0.84);
-    z-index: 0;
-    opacity: 0.75;
+  2.778% {
+    transform: translate3d(15.36px, 13.24px, 0) rotate(130.76deg) scale(1.157);
+    opacity: 0.997;
+    filter: drop-shadow(0 0 11.9px rgba(118, 185, 0, 0.8));
   }
-  /* 41.6% (Back Right-Center) */
-  41.6% {
-    transform: translate(35px, -15px) rotate(135deg) scale(0.78);
-    z-index: 0;
-    opacity: 0.65;
+  4.167% {
+    transform: translate3d(22.11px, 12.25px, 0) rotate(118.98deg) scale(1.153);
+    opacity: 0.992;
+    filter: drop-shadow(0 0 11.8px rgba(118, 185, 0, 0.79));
   }
-  /* 50% (Back Center, top): moving left behind text, beam points straight DOWN (+90deg) to SkyPass */
-  50% {
-    transform: translate(0px, -13px) rotate(90deg) scale(0.75);
-    z-index: 0;
+  5.556% {
+    transform: translate3d(28.69px, 11.16px, 0) rotate(111.26deg) scale(1.147);
+    opacity: 0.986;
+    filter: drop-shadow(0 0 11.7px rgba(118, 185, 0, 0.78));
+  }
+  6.944% {
+    transform: translate3d(35.05px, 9.99px, 0) rotate(105.9deg) scale(1.14);
+    opacity: 0.979;
+    filter: drop-shadow(0 0 11.5px rgba(118, 185, 0, 0.77));
+  }
+  8.472% {
+    transform: translate3d(41.73px, 8.61px, 0) rotate(101.66deg) scale(1.131);
+    opacity: 0.969;
+    filter: drop-shadow(0 0 11.3px rgba(118, 185, 0, 0.76));
+  }
+  10% {
+    transform: translate3d(48.03px, 7.15px, 0) rotate(98.47deg) scale(1.12);
+    opacity: 0.957;
+    filter: drop-shadow(0 0 11px rgba(118, 185, 0, 0.74));
+  }
+  11.667% {
+    transform: translate3d(54.4px, 5.49px, 0) rotate(95.76deg) scale(1.106);
+    opacity: 0.942;
+    filter: drop-shadow(0 0 10.7px rgba(118, 185, 0, 0.72));
+  }
+  13.611% {
+    transform: translate3d(61.07px, 3.48px, 0) rotate(93.26deg) scale(1.088);
+    opacity: 0.923;
+    filter: drop-shadow(0 0 10.3px rgba(118, 185, 0, 0.69));
+  }
+  15.833% {
+    transform: translate3d(67.58px, 1.11px, 0) rotate(90.94deg) scale(1.064);
+    opacity: 0.898;
+    filter: drop-shadow(0 0 9.7px rgba(118, 185, 0, 0.66));
+  }
+  18.611% {
+    transform: translate3d(73.85px, -1.87px, 0) rotate(88.55deg) scale(1.032);
+    opacity: 0.863;
+    filter: drop-shadow(0 0 9px rgba(118, 185, 0, 0.61));
+  }
+  22.5% {
+    transform: translate3d(78.83px, -5.93px, 0) rotate(85.7deg) scale(0.983);
+    opacity: 0.81;
+    filter: drop-shadow(0 0 7.8px rgba(118, 185, 0, 0.54));
+  }
+  26.389% {
+    transform: translate3d(79.12px, -9.63px, 0) rotate(83.06deg) scale(0.932);
+    opacity: 0.755;
+    filter: drop-shadow(0 0 6.6px rgba(118, 185, 0, 0.46));
+  }
+  30.278% {
+    transform: translate3d(74.72px, -12.76px, 0) rotate(80.31deg) scale(0.882);
+    opacity: 0.702;
+    filter: drop-shadow(0 0 5.4px rgba(118, 185, 0, 0.39));
+  }
+  33.333% {
+    transform: translate3d(68.12px, -14.7px, 0) rotate(77.82deg) scale(0.845);
+    opacity: 0.663;
+    filter: drop-shadow(0 0 4.5px rgba(118, 185, 0, 0.33));
+  }
+  35.694% {
+    transform: translate3d(61.29px, -15.83px, 0) rotate(75.52deg) scale(0.819);
+    opacity: 0.635;
+    filter: drop-shadow(0 0 3.9px rgba(118, 185, 0, 0.3));
+  }
+  37.639% {
+    transform: translate3d(54.65px, -16.5px, 0) rotate(73.2deg) scale(0.8);
+    opacity: 0.615;
+    filter: drop-shadow(0 0 3.4px rgba(118, 185, 0, 0.27));
+  }
+  39.444% {
+    transform: translate3d(47.75px, -16.9px, 0) rotate(70.5deg) scale(0.785);
+    opacity: 0.598;
+    filter: drop-shadow(0 0 3.1px rgba(118, 185, 0, 0.25));
+  }
+  41.111% {
+    transform: translate3d(40.83px, -17.08px, 0) rotate(67.3deg) scale(0.772);
+    opacity: 0.584;
+    filter: drop-shadow(0 0 2.8px rgba(118, 185, 0, 0.23));
+  }
+  42.639% {
+    transform: translate3d(34.1px, -17.08px, 0) rotate(63.39deg) scale(0.762);
+    opacity: 0.574;
+    filter: drop-shadow(0 0 2.5px rgba(118, 185, 0, 0.21));
+  }
+  44.028% {
+    transform: translate3d(27.7px, -16.94px, 0) rotate(58.55deg) scale(0.755);
+    opacity: 0.566;
+    filter: drop-shadow(0 0 2.3px rgba(118, 185, 0, 0.2));
+  }
+  45.417% {
+    transform: translate3d(21.09px, -16.68px, 0) rotate(51.67deg) scale(0.749);
+    opacity: 0.559;
+    filter: drop-shadow(0 0 2.2px rgba(118, 185, 0, 0.19));
+  }
+  46.806% {
+    transform: translate3d(14.33px, -16.29px, 0) rotate(41.34deg) scale(0.744);
+    opacity: 0.555;
+    filter: drop-shadow(0 0 2.1px rgba(118, 185, 0, 0.19));
+  }
+  47.778% {
+    transform: translate3d(9.52px, -15.94px, 0) rotate(30.85deg) scale(0.742);
+    opacity: 0.552;
+    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.18));
+  }
+  48.611% {
+    transform: translate3d(5.37px, -15.59px, 0) rotate(19.01deg) scale(0.741);
+    opacity: 0.551;
+    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.18));
+  }
+  49.306% {
+    transform: translate3d(1.9px, -15.27px, 0) rotate(7.11deg) scale(0.74);
     opacity: 0.55;
-    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.2));
+    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.18));
   }
-  /* 58.3% (Back Left-Center) */
-  58.3% {
-    transform: translate(-35px, -8px) rotate(45deg) scale(0.78);
-    z-index: 0;
-    opacity: 0.65;
+  49.861% {
+    transform: translate3d(-0.87px, -14.99px, 0) rotate(-3.34deg) scale(0.74);
+    opacity: 0.55;
+    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.18));
   }
-  /* 66.6% (Back Left) */
-  66.6% {
-    transform: translate(-61px, -2px) rotate(15deg) scale(0.84);
-    z-index: 0;
-    opacity: 0.75;
+  50.417% {
+    transform: translate3d(-3.65px, -14.69px, 0) rotate(-13.95deg) scale(0.74);
+    opacity: 0.55;
+    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.18));
   }
-  /* 75% (Far Left Tip): turning smoothly around left curve, beam points RIGHT (-6deg) to SkyPass */
-  75% {
-    transform: translate(-72px, 7.5px) rotate(-6deg) scale(0.92);
-    z-index: 10;
-    opacity: 0.85;
-    filter: drop-shadow(0 2px 6px rgba(118, 185, 0, 0.5));
+  50.972% {
+    transform: translate3d(-6.42px, -14.38px, 0) rotate(-24.07deg) scale(0.74);
+    opacity: 0.55;
+    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.18));
   }
-  /* 83.3% (Front Left) */
-  83.3% {
-    transform: translate(-61px, 11px) rotate(-30deg) scale(1.0);
-    z-index: 10;
-    opacity: 0.9;
+  51.667% {
+    transform: translate3d(-9.88px, -13.96px, 0) rotate(-35.27deg) scale(0.741);
+    opacity: 0.551;
+    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.18));
   }
-  /* 91.6% (Front Left-Center) */
-  91.6% {
-    transform: translate(-35px, 15px) rotate(-60deg) scale(1.08);
-    z-index: 10;
-    opacity: 0.95;
+  52.5% {
+    transform: translate3d(-13.99px, -13.43px, 0) rotate(-46.19deg) scale(0.743);
+    opacity: 0.553;
+    filter: drop-shadow(0 0 2.1px rgba(118, 185, 0, 0.18));
   }
-  /* 100% (Front Center) */
-  100% {
-    transform: translate(0px, 13px) rotate(-90deg) scale(1.15);
-    z-index: 10;
+  53.75% {
+    transform: translate3d(-20.1px, -12.55px, 0) rotate(-58.01deg) scale(0.746);
+    opacity: 0.556;
+    filter: drop-shadow(0 0 2.1px rgba(118, 185, 0, 0.19));
+  }
+  55.139% {
+    transform: translate3d(-26.73px, -11.49px, 0) rotate(-66.73deg) scale(0.751);
+    opacity: 0.562;
+    filter: drop-shadow(0 0 2.3px rgba(118, 185, 0, 0.2));
+  }
+  56.528% {
+    transform: translate3d(-33.16px, -10.35px, 0) rotate(-72.67deg) scale(0.757);
+    opacity: 0.569;
+    filter: drop-shadow(0 0 2.4px rgba(118, 185, 0, 0.21));
+  }
+  58.056% {
+    transform: translate3d(-39.94px, -8.99px, 0) rotate(-77.31deg) scale(0.766);
+    opacity: 0.578;
+    filter: drop-shadow(0 0 2.6px rgba(118, 185, 0, 0.22));
+  }
+  59.583% {
+    transform: translate3d(-46.36px, -7.56px, 0) rotate(-80.74deg) scale(0.777);
+    opacity: 0.59;
+    filter: drop-shadow(0 0 2.9px rgba(118, 185, 0, 0.23));
+  }
+  61.25% {
+    transform: translate3d(-52.86px, -5.91px, 0) rotate(-83.62deg) scale(0.79);
+    opacity: 0.604;
+    filter: drop-shadow(0 0 3.2px rgba(118, 185, 0, 0.25));
+  }
+  63.056% {
+    transform: translate3d(-59.26px, -4.06px, 0) rotate(-86.08deg) scale(0.807);
+    opacity: 0.622;
+    filter: drop-shadow(0 0 3.6px rgba(118, 185, 0, 0.28));
+  }
+  65.139% {
+    transform: translate3d(-65.68px, -1.85px, 0) rotate(-88.38deg) scale(0.828);
+    opacity: 0.644;
+    filter: drop-shadow(0 0 4.1px rgba(118, 185, 0, 0.31));
+  }
+  67.639% {
+    transform: translate3d(-71.9px, 0.83px, 0) rotate(-90.66deg) scale(0.856);
+    opacity: 0.675;
+    filter: drop-shadow(0 0 4.8px rgba(118, 185, 0, 0.35));
+  }
+  71.25% {
+    transform: translate3d(-77.73px, 4.65px, 0) rotate(-93.42deg) scale(0.901);
+    opacity: 0.722;
+    filter: drop-shadow(0 0 5.8px rgba(118, 185, 0, 0.42));
+  }
+  75.139% {
+    transform: translate3d(-79.55px, 8.49px, 0) rotate(-96.09deg) scale(0.952);
+    opacity: 0.777;
+    filter: drop-shadow(0 0 7px rgba(118, 185, 0, 0.49));
+  }
+  79.028% {
+    transform: translate3d(-76.63px, 11.83px, 0) rotate(-98.78deg) scale(1.003);
+    opacity: 0.831;
+    filter: drop-shadow(0 0 8.3px rgba(118, 185, 0, 0.57));
+  }
+  82.5% {
+    transform: translate3d(-70.18px, 14.22px, 0) rotate(-101.46deg) scale(1.045);
+    opacity: 0.877;
+    filter: drop-shadow(0 0 9.3px rgba(118, 185, 0, 0.63));
+  }
+  85% {
+    transform: translate3d(-63.45px, 15.53px, 0) rotate(-103.76deg) scale(1.073);
+    opacity: 0.907;
+    filter: drop-shadow(0 0 9.9px rgba(118, 185, 0, 0.67));
+  }
+  87.083% {
+    transform: translate3d(-56.63px, 16.33px, 0) rotate(-106.09deg) scale(1.095);
+    opacity: 0.93;
+    filter: drop-shadow(0 0 10.4px rgba(118, 185, 0, 0.7));
+  }
+  88.889% {
+    transform: translate3d(-49.94px, 16.8px, 0) rotate(-108.6deg) scale(1.111);
+    opacity: 0.947;
+    filter: drop-shadow(0 0 10.8px rgba(118, 185, 0, 0.73));
+  }
+  90.556% {
+    transform: translate3d(-43.19px, 17.04px, 0) rotate(-111.53deg) scale(1.124);
+    opacity: 0.962;
+    filter: drop-shadow(0 0 11.1px rgba(118, 185, 0, 0.75));
+  }
+  92.083% {
+    transform: translate3d(-36.59px, 17.1px, 0) rotate(-115.05deg) scale(1.135);
+    opacity: 0.973;
+    filter: drop-shadow(0 0 11.4px rgba(118, 185, 0, 0.76));
+  }
+  93.611% {
+    transform: translate3d(-29.64px, 17px, 0) rotate(-119.83deg) scale(1.143);
+    opacity: 0.982;
+    filter: drop-shadow(0 0 11.6px rgba(118, 185, 0, 0.78));
+  }
+  95% {
+    transform: translate3d(-23.09px, 16.77px, 0) rotate(-125.99deg) scale(1.15);
+    opacity: 0.989;
+    filter: drop-shadow(0 0 11.8px rgba(118, 185, 0, 0.78));
+  }
+  96.389% {
+    transform: translate3d(-16.37px, 16.42px, 0) rotate(-135.08deg) scale(1.155);
+    opacity: 0.994;
+    filter: drop-shadow(0 0 11.9px rgba(118, 185, 0, 0.79));
+  }
+  97.5% {
+    transform: translate3d(-10.9px, 16.04px, 0) rotate(-145.81deg) scale(1.157);
+    opacity: 0.997;
+    filter: drop-shadow(0 0 11.9px rgba(118, 185, 0, 0.8));
+  }
+  98.333% {
+    transform: translate3d(-6.76px, 15.71px, 0) rotate(-156.73deg) scale(1.159);
+    opacity: 0.999;
+    filter: drop-shadow(0 0 12px rgba(118, 185, 0, 0.8));
+  }
+  99.028% {
+    transform: translate3d(-3.29px, 15.4px, 0) rotate(-167.93deg) scale(1.16);
     opacity: 1;
-    filter: drop-shadow(0 4px 12px rgba(118, 185, 0, 0.8));
+    filter: drop-shadow(0 0 12px rgba(118, 185, 0, 0.8));
+  }
+  99.583% {
+    transform: translate3d(-0.52px, 15.13px, 0) rotate(-178.05deg) scale(1.16);
+    opacity: 1;
+    filter: drop-shadow(0 0 12px rgba(118, 185, 0, 0.8));
+  }
+  100% {
+    transform: translate3d(1.57px, 14.92px, 0) rotate(-186deg) scale(1.16);
+    opacity: 1;
+    filter: drop-shadow(0 0 12px rgba(118, 185, 0, 0.8));
   }
 }
 
@@ -980,8 +1221,15 @@
   .sat-orbit-mover.is-animated,
   .orbit-ellipse-line,
   .sat-beam-line,
+  .sat-beam-cone,
   .sat-emitter {
     animation: none;
+  }
+
+  /* park the satellite at the front of the orbit, beam still aimed at the text */
+  .sat-orbit-mover.is-animated {
+    transform: translate3d(1.57px, 14.92px, 0) rotate(174deg) scale(1.16);
+    z-index: 6;
   }
 }
 

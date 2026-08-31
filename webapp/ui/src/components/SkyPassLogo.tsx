@@ -6,8 +6,8 @@ export function SkyPassLogo({ animated = true }: { animated?: boolean }) {
         <ellipse
           cx="85"
           cy="22"
-          rx="72"
-          ry="13"
+          rx="80"
+          ry="15"
           transform="rotate(-6 85 22)"
           fill="none"
           stroke="var(--accent)"
@@ -35,32 +35,39 @@ export function SkyPassLogo({ animated = true }: { animated?: boolean }) {
               <stop offset="100%" stopColor="#0369a1" />
             </linearGradient>
 
+            <linearGradient id="satBeamCone" x1="0" y1="0" x2="0" y2="100%">
+              <stop offset="0%" stopColor="rgba(163, 230, 53, 0.55)" />
+              <stop offset="100%" stopColor="rgba(118, 185, 0, 0)" />
+            </linearGradient>
+
             <filter id="satGreenGlow" x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="2" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
 
-          {/* Green Emitted Light Laser Beam pointing towards SkyPass center */}
+          {/* Green signal beam emitted from 22,22 straight down (+y). That axis is the one
+              the orbit keyframes rotate, so it always faces the SkyPass text at the ellipse centre. */}
+          <polygon points="22,22 14,44 30,44" fill="url(#satBeamCone)" className="sat-beam-cone" />
           <line x1="22" y1="22" x2="22" y2="44" stroke="#76B900" strokeWidth="2.5" strokeDasharray="3 2" className="sat-beam-line" />
-          <polygon points="22,22 17,44 27,44" fill="rgba(118, 185, 0, 0.25)" />
 
           {/* 3D Solar Panel Left */}
           <polygon points="3,13 13,7 13,15 3,21" fill="url(#satSolarGrad)" stroke="#38bdf8" strokeWidth="0.6" />
 
-          {/* 3D Solar Panel Right */}
-          <polygon points="21,19 31,13 31,21 21,27" fill="url(#satSolarGrad)" stroke="#38bdf8" strokeWidth="0.6" />
+          {/* 3D Solar Panel Right — lifted clear of the beam cone below the bus */}
+          <polygon points="25,11 35,5 35,13 25,19" fill="url(#satSolarGrad)" stroke="#38bdf8" strokeWidth="0.6" />
 
-          {/* Solar Panel Boom */}
-          <line x1="13" y1="11" x2="21" y2="23" stroke="#94a3b8" strokeWidth="1.2" strokeLinecap="round" />
+          {/* Solar Panel Boom (bus is drawn over its midsection for depth) */}
+          <line x1="12" y1="12" x2="26" y2="14" stroke="#94a3b8" strokeWidth="1.2" strokeLinecap="round" />
 
           {/* 3D Bus Body */}
           <polygon points="13,13 21,9 25,13 17,17" fill="#f8fafc" />
           <polygon points="13,13 17,17 17,24 13,20" fill="#cbd5e1" />
           <polygon points="17,17 25,13 25,20 17,24" fill="#94a3b8" />
 
-          {/* Dish facing center */}
-          <path d="M16 21 Q 21 26 26 23" fill="none" stroke="#76B900" strokeWidth="1.8" strokeLinecap="round" />
+          {/* Parabolic dish mounted under the bus, mouth facing down the beam axis */}
+          <path d="M15 23 Q 22 14 29 23" fill="rgba(118, 185, 0, 0.18)" stroke="#76B900" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          <line x1="22" y1="17" x2="22" y2="22" stroke="#94a3b8" strokeWidth="1" strokeLinecap="round" />
 
           {/* Glowing Green Emitter Lens */}
           <circle cx="22" cy="22" r="2.5" fill="#76B900" filter="url(#satGreenGlow)" className="sat-emitter" />

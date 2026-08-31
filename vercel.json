@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "buildCommand": "cd webapp/ui && npm install && npm run build",
+  "outputDirectory": "webapp/ui/dist",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.py" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
