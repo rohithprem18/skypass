@@ -124,9 +124,13 @@ export function HeroViz({ pass, maskDeg }: Props) {
         {/* Line of sight at culmination. */}
         <line className="viz-los" x1={obs.x} y1={obs.y} x2={sat.x} y2={sat.y} />
 
+        <circle className="viz-sat-pulse" cx={sat.x} cy={sat.y} r="10" />
         <circle className="viz-sat" cx={sat.x} cy={sat.y} r="5" />
+
+        <circle className="viz-obs-pulse" cx={obs.x} cy={obs.y} r="8" />
         <circle className="viz-obs" cx={obs.x} cy={obs.y} r="4" />
         <text className="viz-tick" x={obs.x + 12} y={obs.y + 4}>OBSERVER</text>
+
 
         <text className="viz-tick" x={sat.x + 14} y={sat.y - 14}>
           {Math.round(altKm).toLocaleString()} KM
