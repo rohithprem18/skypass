@@ -2,8 +2,6 @@ import type { Settings, Station } from '../types';
 import { useEffect, useRef } from 'react';
 import { usePlanningStatus } from '../lib/loading';
 import { PROPAGATION, SCHEDULER, WEATHER } from '../lib/research';
-import { Analysis } from './Analysis';
-import { Experiments } from './Experiments';
 
 /* The front door.
  *
@@ -20,10 +18,11 @@ interface Props {
   error: string | null;
   onChange: (patch: Partial<Settings>) => void;
   onPlan: () => void;
+  onResearch?: () => void;
 }
 
 export function Landing({ settings: s, stations, busy, error,
-                          onChange, onPlan }: Props) {
+                          onChange, onPlan, onResearch }: Props) {
   const usingCoords = s.lat.trim() !== '' && s.lon.trim() !== '';
   const status = usePlanningStatus(busy);
   /* The clip is 1.4 seconds. At normal speed the loop restarts often enough to
@@ -31,10 +30,6 @@ export function Landing({ settings: s, stations, busy, error,
      roughly three seconds. */
   const video = useRef<HTMLVideoElement>(null);
   useEffect(() => { if (video.current) video.current.playbackRate = 0.45; }, []);
-
-  const scrollToResearch = () => {
-    document.getElementById('landing-research')?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   return (
     <div className="landing">
@@ -53,9 +48,11 @@ export function Landing({ settings: s, stations, busy, error,
       <header className="band band-dark">
         <div className="wrap lp-top" style={{ justifyContent: 'space-between' }}>
           <span className="nav-mark">SkyPass</span>
-          <button type="button" className="btn btn-quiet btn-sm" onClick={scrollToResearch}>
-            Research & Experiments ↓
-          </button>
+          {onResearch && (
+            <button type="button" className="btn btn-quiet btn-sm" onClick={onResearch}>
+              Research & Experiments →
+            </button>
+          )}
         </div>
       </header>
 
@@ -184,22 +181,20 @@ export function Landing({ settings: s, stations, busy, error,
                 <span className="sq sq-sm sq-err" aria-hidden="true" />{error}
               </p>
             )}
+
+            {onResearch && (
+              <button
+                type="button"
+                className="btn btn-outline lp-research-btn"
+                onClick={onResearch}
+                style={{ marginBlockStart: 'var(--s-3)', inlineSize: '100%' }}
+              >
+                View Research Analysis & Experiments →
+              </button>
+            )}
           </form>
         </div>
-
-        <div className="wrap lp-explore-wrap">
-          <button type="button" className="btn btn-outline lp-explore-btn" onClick={scrollToResearch}>
-            <span>Explore Research Analysis & Experiments</span>
-            <span className="lp-explore-arrow" aria-hidden="true">↓</span>
-          </button>
-        </div>
       </section>
-
-      {/* ------------------------------------------- research & experiments -- */}
-      <div id="landing-research" className="lp-research-sec">
-        <Analysis />
-        <Experiments />
-      </div>
 
       <footer className="band band-dark">
         <div className="wrap pad-sm app-foot-in">
@@ -215,4 +210,5 @@ export function Landing({ settings: s, stations, busy, error,
     </div>
   );
 }
+
 

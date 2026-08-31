@@ -16,7 +16,10 @@ import { fetchPlan, fetchStations, fetchTrack, icsUrl } from './lib/api';
 import { utc } from './lib/time';
 import type { Pass, Plan, Settings, Station, TrackPoint, View } from './types';
 
+import { ResearchPage } from './components/ResearchPage';
+
 const STORE = 'skypass.settings';
+
 
 const DEFAULTS: Settings = {
   station: 'chennai', lat: '', lon: '', days: '3',
@@ -53,7 +56,9 @@ export default function App() {
   const [live, setLive] = useState(false);
   /* The console is only entered once a plan has been asked for. */
   const [entered, setEntered] = useState(false);
+  const [showResearch, setShowResearch] = useState(false);
   const [busy, setBusy] = useState(false);
+
   const [error, setError] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const abort = useRef<AbortController | null>(null);
@@ -202,11 +207,16 @@ export default function App() {
   }
 
   if (!entered || !plan) {
+    if (showResearch) {
+      return <ResearchPage onBack={() => setShowResearch(false)} />;
+    }
     return (
       <Landing settings={settings} stations={stations} busy={busy}
-        error={error} onChange={patch} onPlan={planAndEnter} />
+        error={error} onChange={patch} onPlan={planAndEnter}
+        onResearch={() => setShowResearch(true)} />
     );
   }
+
 
   return (
     <div className="app">

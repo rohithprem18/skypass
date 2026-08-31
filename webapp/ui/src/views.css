@@ -760,34 +760,25 @@
 .nav-brand:hover .nav-mark { color: var(--accent); }
 .nav-mark { transition: color var(--t-fast) var(--ease); }
 
-.lp-explore-wrap {
-  display: flex;
-  justify-content: center;
-  margin-block: var(--s-6) var(--s-4);
-}
-.lp-explore-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-3);
-  padding: var(--s-3) var(--s-6);
-  font-size: 14px;
-  font-weight: 600;
+.lp-research-btn {
   border-color: var(--border-dark);
   color: var(--white);
+  font-weight: 600;
   transition: all var(--t-base) var(--ease);
 }
-.lp-explore-btn:hover {
+.lp-research-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
   background: rgba(118, 185, 0, 0.08);
 }
-.lp-explore-arrow {
-  transition: transform var(--t-fast) var(--ease);
+.research-page {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100dvh;
+  background: var(--bg);
 }
-.lp-explore-btn:hover .lp-explore-arrow {
-  transform: translateY(3px);
+.research-content {
+  flex: 1 0 auto;
 }
-.lp-research-sec {
-  scroll-margin-top: var(--s-4);
-}
+
 
