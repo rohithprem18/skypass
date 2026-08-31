@@ -104,7 +104,6 @@ export function HeroViz({ pass, maskDeg }: Props) {
         {/* Terminator: the boundary the site has to cross before it is dark. */}
         <path className="viz-term"
           d={`M 0 ${cy - R * 1.02} Q 360 ${cy - R - 130} 720 ${cy - R * 0.86}`} />
-        <text className="viz-tick" x="14" y={cy - R * 1.02 - 12}>TWILIGHT BOUNDARY</text>
 
         {/* Earth limb. */}
         <circle className="viz-earth" cx={cx} cy={cy} r={R} />
@@ -113,9 +112,6 @@ export function HeroViz({ pass, maskDeg }: Props) {
         {/* Mask cone: everything below these lines is refused. */}
         <path className="viz-cone"
           d={`M ${cone[0]!.x} ${cone[0]!.y} L ${obs.x} ${obs.y} L ${cone[1]!.x} ${cone[1]!.y}`} />
-        <text className="viz-tick" x={cone[1]!.x + 6} y={cone[1]!.y}>
-          {maskDeg}° MASK
-        </text>
 
         {/* Orbit: gray where unobserved, accent across the observed arc. */}
         <path className="viz-orbit" d={d(arc)} />
@@ -124,17 +120,40 @@ export function HeroViz({ pass, maskDeg }: Props) {
         {/* Line of sight at culmination. */}
         <line className="viz-los" x1={obs.x} y1={obs.y} x2={sat.x} y2={sat.y} />
 
+        {/* Satellite & Observer Beacons */}
         <circle className="viz-sat-pulse" cx={sat.x} cy={sat.y} r="10" />
         <circle className="viz-sat" cx={sat.x} cy={sat.y} r="5" />
 
         <circle className="viz-obs-pulse" cx={obs.x} cy={obs.y} r="8" />
         <circle className="viz-obs" cx={obs.x} cy={obs.y} r="4" />
-        <text className="viz-tick" x={obs.x + 12} y={obs.y + 4}>OBSERVER</text>
 
+        {/* ----------------------------------------------- Aligned Badges -- */}
+        {/* Twilight Boundary Badge */}
+        <g transform="translate(18, 224)">
+          <rect x="0" y="0" width="138" height="20" rx="3" fill="#0A0A0A" stroke="#333333" strokeWidth="1" opacity="0.9" />
+          <text className="viz-tick" x="69" y="13" textAnchor="middle">TWILIGHT BOUNDARY</text>
+        </g>
 
-        <text className="viz-tick" x={sat.x + 14} y={sat.y - 14}>
-          {Math.round(altKm).toLocaleString()} KM
-        </text>
+        {/* Horizon Mask Badge */}
+        <g transform={`translate(${Math.max(16, Math.min(624, cone[1]!.x - 75))}, ${cone[1]!.y - 12})`}>
+          <rect x="0" y="0" width="76" height="20" rx="3" fill="#0A0A0A" stroke="#333333" strokeWidth="1" opacity="0.9" />
+          <text className="viz-tick" x="38" y="13" textAnchor="middle">{maskDeg}° MASK</text>
+        </g>
+
+        {/* Ground Station Observer Badge */}
+        <g transform={`translate(${obs.x - 48}, ${obs.y + 12})`}>
+          <rect x="0" y="0" width="96" height="20" rx="3" fill="#0A0A0A" stroke="#444444" strokeWidth="1" opacity="0.95" />
+          <text className="viz-tick" x="48" y="13" textAnchor="middle" fill="#FFFFFF">OBSERVER</text>
+        </g>
+
+        {/* Satellite Culmination Altitude Badge */}
+        <g transform={`translate(${sat.x - 60}, ${Math.max(10, sat.y - 30)})`}>
+          <rect x="0" y="0" width="120" height="22" rx="3" fill="#0A0A0A" stroke="var(--accent)" strokeWidth="1.25" opacity="0.95" />
+          <text className="viz-tick" x="60" y="14" textAnchor="middle" fill="var(--accent)" fontWeight="700">
+            {Math.round(altKm).toLocaleString()} KM ALT
+          </text>
+        </g>
+
       </svg>
 
       <figcaption className="viz-cap">
