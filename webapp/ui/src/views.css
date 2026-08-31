@@ -803,114 +803,121 @@
   flex: 1 0 auto;
 }
 
-/* ----------------------------------------------- 3D Satellite Logo -- */
-.skypass-brand {
+/* ----------------------------------------------- 3D Satellite Orbit -- */
+.skypass-orbit-brand {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: var(--s-2);
-  position: relative;
+  justify-content: center;
+  padding-inline: var(--s-6);
+  padding-block: var(--s-2);
   user-select: none;
 }
 
-.skypass-icon-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  perspective: 400px;
-}
-
-.sat-3d-svg {
-  display: block;
+.skypass-orbit-ring {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  transform: translate(-50%, -50%) rotate(-6deg);
+  pointer-events: none;
   overflow: visible;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
-  transform-style: preserve-3d;
 }
 
-.sat-3d-svg.is-animated {
-  animation: sat3dFloat 3.8s ease-in-out infinite;
+.orbit-ellipse-line {
+  animation: orbitRingDash 20s linear infinite;
 }
 
-@keyframes sat3dFloat {
-  0%, 100% {
-    transform: translateY(0px) rotate(-1deg);
-  }
-  50% {
-    transform: translateY(-3px) rotate(2deg) scale(1.03);
-  }
+@keyframes orbitRingDash {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -100; }
 }
 
-.sat-beam {
-  animation: satBeamPulse 2.2s ease-in-out infinite;
+.sat-orbit-mover {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  margin-block-start: -13px;
+  margin-inline-start: -13px;
+  pointer-events: none;
+  z-index: 5;
 }
 
-@keyframes satBeamPulse {
-  0%, 100% {
-    opacity: 0.35;
-  }
-  50% {
-    opacity: 0.95;
-    filter: drop-shadow(0 0 6px #76B900);
-  }
+.sat-orbit-mover.is-animated {
+  animation: sat3dRevolve 6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
-.sat-emitter {
-  animation: satEmitterGlow 1.8s ease-in-out infinite;
-}
-
-@keyframes satEmitterGlow {
-  0%, 100% {
-    fill: #76B900;
-    r: 2.2px;
-  }
-  50% {
-    fill: #a3e635;
-    r: 3px;
-    filter: drop-shadow(0 0 5px #76B900);
-  }
-}
-
-.sat-wave {
-  transform-origin: 24px 28px;
-  animation: satWavePulse 2.4s ease-out infinite;
-}
-
-.sat-wave.wave-2 {
-  animation-delay: 0.6s;
-}
-
-@keyframes satWavePulse {
+@keyframes sat3dRevolve {
+  /* 0%: Front center (moving right, in front of text, glowing green) */
   0% {
-    opacity: 0.8;
-    transform: scale(0.6);
-    stroke-width: 1px;
+    transform: translate(0px, 12px) scale(1.15) rotate(0deg);
+    z-index: 10;
+    opacity: 1;
+    filter: drop-shadow(0 4px 10px rgba(118, 185, 0, 0.7));
   }
+  /* 25%: Far right curve (moving up/back) */
+  25% {
+    transform: translate(62px, 0px) scale(0.95) rotate(-12deg);
+    z-index: 10;
+    opacity: 0.9;
+    filter: drop-shadow(0 2px 6px rgba(118, 185, 0, 0.5));
+  }
+  /* 50%: Back center (moving left, behind text) */
+  50% {
+    transform: translate(0px, -12px) scale(0.75) rotate(-22deg);
+    z-index: 0;
+    opacity: 0.55;
+    filter: drop-shadow(0 0 2px rgba(118, 185, 0, 0.2));
+  }
+  /* 75%: Far left curve (moving down/front) */
+  75% {
+    transform: translate(-62px, 0px) scale(0.95) rotate(12deg);
+    z-index: 10;
+    opacity: 0.9;
+    filter: drop-shadow(0 2px 6px rgba(118, 185, 0, 0.5));
+  }
+  /* 100%: Front center */
   100% {
-    opacity: 0;
-    transform: scale(1.6);
-    stroke-width: 0.2px;
+    transform: translate(0px, 12px) scale(1.15) rotate(0deg);
+    z-index: 10;
+    opacity: 1;
+    filter: drop-shadow(0 4px 10px rgba(118, 185, 0, 0.7));
   }
 }
 
-.skypass-brand .brand-text {
+.sat-beam-line {
+  animation: satBeamLaser 1.8s ease-in-out infinite;
+}
+
+@keyframes satBeamLaser {
+  0%, 100% {
+    stroke-opacity: 0.3;
+    stroke-width: 1.5px;
+  }
+  50% {
+    stroke-opacity: 1;
+    stroke-width: 2.5px;
+  }
+}
+
+.skypass-orbit-brand .brand-text {
   position: relative;
-  text-shadow: 0 0 12px rgba(118, 185, 0, 0.25);
+  z-index: 2;
   transition: all var(--t-fast) var(--ease);
 }
 
-.skypass-brand:hover .brand-text {
+.skypass-orbit-brand:hover .brand-text {
   color: var(--accent);
-  text-shadow: 0 0 16px rgba(118, 185, 0, 0.6);
+  text-shadow: 0 0 16px rgba(118, 185, 0, 0.7);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sat-3d-svg.is-animated,
-  .sat-beam,
-  .sat-emitter,
-  .sat-wave {
+  .sat-orbit-mover.is-animated,
+  .orbit-ellipse-line,
+  .sat-beam-line {
     animation: none;
   }
 }
+
 
 
 
