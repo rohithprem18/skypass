@@ -1,6 +1,7 @@
 import { Analysis } from './Analysis';
 import { Experiments } from './Experiments';
 import { PROPAGATION } from '../lib/research';
+import { SkyPassLogo } from './SkyPassLogo';
 
 interface Props {
   onBack: () => void;
@@ -12,8 +13,9 @@ export function ResearchPage({ onBack }: Props) {
       <header className="band band-dark nav">
         <div className="wrap nav-in">
           <button type="button" className="nav-brand" onClick={onBack} title="Back to planning setup">
-            <span className="nav-mark">SkyPass</span>
+            <SkyPassLogo />
           </button>
+
 
           <div style={{ marginInlineStart: 'auto', display: 'flex', gap: 'var(--s-3)' }}>
             <button type="button" className="btn btn-outline btn-sm" onClick={onBack}>

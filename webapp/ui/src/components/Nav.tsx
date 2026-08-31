@@ -1,5 +1,7 @@
 import type { Plan, View } from '../types';
 import { windowLabel } from '../lib/time';
+import { SkyPassLogo } from './SkyPassLogo';
+
 
 /* Top navigation. No sidebar: a planning console spends its width on the
  * night, not on a permanent list of links. The active view is marked with the
@@ -33,8 +35,9 @@ export function Nav({ view, plan, elementAge, busy, settingsOpen,
       <div className="wrap nav-in">
         <button type="button" className="nav-brand" onClick={onHome}
           title="Back to planning setup">
-          <span className="nav-mark">SkyPass</span>
+          <SkyPassLogo />
         </button>
+
 
         <nav className="nav-links" aria-label="Sections">
           {VIEWS.map(([key, label]) => (

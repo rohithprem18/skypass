@@ -803,4 +803,114 @@
   flex: 1 0 auto;
 }
 
+/* ----------------------------------------------- 3D Satellite Logo -- */
+.skypass-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  position: relative;
+  user-select: none;
+}
+
+.skypass-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  perspective: 400px;
+}
+
+.sat-3d-svg {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+  transform-style: preserve-3d;
+}
+
+.sat-3d-svg.is-animated {
+  animation: sat3dFloat 3.8s ease-in-out infinite;
+}
+
+@keyframes sat3dFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(2deg) scale(1.03);
+  }
+}
+
+.sat-beam {
+  animation: satBeamPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes satBeamPulse {
+  0%, 100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 6px #76B900);
+  }
+}
+
+.sat-emitter {
+  animation: satEmitterGlow 1.8s ease-in-out infinite;
+}
+
+@keyframes satEmitterGlow {
+  0%, 100% {
+    fill: #76B900;
+    r: 2.2px;
+  }
+  50% {
+    fill: #a3e635;
+    r: 3px;
+    filter: drop-shadow(0 0 5px #76B900);
+  }
+}
+
+.sat-wave {
+  transform-origin: 24px 28px;
+  animation: satWavePulse 2.4s ease-out infinite;
+}
+
+.sat-wave.wave-2 {
+  animation-delay: 0.6s;
+}
+
+@keyframes satWavePulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.6);
+    stroke-width: 1px;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+    stroke-width: 0.2px;
+  }
+}
+
+.skypass-brand .brand-text {
+  position: relative;
+  text-shadow: 0 0 12px rgba(118, 185, 0, 0.25);
+  transition: all var(--t-fast) var(--ease);
+}
+
+.skypass-brand:hover .brand-text {
+  color: var(--accent);
+  text-shadow: 0 0 16px rgba(118, 185, 0, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sat-3d-svg.is-animated,
+  .sat-beam,
+  .sat-emitter,
+  .sat-wave {
+    animation: none;
+  }
+}
+
+
 

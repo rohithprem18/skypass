@@ -2,8 +2,10 @@ import type { Settings, Station } from '../types';
 import { useEffect, useRef } from 'react';
 import { usePlanningStatus } from '../lib/loading';
 import { PROPAGATION, SCHEDULER, WEATHER } from '../lib/research';
+import { SkyPassLogo } from './SkyPassLogo';
 
 /* The front door.
+
  *
  * Nothing is planned until someone asks for it. Propagating a catalogue takes
  * real seconds and real network, so the console opens on a question rather
@@ -48,7 +50,7 @@ export function Landing({ settings: s, stations, busy, error,
       {/* ------------------------------------------------------------ top -- */}
       <header className="band band-dark">
         <div className="wrap lp-top" style={{ justifyContent: 'space-between' }}>
-          <span className="nav-mark">SkyPass</span>
+          <SkyPassLogo />
           {onResearch && (
             <button type="button" className="btn btn-quiet btn-sm" onClick={onResearch}>
               Research & Experiments →
@@ -56,6 +58,7 @@ export function Landing({ settings: s, stations, busy, error,
           )}
         </div>
       </header>
+
 
       {/* ----------------------------------------------------------- hero -- */}
       <section className="band band-dark">
