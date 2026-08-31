@@ -40,7 +40,8 @@ export function Landing({ settings: s, stations, busy, error,
       <div className="lp-bg" aria-hidden="true">
         <video ref={video} className="lp-bg-video" autoPlay muted loop
           playsInline preload="auto" disablePictureInPicture
-          src="/landing-bg.mp4" />
+          src="/landing-bg-new.mp4" />
+
         <div className="lp-bg-scrim" />
       </div>
 
