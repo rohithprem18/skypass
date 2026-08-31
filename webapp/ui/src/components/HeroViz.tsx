@@ -128,17 +128,18 @@ export function HeroViz({ pass, maskDeg }: Props) {
         <circle className="viz-obs" cx={obs.x} cy={obs.y} r="4" />
 
         {/* ----------------------------------------------- Aligned Badges -- */}
-        {/* Twilight Boundary Badge */}
-        <g transform="translate(18, 224)">
+        {/* Twilight Boundary Badge (Left Side) */}
+        <g transform="translate(24, 236)">
           <rect x="0" y="0" width="138" height="20" rx="3" fill="#0A0A0A" stroke="#333333" strokeWidth="1" opacity="0.9" />
           <text className="viz-tick" x="69" y="13" textAnchor="middle">TWILIGHT BOUNDARY</text>
         </g>
 
-        {/* Horizon Mask Badge */}
-        <g transform={`translate(${Math.max(16, Math.min(624, cone[1]!.x - 75))}, ${cone[1]!.y - 12})`}>
+        {/* Horizon Mask Badge (Right Mask Line) */}
+        <g transform={`translate(${Math.max(560, Math.min(625, cone[0]!.x - 75))}, ${Math.max(20, cone[0]!.y - 25)})`}>
           <rect x="0" y="0" width="76" height="20" rx="3" fill="#0A0A0A" stroke="#333333" strokeWidth="1" opacity="0.9" />
           <text className="viz-tick" x="38" y="13" textAnchor="middle">{maskDeg}° MASK</text>
         </g>
+
 
         {/* Ground Station Observer Badge */}
         <g transform={`translate(${obs.x - 48}, ${obs.y + 12})`}>
