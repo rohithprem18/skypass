@@ -4,13 +4,13 @@ Run before compiling. Catches the mistakes that otherwise surface as silent
 "??" marks or bold "?" in the rendered PDF.
 
 Usage:
-    python paper/check_refs.py
+    python experiments/check_paper.py
 """
 import os
 import re
 import sys
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+HERE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "paper")
 
 
 def read(path):
@@ -97,11 +97,11 @@ def main():
 
     # --- figures ----------------------------------------------------------
     figs = set(re.findall(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}", full))
-    figdir = os.path.join(os.path.dirname(HERE), "figures")
+    figdir = os.path.join(HERE, "figures")
     for f in sorted(figs):
         if not os.path.exists(os.path.join(figdir, f)):
             ok = False
-            print(f"  ERROR missing figure: figures/{f}")
+            print(f"  ERROR missing figure: paper/figures/{f}")
     print(f"figures: {len(figs)} referenced")
     if orphans:
         print(f"  note: generated but never \\input: {orphans}")

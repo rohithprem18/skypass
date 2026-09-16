@@ -224,7 +224,7 @@ experiments/      Eight validation experiments plus figure/table generators
 tests/            Deterministic unit tests; no network required
 results/          Experiment outputs consumed by the paper
 figures/          Generated scientific figures
-paper/            LaTeX manuscript, bibliography, and generated tables
+paper/            Overleaf-ready manuscript: skypass.tex, refs.bib, figures/, generated/
 tle_archive/      Dated orbital-element archives
 webapp/           Python server, React UI, and dependency-free fallback build
 docs/             Setup notes and project assets

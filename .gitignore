@@ -7,8 +7,8 @@ venv/
 # Cached Open-Meteo API responses. Large, and regenerated on demand.
 cache/
 
-# LaTeX build products. paper/skypass.pdf is intentionally NOT ignored:
-# the compiled paper is part of what this repository delivers.
+# LaTeX build products. The compiled paper is kept at docs/skypass.pdf (not
+# ignored) so that paper/ holds only what Overleaf needs to build it.
 paper/*.aux
 paper/*.log
 paper/*.out
@@ -22,7 +22,7 @@ paper/build.log
 # Preview renders; the vector PDFs are the ones the paper uses.
 figures/*.png
 
-# NOTE: results/, figures/*.pdf, paper/generated/ and tle_archive/ are all
+# NOTE: results/, figures/*.pdf, paper/figures/, paper/generated/ and tle_archive/ are all
 # tracked on purpose. They are the exact inputs the paper was built from, and
 # CelesTrak serves only current elements -- without the dated archive, a past
 # prediction cannot be reproduced.
