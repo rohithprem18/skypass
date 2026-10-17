@@ -19,6 +19,24 @@ import matplotlib.pyplot as plt
 
 from _common import FIG_DIR, RESULTS_DIR
 
+#: Figure text has to match the body font of the paper it lands in, or the
+#: figures read as pasted-in screenshots. The two targets use different fonts:
+#:
+#:   cm     Computer Modern -- Springer's sn-jnl (its own sample PDF is CM)
+#:   times  Times           -- IEEEtran, which requests Times for the body
+#:
+#: Select with SKYPASS_FIG_FONT, or --font on the command line.
+FONT_PROFILES = {
+    "cm": {"font.serif": ["cmr10", "DejaVu Serif"],
+           "mathtext.fontset": "cm",
+           # cmr10 has no U+2212; without this matplotlib draws a blank box
+           "axes.unicode_minus": False},
+    "times": {"font.serif": ["STIXGeneral", "Times New Roman", "DejaVu Serif"],
+              "mathtext.fontset": "stix",
+              "axes.unicode_minus": True},
+}
+FONT = os.environ.get("SKYPASS_FIG_FONT", "cm")
+
 plt.rcParams.update({
     "font.family": "serif",
     "font.size": 8,
@@ -35,6 +53,7 @@ plt.rcParams.update({
     "savefig.bbox": "tight",
     "savefig.pad_inches": 0.02,
 })
+plt.rcParams.update(FONT_PROFILES[FONT])
 
 # Colour-blind-safe qualitative palette (Okabe-Ito).
 C = {"blue": "#0072B2", "orange": "#E69F00", "green": "#009E73",
@@ -204,7 +223,7 @@ def fig_budget_modes():
     ax2.set_xticklabels([labels[k] for k in order])
     ax2.set_ylabel("scheduled passes under clear sky (%)")
     ax2.set_xlabel("observing budget for the window")
-    ax2.set_title("(b) observations that actually worked")
+    ax2.set_title("(b) share of passes under clear sky")
     ax2.legend(frameon=False)
     _save(fig, "fig_budget_modes")
 
@@ -311,7 +330,10 @@ def fig_funnel():
               ("sunlit", f["sunlit"]),
               ("observer\nin darkness", f["dark_sky"]),
               ("bright\nenough", f["bright_enough"]),
-              ("forecast\nsky usable", f["cloud_clear"]),
+              # The scheduler draws from passes above the score floor. The
+              # cloud_clear count (forecast < 50%) is diagnostic only and is not
+              # a subset of what gets scheduled, so it cannot be a funnel stage.
+              ("above\nscore floor", f["above_floor"]),
               ("scheduled", f["scheduled"])]
     fig, ax = plt.subplots(figsize=(WIDE, 2.2))
     labels = [s[0] for s in stages]
@@ -327,13 +349,12 @@ def fig_funnel():
         txt = f"{v:,}" if prev is None else f"{v:,}\n({100.0 * v / vals[0]:.1f}%)"
         ax.annotate(txt, (b.get_x() + b.get_width() / 2, max(v, floor)),
                     xytext=(0, 3), textcoords="offset points",
-                    ha="center", va="bottom", fontsize=6.5, zorder=3)
+                    ha="center", va="bottom", fontsize=7.5, zorder=3)
     ax.set_ylabel("passes (log scale)")
     ax.set_ylim(floor, max(vals) * 6.0)
     ax.grid(axis="y", which="major", alpha=0.25, linewidth=0.4)
     ax.set_axisbelow(True)
-    ax.set_title(f"Visibility funnel, {rows[key]['site']}, "
-                 f"{rows[key]['horizon_days']:.0f}-day horizon")
+    # No in-figure title: Springer artwork rules keep titles in the caption.
     _save(fig, "fig_funnel")
 
 
@@ -477,7 +498,7 @@ def _placeholder(name):
 
 
 def main():
-    print("Rendering figures...")
+    print(f"Rendering figures... (font profile: {FONT}, -> {FIG_DIR})")
     for fn in (fig_accuracy, fig_forecast_skill, fig_site_skill,
                fig_calibration, fig_weather_value, fig_budget_modes,
                fig_lead_sweep, fig_scheduler, fig_funnel,
@@ -498,4 +519,24 @@ def main():
 
 
 if __name__ == "__main__":
+    import argparse
+
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--font", choices=sorted(FONT_PROFILES), default=FONT,
+                    help="body font of the target paper (default: %(default)s)")
+    ap.add_argument("--out", default=None,
+                    help="write the PDFs here instead of figures/")
+    ap.add_argument("--wide", type=float, default=None,
+                    help="layout width in inches for the wide figures. The "
+                         "default suits an IEEE double-column float; a paper "
+                         "that prints them in a narrower block should pass "
+                         "its width so the lettering prints at true size")
+    a = ap.parse_args()
+    if a.wide:
+        WIDE = a.wide
+    if a.font != FONT:
+        FONT = a.font
+        plt.rcParams.update(FONT_PROFILES[FONT])
+    if a.out:
+        FIG_DIR = os.path.abspath(a.out)
     main()

@@ -1,4 +1,4 @@
-/* Measured results, transcribed from paper/generated/numbers.tex.
+/* Measured results, transcribed from generated/numbers.tex.
  *
  * These are findings, not live state: they came from experiment runs over
  * fixed archived inputs and do not change when the planner runs. Every value

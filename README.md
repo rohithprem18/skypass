@@ -220,11 +220,13 @@ are in [docs/spacetrack-setup.md](docs/spacetrack-setup.md).
 
 ```text
 skypass/          Core propagation, geometry, scoring, weather, and scheduling
-experiments/      Eight validation experiments plus figure/table generators
+experiments/      Nine validation experiments plus figure/table generators
 tests/            Deterministic unit tests; no network required
 results/          Experiment outputs consumed by the paper
 figures/          Generated scientific figures
-paper/            Overleaf-ready manuscript: skypass.tex, refs.bib, figures/, generated/
+generated/        Result macros and tables built from results/ by make_tables.py
+final_paper/      Submission manuscripts: ieee/ (IEEE conference) and springer/
+                  (SN Computer Science), plus reports/ from the evidence audit
 tle_archive/      Dated orbital-element archives
 webapp/           Python server, React UI, and dependency-free fallback build
 docs/             Setup notes and project assets

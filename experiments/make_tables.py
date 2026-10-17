@@ -4,8 +4,14 @@ Every figure quoted in the paper is emitted here, so the text cannot drift from
 the experiments: the paper \\input{}s these files rather than hard-coding values.
 
 Writes:
-    paper/generated/tab_*.tex      booktabs tables
-    paper/generated/numbers.tex    \\newcommand macros for inline values
+    generated/tab_*.tex            booktabs tables
+    generated/numbers.tex          \\newcommand macros for inline values
+
+and then publishes them into the two submission manuscripts, so one run keeps
+both in step with results/:
+    final_paper/ieee/generated/    numbers.tex + the tables skypass.tex \\input{}s
+    final_paper/springer/skypass-sn.tex
+                                   its inlined macro block (Springer forbids \\input)
 
 Usage:
     python experiments/make_tables.py
@@ -17,8 +23,10 @@ import os
 
 from _common import RESULTS_DIR
 
-OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                   "paper", "generated")
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT = os.path.join(ROOT, "generated")
+IEEE_DIR = os.path.join(ROOT, "final_paper", "ieee")
+SPRINGER_TEX = os.path.join(ROOT, "final_paper", "springer", "skypass-sn.tex")
 
 MACROS: dict = {}
 
@@ -40,12 +48,29 @@ def write(name, body):
     WRITTEN.add(name[:-4] if name.endswith(".tex") else name)
     with open(os.path.join(OUT, name), "w", encoding="utf-8") as fh:
         fh.write(body)
-    print(f"  -> paper/generated/{name}")
+    print(f"  -> generated/{name}")
+
+
+def group(value):
+    """Thin-space thousands grouping, applied from five digits upward.
+
+    Call sites had been splitting on this: some passed \\, grouped strings and
+    some passed bare ints, so "2\\,000" and "12449" could appear in the same
+    paper. Normalising here makes every count read the same way, and follows the
+    SI convention of leaving four-digit integers unseparated.
+    """
+    digits = str(value).replace("\\,", "").replace(",", "")
+    if not digits.lstrip("-").isdigit():
+        return value
+    sign, digits = ("-", digits[1:]) if digits.startswith("-") else ("", digits)
+    if len(digits) < 5:
+        return sign + digits
+    return sign + f"{int(digits):,}".replace(",", "\\,")
 
 
 def mac(key, value):
     """Register an inline macro. Keys must be letters only (TeX restriction)."""
-    MACROS[key] = value
+    MACROS[key] = group(value)
 
 
 def esc(s):
@@ -474,6 +499,10 @@ def tab_pipeline():
     mac("DemoDark", f["dark_sky"])
     mac("DemoBright", f["bright_enough"])
     mac("DemoClear", f["cloud_clear"])
+    # The scheduler draws from passes above the score floor, not from the
+    # cloud-clear count, which is diagnostic only (cloud enters the score as
+    # a continuous weight). Prose describing the funnel must use this one.
+    mac("DemoCandidates", f["above_floor"])
     mac("DemoScheduled", f["scheduled"])
     mac("DemoRuntime", num(v["runtime"]["total"], 1))
     mac("DemoHorizon", num(d["horizon_days"], 0))
@@ -583,12 +612,13 @@ def tab_histtle():
          r"\caption{Effect of how the pass geometry is obtained. The default "
          r"run propagates current elements backwards over the window; the "
          r"second uses the element set that was actually current on each "
-         r"night, from Space-Track. The ordering and the monotone rise with "
-         r"budget freedom are unchanged, but epoch-correct geometry reports a "
-         r"\emph{larger} weather benefit throughout: back-propagation error "
-         r"blurs the association between a pass time and the sky above it, "
-         r"attenuating the very signal being measured. The default run is "
-         r"therefore the conservative one. Threshold value model.}",
+         r"night, from Space-Track. The ordering and the rise with budget "
+         r"freedom are unchanged. Epoch-correct geometry reports a larger "
+         r"weather benefit in three of the four regimes, consistent with "
+         r"back-propagation error blurring the association between a pass "
+         r"time and the sky above it; at the half budget it reports a smaller "
+         r"one, so the default run is not uniformly conservative. Threshold "
+         r"value model.}",
          r"\label{tab:histtle}", r"\centering",
          r"\setlength{\tabcolsep}{4pt}",
          r"\begin{tabular}{lrrrr}", r"\toprule",
@@ -612,6 +642,120 @@ def tab_histtle():
             mac(macro, num(v, 1))
 
 
+def tab_bootstrap():
+    """Confidence intervals on the weather-value gains (experiment 9).
+
+    The resampling unit is the station, so these intervals answer "how much of
+    the pooled gain is an accident of which six stations were in the panel?".
+    """
+    b = load("exp9_bootstrap")
+    if not b:
+        return
+    modes = b.get("modes") or {}
+
+    L = [r"\begin{table}[t]",
+         r"\caption{Cluster bootstrap over the %d stations (%s resamples, "
+         r"percentile 95\%% intervals). The resampling unit is the station, so "
+         r"the interval reflects how far the pooled gain depends on which "
+         r"stations were in the panel.}"
+         % (len(b.get("stations", [])), f"{b.get('resamples', 0):,}".replace(",", "\\,")),
+         r"\label{tab:bootstrap}", r"\centering", r"\small",
+         r"\begin{tabular}{lrrr}", r"\toprule",
+         r"Observing regime & Gain (\%) & 95\% CI & $P(>0)$ \\",
+         r"\midrule"]
+    for key, label in (("nightly-quota", "Nightly quota"),
+                       ("budget-75pct", "Budget, 75\\% of nights"),
+                       ("budget-50pct", "Budget, 50\\% of nights"),
+                       ("budget-25pct", "Budget, 25\\% of nights")):
+        g = modes.get(key, {}).get("bootstrap", {}).get("gain_clear_pct")
+        if not g or g.get("point") is None:
+            continue
+        L.append("%s & %+.1f & [%+.1f, %+.1f] & %.2f \\\\"
+                 % (label, g["point"], g["lo"], g["hi"], g["share_positive"]))
+    L += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
+    write("tab_bootstrap.tex", "\n".join(L) + "\n")
+
+    for key, prefix in (("nightly-quota", "QuotaGainClear"),
+                        ("budget-50pct", "BudgetGainClear"),
+                        ("budget-25pct", "TightGainClear")):
+        g = modes.get(key, {}).get("bootstrap", {}).get("gain_clear_pct")
+        if g and g.get("lo") is not None:
+            mac(prefix + "Lo", num(g["lo"], 1))
+            mac(prefix + "Hi", num(g["hi"], 1))
+            mac(prefix + "Pos", num(g["share_positive"], 2))
+    for key, prefix in (("budget-50pct", "BudgetGainEV"),
+                        ("nightly-quota", "QuotaGainEV")):
+        g = modes.get(key, {}).get("bootstrap", {}).get("gain_ev_pct")
+        if g and g.get("lo") is not None:
+            mac(prefix + "Lo", num(g["lo"], 1))
+            mac(prefix + "Hi", num(g["hi"], 1))
+    mac("BootResamples", f"{b.get('resamples', 0):,}".replace(",", "\\,"))
+    mac("BootStations", str(len(b.get("stations", []))))
+
+
+def audit_macros():
+    """Values the manuscript needs to state its findings without overreach.
+
+    Added after an evidence audit found prose claims that the stored results did
+    not support as worded: station counts that differ between experiments, a
+    raw-forecast penalty that holds only under the quota, an epoch-correct
+    benefit that is not uniform, calibration slopes quoted as an upper bound
+    that two stations exceed, and heavy-tailed ageing errors quoted by mean only.
+    """
+    e3, e4 = load("exp3_forecast"), load("exp4_weather_value")
+    words = ["zero", "one", "two", "three", "four", "five", "six", "seven",
+             "eight", "nine", "ten"]
+    if e3:
+        mac("SkillStations", len(e3["sites"]))
+        if len(e3["sites"]) <= 10:
+            mac("SkillStationsWord", words[len(e3["sites"])])
+    if e4:
+        mac("EvalStations", len(e4["sites"]))
+        if len(e4["sites"]) <= 10:
+            mac("EvalStationsWord", words[len(e4["sites"])])
+        bm = e4["budget_modes"]
+        mac("RawQuotaClear", num(bm["nightly-quota"]["raw_gain_clear_pct"], 1))
+        mac("RawBudgetEV", num(bm["budget-50pct"]["raw_gain_ev_pct"], 1))
+        mac("RawBudgetClear", num(bm["budget-50pct"]["raw_gain_clear_pct"], 1))
+        cal = [s["calibration"] for s in e4["sites"].values() if s.get("calibration")]
+        if cal:
+            mac("SlopeMin", num(min(c["slope"] for c in cal), 2))
+            mac("SlopeMax", num(max(c["slope"] for c in cal), 2))
+            mac("InterceptMin", num(min(c["intercept"] for c in cal), 2))
+            mac("InterceptMax", num(max(c["intercept"] for c in cal), 2))
+    h = load("exp4_weather_value_histtle")
+    if h:
+        bm = h["budget_modes"]
+        mac("HistQuotaEV", num(bm["nightly-quota"]["gain_ev_pct"], 1))
+        mac("HistBudgetEV", num(bm["budget-50pct"]["gain_ev_pct"], 1))
+        mac("HistTightClear", num(bm["budget-25pct"]["gain_clear_pct"], 1))
+    e8 = load("exp8_tle_age")
+    if e8:
+        by = e8["by_age"]
+        for key, macro in (("0-1 d", "AgeDayOneMedian"), ("7-14 d", "AgeWeekMedian"),
+                           ("30-90 d", "AgeMonthMedian")):
+            if key in by:
+                mac(macro, num(by[key]["d_tca_s"]["median"], 2))
+    e2 = load("exp2_elements")
+    if e2:
+        # A zero median shows the two providers mostly serve the same upstream
+        # element sets, so their agreement is not an independent cross-check.
+        mac("ProviderTcaMedian", num(e2["part_b_provider_divergence"]["d_tca_s"]["median"], 2))
+    e5 = load("exp5_scheduling")
+    if e5 and e5.get("part_b_vs_genetic"):
+        g = e5["part_b_vs_genetic"][0]
+        mac("GAPopulation", g["ga_population"])
+        mac("GAGenerations", g["ga_generations"])
+        mac("GASites", len(e5["part_b_vs_genetic"]))
+    e6 = load("exp6_pipeline")
+    if e6:
+        rows = {r["w_elev"]: r["jaccard_vs_default"] for r in e6["part_b_weight_sensitivity"]}
+        if 0.0 in rows:
+            mac("JaccardDurOnly", num(rows[0.0], 2))
+        if 0.9 in rows:
+            mac("JaccardNinety", num(rows[0.9], 2))
+
+
 def env_macros():
     for name in ("exp1_accuracy", "exp4_weather_value", "exp6_pipeline"):
         d = load(name)
@@ -626,7 +770,7 @@ def main():
     print("Generating LaTeX tables...")
     for fn in (tab_accuracy, tab_elements, tab_forecast, tab_weather_value,
                tab_scheduling, tab_pipeline, tab_structure,
-               tab_tleage, tab_histtle, env_macros):
+               tab_tleage, tab_histtle, tab_bootstrap, audit_macros, env_macros):
         try:
             fn()
         except Exception as exc:                      # noqa: BLE001
@@ -639,7 +783,7 @@ def main():
                 "tab_weather_value", "tab_persite", "tab_scheduling",
                 "tab_genetic", "tab_pipeline", "tab_leadsweep",
                 "tab_capsweep", "tab_budgetmodes", "tab_structure",
-                "tab_tleage", "tab_histtle"]
+                "tab_tleage", "tab_histtle", "tab_bootstrap"]
     os.makedirs(OUT, exist_ok=True)
     for name in expected:
         path = os.path.join(OUT, f"{name}.tex")
@@ -685,12 +829,55 @@ def main():
                 "DemoSunlit", "DemoDark", "DemoBright", "DemoClear",
                 "DemoScheduled", "DemoRuntime", "DemoHorizon", "DemoObjects",
                 "JaccardMid", "JaccardExtreme", "ScaleObjects", "ScaleDays",
-                "ScaleSeconds", "PythonVersion", "SgpVersion"):
+                "ScaleSeconds", "PythonVersion", "SgpVersion",
+                "QuotaGainClearLo", "QuotaGainClearHi", "QuotaGainClearPos",
+                "BudgetGainClearLo", "BudgetGainClearHi", "BudgetGainClearPos",
+                "TightGainClearLo", "TightGainClearHi", "TightGainClearPos",
+                "BudgetGainEVLo", "BudgetGainEVHi",
+                "BootResamples", "BootStations"):
         MACROS.setdefault(key, r"\textbf{??}")
     for k, v in sorted(MACROS.items()):
+        # A bare "-" typesets as a hyphen in running text; \ensuremath{-}
+        # gives a true minus sign in both text and math mode.
+        if isinstance(v, str) and v.startswith("-") and v[1:2].isdigit():
+            v = r"\ensuremath{-}" + v[1:]
         lines.append(f"\\newcommand{{\\{k}}}{{{v}}}")
     write("numbers.tex", "\n".join(lines) + "\n")
     print(f"  ({len(MACROS)} inline macros)")
+    publish()
+
+
+def publish():
+    """Copy the generated values into both submission manuscripts."""
+    import re
+    import shutil
+
+    tex_path = os.path.join(IEEE_DIR, "skypass.tex")
+    if os.path.exists(tex_path):
+        dest = os.path.join(IEEE_DIR, "generated")
+        os.makedirs(dest, exist_ok=True)
+        with open(tex_path, encoding="utf-8") as fh:
+            used = re.findall(r"\\input\{generated/([^}]+)\}", fh.read())
+        names = sorted({n if n.endswith(".tex") else n + ".tex" for n in used})
+        for name in names:
+            shutil.copy(os.path.join(OUT, name), os.path.join(dest, name))
+        print(f"  -> final_paper/ieee/generated/ ({', '.join(names)})")
+
+    if os.path.exists(SPRINGER_TEX):
+        with open(SPRINGER_TEX, encoding="utf-8") as fh:
+            s = fh.read()
+        marker = "%%== generated result values"
+        begin = r"\begin{document}"
+        if marker in s and begin in s:
+            with open(os.path.join(OUT, "numbers.tex"), encoding="utf-8") as fh:
+                numbers = fh.read().strip()
+            header = ("%%== generated result values (experiments/make_tables.py), "
+                      "inlined ==%%\n%% Springer forbids \\input, so "
+                      "generated/numbers.tex is pasted here.\n")
+            s = s[:s.index(marker)] + header + numbers + "\n\n" + s[s.index(begin):]
+            with open(SPRINGER_TEX, "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(s)
+            print("  -> final_paper/springer/skypass-sn.tex (inlined macros)")
 
 
 if __name__ == "__main__":

@@ -10,7 +10,10 @@ import os
 import re
 import sys
 
-HERE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "paper")
+# The IEEE submission copy; the Springer copy is a single file with the same
+# content and is checked by compiling it.
+HERE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                    "final_paper", "ieee")
 
 
 def read(path):
@@ -101,7 +104,7 @@ def main():
     for f in sorted(figs):
         if not os.path.exists(os.path.join(figdir, f)):
             ok = False
-            print(f"  ERROR missing figure: paper/figures/{f}")
+            print(f"  ERROR missing figure: final_paper/ieee/figures/{f}")
     print(f"figures: {len(figs)} referenced")
     if orphans:
         print(f"  note: generated but never \\input: {orphans}")

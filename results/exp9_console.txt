@@ -1,0 +1,34 @@
+
+==========================================================================
+ 9  Uncertainty on the weather-value gains (6 stations, 10000 resamples)
+==========================================================================
+  window 2026-06-25 .. 2026-08-23   (read back from experiment 4)
+  stations: chennai, bengaluru, leh, tucson, singapore, reykjavik
+
+  nightly-quota    budget  None   reproduces experiment 4: ok (max drift 0.000 pp)
+      clear-sky gain                    -0.2%  95% CI [-11.6, +3.5]  P(>0)=0.46
+      expected-value gain               -1.5%  95% CI [-2.7, +2.0]  P(>0)=0.13
+      oracle clear-sky headroom        +31.6%  95% CI [+26.7, +45.7]  P(>0)=1.00
+      uncalibrated clear-sky gain       -5.5%  95% CI [-12.3, +2.4]  P(>0)=0.06
+
+  budget-75pct     budget   135   reproduces experiment 4: ok (max drift 0.000 pp)
+      clear-sky gain                   +17.7%  95% CI [-4.3, +35.2]  P(>0)=0.95
+      expected-value gain               +7.8%  95% CI [+3.1, +10.9]  P(>0)=1.00
+      oracle clear-sky headroom        +60.3%  95% CI [+48.3, +97.0]  P(>0)=1.00
+      uncalibrated clear-sky gain      +11.9%  95% CI [-3.3, +39.3]  P(>0)=0.95
+
+  budget-50pct     budget    90   reproduces experiment 4: ok (max drift 0.000 pp)
+      clear-sky gain                   +37.6%  95% CI [+3.1, +80.4]  P(>0)=0.98
+      expected-value gain              +19.0%  95% CI [+9.2, +24.9]  P(>0)=1.00
+      oracle clear-sky headroom       +106.7%  95% CI [+68.7, +192.4]  P(>0)=1.00
+      uncalibrated clear-sky gain      +29.9%  95% CI [+3.6, +90.1]  P(>0)=0.99
+
+  budget-25pct     budget    45   reproduces experiment 4: ok (max drift 0.000 pp)
+      clear-sky gain                   +55.0%  95% CI [+24.7, +144.5]  P(>0)=1.00
+      expected-value gain              +19.2%  95% CI [+9.3, +38.6]  P(>0)=1.00
+      oracle clear-sky headroom       +179.1%  95% CI [+101.0, +412.2]  P(>0)=1.00
+      uncalibrated clear-sky gain      +43.7%  95% CI [+6.1, +165.2]  P(>0)=0.99
+
+  largest drift from experiment 4: 0.000 pp (tolerance 0.5)
+
+  -> C:\Users\admin\Documents\projctss\SkyPass\results\exp9_bootstrap.json
