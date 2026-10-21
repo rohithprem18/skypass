@@ -6,7 +6,7 @@ produced by an evidence audit against `results/*.json` and the code.
 | Folder | Format | Pages | References |
 |---|---|---|---|
 | `ieee/` | IEEEtran conference, 2 columns | 6 | 30 |
-| `springer/` | Springer Nature `sn-jnl` (SN Computer Science), 1 column | 12 | 17 |
+| `springer/` | Springer Nature `sn-jnl` (SN Computer Science), 1 column | 18 | 30 |
 | `reports/` | Audit deliverables | | |
 
 Earlier versions (the 13-page IEEE and 29-page Springer papers, the uncorrected
@@ -18,11 +18,13 @@ the project on 15 Oct 2026 to `../SkyPass_old_papers_backup/`.
 Each manuscript folder is self-contained. Zip the folder's *contents* (not the
 folder) and upload to Overleaf or the journal system; compile with pdfLaTeX.
 
-* `ieee/`: `skypass.tex`, `refs.bib`, `figures/` (5 PDFs, Times lettering),
-  `generated/` (result macros and the accuracy table).
+* `ieee/`: `skypass.tex`, `refs.bib`, `figures/` (4 PDFs, Times lettering; the
+  architecture diagram is inline TikZ), `generated/` (result macros and the
+  accuracy table).
 * `springer/`: `skypass-sn.tex` (single file, macros inlined as Springer
   requires), `references.bib`, `sn-jnl.cls`, `sn-mathphys-num.bst`,
-  `Fig1.pdf`-`Fig3.pdf` (Computer Modern lettering, printed at true size).
+  `Fig1.pdf`-`Fig13.pdf` (Computer Modern lettering; Fig1-4 and Fig7 are colour
+  TikZ diagrams from `experiments/diagrams/`).
 
 The compiled `skypass.pdf` / `skypass-sn.pdf` in each folder are local
 (Tectonic/XeTeX) builds for reading; regenerate them on the target system.

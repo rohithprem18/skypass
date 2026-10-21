@@ -335,7 +335,7 @@ def fig_funnel():
               # a subset of what gets scheduled, so it cannot be a funnel stage.
               ("above\nscore floor", f["above_floor"]),
               ("scheduled", f["scheduled"])]
-    fig, ax = plt.subplots(figsize=(WIDE, 2.2))
+    fig, ax = plt.subplots(figsize=(WIDE, 1.85))
     labels = [s[0] for s in stages]
     vals = [s[1] for s in stages]
     cols = [C["grey"], C["yellow"], C["sky"], C["orange"], C["blue"], C["green"]]
@@ -378,7 +378,7 @@ def fig_weight_sensitivity():
     lines = ax.get_lines() + ax2.get_lines()
     ax.legend(lines, [l.get_label() for l in lines], frameon=False,
               loc="lower center")
-    ax.set_title("Timetable is stable across score weights")
+    ax.set_title("Timetable is stable across moderate weights")
     _save(fig, "fig_weight_sensitivity")
 
 
@@ -497,12 +497,130 @@ def _placeholder(name):
     _save(fig, name)
 
 
+def fig_brightness():
+    """Experiment 11: learned photometry against the sphere, and what it uses."""
+    d = _load("exp11_brightness")
+    if not d:
+        return
+    import numpy as np
+    keys = ("sphere_skypass", "sphere_fitted", "learned_hgb")
+    labels = ("sphere\n(current)", "sphere\n(fitted)", "learned\n(GBM)")
+    cols = [C["grey"], C["orange"], C["blue"]]
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.1),
+                                   gridspec_kw={"width_ratios": [1.15, 1]})
+    x = np.arange(len(keys))
+    g = [d["grouped_cv"][k]["mae"] for k in keys]
+    t = [d["temporal"][k]["mae"] for k in keys]
+    w = 0.38
+    b1 = ax1.bar(x - w / 2, g, w, color=cols, edgecolor="white", label="unseen satellites")
+    b2 = ax1.bar(x + w / 2, t, w, color=cols, alpha=0.45, edgecolor=cols, hatch="///",
+                 label=f"later period (after {d['temporal']['split_date'][:7]})")
+    for bars, vals in ((b1, g), (b2, t)):
+        for b, v in zip(bars, vals):
+            ax1.annotate(f"{v:.2f}", (b.get_x() + b.get_width() / 2, v), xytext=(0, 2),
+                         textcoords="offset points", ha="center", va="bottom", fontsize=6.5)
+    ax1.set_xticks(x, labels)
+    ax1.set_ylabel("mean absolute error (mag)")
+    ax1.set_ylim(0, max(g + t) * 1.25)
+    ax1.legend(frameon=False, fontsize=6.5, loc="upper right")
+    ax1.set_title("(a) prediction error")
+    imp = d["permutation_importance_mae"]
+    order = sorted(imp, key=imp.get)
+    ax2.barh(order, [imp[k] for k in order], color=C["blue"])
+    ax2.set_xlabel("MAE increase when shuffled (mag)")
+    ax2.set_title("(b) what the learned model uses")
+    ax2.tick_params(axis="y", labelsize=7)
+    fig.tight_layout(w_pad=1.5)
+    _save(fig, "fig_brightness")
+
+
+def fig_cloudcam():
+    """Experiment 10: example segmentations and the metrics of each method."""
+    d = _load("exp10_cloudcam")
+    if not d:
+        return
+    import numpy as np
+    ex_path = os.path.join(os.path.dirname(RESULTS_DIR), "cache", "ml", "figures",
+                           "cloudcam_examples.npz")
+    if not os.path.exists(ex_path):
+        print("  [skip] fig_cloudcam: run exp10 to create its example cache")
+        return
+    ex = np.load(ex_path)
+    n = min(2, len(ex["idx"]))
+    fig = plt.figure(figsize=(WIDE, 0.85 * n + 1.25))
+    gs = fig.add_gridspec(n + 1, 5, height_ratios=[1] * n + [1.25], hspace=0.12, wspace=0.04)
+    titles = ("whole-sky image", "label", "tuned R/B rule", "pixel GBM", "U-Net")
+    sky = np.array([0.74, 0.84, 0.95]); cloud = np.array([0.97, 0.97, 0.97]); undef = np.array([0.2, 0.2, 0.2])
+    def colour(lab):
+        out = np.empty(lab.shape + (3,))
+        out[lab == 1] = cloud; out[lab == 0] = sky; out[lab == -1] = undef
+        return out
+    for r in range(n):
+        valid = ex["lab"][r] != -1
+        panels = (ex["img"][r], colour(ex["lab"][r]),
+                  colour(np.where(valid, ex["ratio"][r], -1)),
+                  colour(np.where(valid, ex["gbm"][r], -1)),
+                  colour(np.where(valid, (ex["unet"][r] > 0.5).astype(int), -1)))
+        for c, im in enumerate(panels):
+            ax = fig.add_subplot(gs[r, c])
+            ax.imshow(im, interpolation="nearest")
+            ax.set_xticks([]); ax.set_yticks([])
+            for s in ax.spines.values():
+                s.set_visible(False)
+            if r == 0:
+                ax.set_title(titles[c], fontsize=7.5)
+    axm = fig.add_subplot(gs[n, :])
+    keys = ("ratio_fixed", "ratio_tuned", "pixel_gbm", "unet")
+    names = ("R/B = 0.6", "tuned R/B", "pixel GBM", "U-Net")
+    p = d["pooled"]
+    x = np.arange(len(keys)); w = 0.38
+    iou = [p[k]["cloud_iou"] for k in keys]
+    fmae = [100 * p[k]["fraction_mae"] for k in keys]
+    b1 = axm.bar(x - w / 2, iou, w, color=C["blue"], label="cloud IoU")
+    axr = axm.twinx()
+    b2 = axr.bar(x + w / 2, fmae, w, color=C["orange"], label="cloud-fraction error (pp)")
+    for b, v in zip(b1, iou):
+        axm.annotate(f"{v:.2f}", (b.get_x() + b.get_width() / 2, v), xytext=(0, 1),
+                     textcoords="offset points", ha="center", va="bottom", fontsize=6.5)
+    for b, v in zip(b2, fmae):
+        axr.annotate(f"{v:.1f}", (b.get_x() + b.get_width() / 2, v), xytext=(0, 1),
+                     textcoords="offset points", ha="center", va="bottom", fontsize=6.5)
+    axm.set_xticks(x, names)
+    axm.set_ylim(0, 1.45); axm.set_ylabel("cloud IoU")
+    axr.set_ylim(0, max(fmae) * 1.6); axr.set_ylabel("fraction error (pp)")
+    axr.grid(False)
+    axm.legend(handles=[b1, b2], frameon=False, fontsize=6.5, loc="upper center", ncol=2)
+    _save(fig, "fig_cloudcam")
+
+    # Column-width strip of the first two examples, for a two-column paper
+    # that reports the metrics in a table.
+    rows = min(2, n)
+    fig = plt.figure(figsize=(COL, 0.62 * rows + 0.2))
+    gs = fig.add_gridspec(rows, 5, hspace=0.06, wspace=0.04)
+    for r in range(rows):
+        valid = ex["lab"][r] != -1
+        panels = (ex["img"][r], colour(ex["lab"][r]),
+                  colour(np.where(valid, ex["ratio"][r], -1)),
+                  colour(np.where(valid, ex["gbm"][r], -1)),
+                  colour(np.where(valid, (ex["unet"][r] > 0.5).astype(int), -1)))
+        for c, im in enumerate(panels):
+            ax = fig.add_subplot(gs[r, c])
+            ax.imshow(im, interpolation="nearest")
+            ax.set_xticks([]); ax.set_yticks([])
+            for s in ax.spines.values():
+                s.set_visible(False)
+            if r == 0:
+                ax.set_title(titles[c], fontsize=6.5)
+    _save(fig, "fig_cloudcam_strip")
+
+
 def main():
     print(f"Rendering figures... (font profile: {FONT}, -> {FIG_DIR})")
     for fn in (fig_accuracy, fig_forecast_skill, fig_site_skill,
                fig_calibration, fig_weather_value, fig_budget_modes,
                fig_lead_sweep, fig_scheduler, fig_funnel,
-               fig_weight_sensitivity, fig_tle_age):
+               fig_weight_sensitivity, fig_tle_age, fig_brightness,
+               fig_cloudcam):
         try:
             fn()
         except Exception as exc:                      # noqa: BLE001
@@ -531,9 +649,14 @@ if __name__ == "__main__":
                          "default suits an IEEE double-column float; a paper "
                          "that prints them in a narrower block should pass "
                          "its width so the lettering prints at true size")
+    ap.add_argument("--col", type=float, default=None,
+                    help="layout width in inches for the single-panel figures, "
+                         "e.g. half the text width when two are set side by side")
     a = ap.parse_args()
     if a.wide:
         WIDE = a.wide
+    if a.col:
+        COL = a.col
     if a.font != FONT:
         FONT = a.font
         plt.rcParams.update(FONT_PROFILES[FONT])

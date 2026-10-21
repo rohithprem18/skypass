@@ -1,15 +1,16 @@
 # Submission readiness report
 
 Final assessment of `final_paper/springer/` (SN Computer Science) and
-`final_paper/ieee/` (IEEE conference, venue not yet chosen), after the audit,
-corrections and a second quality-control pass.
+`final_paper/ieee/` (IEEE conference, venue not yet chosen) for release v2.0.0
+(21 Oct 2026), which adds the learned cloud nowcast and brightness model to both
+manuscripts.
 
 ## Classification
 
 | Manuscript | Classification |
 |---|---|
-| Springer, SN Computer Science (12 pp) | **Near submission-ready.** No critical scientific or integrity issue remains open. The remaining items are limited and listed below; two of them (publishing the code, confirming the AI statement) are blocking but are author actions, not research work. |
-| IEEE (6 pp) | **Near submission-ready**, subject to choosing a venue and deciding the figure-legibility trade-off. |
+| Springer, SN Computer Science (18 pp) | **Near submission-ready.** No critical scientific or integrity issue is open. The remaining items are author confirmations and decisions, listed below. |
+| IEEE (6 pp) | **Near submission-ready**, subject to choosing a venue and confirming its page limit. |
 
 This is a judgement about correctness and completeness against the evidence and
 the verified venue requirements. It is not a prediction of acceptance.
@@ -18,61 +19,58 @@ the verified venue requirements. It is not a prediction of acceptance.
 
 | Check | Springer | IEEE |
 |---|---|---|
-| Compiles, 0 errors, 0 overfull boxes, 0 undefined references or citations | Yes | Yes |
-| Every cited key in the bibliography, every entry cited | 17 / 17 | 30 / 30 |
-| Every figure and table cited in text, figures cited in order | Yes | Yes |
-| No `??`, no drafting markers, no em-dashes, no bold run-in labels | Yes | Yes |
-| Every number a generated macro from `results/` | Yes (147 inlined) | Yes (`generated/numbers.tex`) |
-| Abstract, results and conclusion report the same findings | Yes: quota gives nothing; budget gives +19.0% EV and +37.6% clear-sky with intervals; calibration raises the gain (point estimates); raw forecast worse than ignoring weather only under the quota | Same |
+| Compiles, 0 errors, 0 undefined references or citations, no `??` | Yes | Yes |
+| Every cited key in the bibliography, every entry cited | 30 / 30 | 30 / 30 |
+| Every figure cited, figures first cited in numerical order | Yes (13) | Yes (5) |
+| No em-dashes, no bold run-in labels | Yes | Yes |
+| Every number a generated macro from `results/` | Yes (204, inlined) | Yes (`generated/numbers.tex`); `check_paper.py` OK |
+| Abstract length | 247 words | 238 words |
+| Abstract, results and conclusion report the same findings | Yes: quota gives nothing; budget gives +19.0% EV and +37.6% clear-sky; calibration raises the gain (point estimates); learned segmentation 1.2 pp cloud-fraction error against 3.5 pp for the tuned ratio rule; learned photometry 0.83 against 1.51 mag for unseen satellites, no gain over time | Same |
 | Station counts consistent (7 for skill, 6 for value) | Yes | Yes |
-| Limitations stated: one season, six stations, few-cluster bootstrap, cloud as proxy, photometry, LEO-only ageing, single instrument | Yes | Yes (condensed) |
+| SCORE acknowledgement and NSF disclaimer verbatim | Yes | Yes |
+| Unit tests | 71 passed | |
 
 ## Blockers (must be done before submitting)
 
-1. **Publish the code that the paper describes.** Nothing has been committed
-   since `9a288c4`. The repository linked in the paper does not contain
-   experiment 9, its results, the corrected generators, or these manuscripts.
-   Commit and push, and preferably archive a tagged release on Zenodo so the
-   data statement can cite a DOI. (Not done here: commits and pushes need your
-   instruction.)
-2. **Confirm the AI-use statements.** Both publishers require disclosure.
-   Draft wording is in the Springer Experimental Setup and the IEEE
-   Acknowledgements. Confirm it describes how AI was actually used across the
-   whole project (writing, code, experiments, figures) and adjust it.
-3. **Confirm the declarations.** No funding, no competing interests: only the
+1. **Confirm the AI-use statements.** Both publishers require disclosure. Draft
+   wording is in the Springer Experimental Setup and the IEEE Acknowledgements.
+   Confirm it describes how AI was used across the whole project (writing, code,
+   experiments, figures, the learned components) and adjust it.
+2. **Confirm the declarations.** No funding, no competing interests: only the
    authors can confirm these.
+
+The code blocker of earlier versions is resolved: v2.0.0 is committed and tagged
+in the public repository.
 
 ## Author decisions (not blocking, but affect review)
 
 | Decision | Options | Recommendation |
 |---|---|---|
-| Springer length | 12 pages now. The journal sets no limit. Reaching 10 would need dropping the funnel figure and about 150 words, or shrinking figures back below legible size. | Keep 12. |
+| Springer length | 18 pages; the journal sets no limit. | Keep. |
 | Structured abstract labels | Removed at your request; the journal asks for Purpose / Methods / Results / Conclusion. | Enter the labels in the submission system's abstract fields if prompted. |
-| IEEE figure legibility | Figs. 3, 5, 6 print at about 3.5 pt lettering. Fix needs one figure removed or a seventh page. | Drop Fig. 6 (funnel; its numbers are in the text) and regenerate Figs. 3 and 5 at column width. |
-| Literature additions | Spacetrack Report #3 and Vallado et al. (2006); one forecast-value reference (Richardson 2000 is already verified in `paper/refs.bib`); Kleinberg and Tardos for interval scheduling. | Add to the Springer version (about half a page). These are the likeliest scholarship remarks from reviewers. |
-| Venue | SN Computer Science (broad CS) or Astronomy and Computing (specialist). | SN Computer Science fits the scope; the paper's weight rests on the empirical weather finding. |
+| WSISEG data licence | The dataset repository states no licence; it is cited and not redistributed. | If an editor asks, write to the dataset authors for permission. |
+| SCORE contact | SCORE's usage notes suggest contacting its team, and considering co-authorship with the observers, for publications that rely substantially on its data. | Your decision; at minimum an e-mail to the SCORE team before submission. |
+| Venue | SN Computer Science (broad CS) or Astronomy and Computing (specialist). | SN Computer Science fits; the ML additions strengthen the systems angle. |
+| Duplicate submission | The two manuscripts share results. | Submit one, or extend substantially for the journal. |
 | ORCID | Add if available. | Add. |
 
 ## Remaining evidence gaps (documented, not fixable by editing)
 
 | Gap | Effect on claims |
 |---|---|
-| One season, six stations | The clear-sky interval at the headline budget is wide (+3.1 to +80.4%). Generalisation beyond this setting is stated as an expectation, not a result. |
+| One season, six stations | The clear-sky interval at the headline budget is wide (+3.1 to +80.4%). Generalisation is stated as an expectation. |
 | Few-cluster bootstrap | Intervals approximate and probably too narrow; stated in both papers. |
 | Calibrated vs raw difference not tested | Stated as point estimates. |
-| Weather cache and Space-Track data not redistributed | Reproduction depends on Open-Meteo continuing to serve the archive and on a Space-Track account; stated in the data statement. |
-| No tool survey | The two "to our knowledge" claims stay hedged. |
-| No similarity check | Plagiarism risk cannot be certified; the journal will run its own check. |
-| 30% clear-sky threshold not varied | Sensitivity of the 37.6% figure to the threshold unknown. |
-| Shipped tool differs from the evaluated method | The evaluated planner calibrates the forecast and uses a window budget; the released CLI and web app use the raw forecast with no budget option (`pipeline.plan()`, `webapp/server.py`). The papers describe the evaluated method. Either implement calibration and the budget mode in the tool before release, or state in the paper that they are experiment-side. |
+| Sky camera: one camera, planning value unmeasured | The segmentation accuracy is measured; its value to the planner and transfer to other cameras are stated as untested. |
+| Brightness model drift | Measured (temporal split); the sphere stays the default and the papers say so. |
+| Weather cache, Space-Track, SCORE and WSISEG data not redistributed | Reproduction depends on the providers continuing to serve the data; stated in the data statement. |
+| No similarity check | The journal will run its own. |
 
 ## Files
 
 | Path | Status |
 |---|---|
-| `final_paper/springer/` | Upload-ready: `skypass-sn.tex`, `references.bib`, `sn-jnl.cls`, `sn-mathphys-num.bst`, `Fig1-3.pdf` |
-| `final_paper/ieee/` | Upload-ready: `skypass.tex`, `refs.bib`, `figures/`, `generated/` |
-| `final_paper/reports/` | `research_audit_report.md`, `claim_evidence_matrix.md`, `literature_and_citation_audit.md`, `experimental_validation_report.md`, `springer_compliance_checklist.md`, `change_log.md`, `final_peer_review.md`, this report |
-| `results/exp9_bootstrap.json`, `results/exp9_console.txt` | New experiment output |
-| `experiments/make_tables.py`, `experiments/make_figures.py` | Generator corrections (shared) |
-| `paper/`, `paper/v2/`, `paper/springer/` | Prose unchanged; the full-length versions still carry the defects corrected here |
+| `final_paper/springer/` | Upload-ready: `skypass-sn.tex`, `references.bib`, `sn-jnl.cls`, `sn-mathphys-num.bst`, `Fig1.pdf`-`Fig13.pdf` |
+| `final_paper/ieee/` | Upload-ready: `skypass.tex`, `refs.bib`, `figures/` (4 PDFs), `generated/` |
+| `final_paper/reports/` | Audit deliverables; `change_log.md` P11-P13 record the v2 changes |
+| `results/exp10_cloudcam.json`, `results/exp11_brightness.json` | New experiment outputs |

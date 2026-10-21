@@ -18,3 +18,9 @@ SPACETRACK_CACHE_DIR = os.path.join(CACHE_DIR, "spacetrack")
 RESULTS_DIR = os.path.join(PROJECT_ROOT, "results")
 FIGURES_DIR = os.path.join(PROJECT_ROOT, "figures")
 TLE_ARCHIVE_DIR = os.path.join(PROJECT_ROOT, "tle_archive")
+
+#: Downloaded ML datasets and trained models. Both live under the ignored cache:
+#: the datasets carry their own licences and are fetched by the experiment
+#: scripts, and trained models are rebuilt from them, so neither is committed.
+ML_DATA_DIR = os.path.join(CACHE_DIR, "ml")
+MODEL_DIR = os.path.join(ML_DATA_DIR, "models")

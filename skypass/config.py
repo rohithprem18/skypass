@@ -61,6 +61,12 @@ class ScoreWeights:
     mag_floor: float = 0.10
     #: Exponent on the clear-sky fraction (1 - cloud). >1 punishes cloud harder.
     cloud_exponent: float = 1.0
+    #: "sphere" (diffuse-sphere photometry, the default) or "learned" (the
+    #: model of skypass.ml.brightness, trained on SCORE magnitudes; falls back
+    #: to the sphere when the model or its optional dependencies are missing).
+    #: The learned model is far better for unseen satellites of the same era
+    #: but drifts as designs change, so retrain it regularly (experiment 11).
+    magnitude_model: str = "sphere"
 
     def normalised(self) -> "ScoreWeights":
         s = self.w_elev + self.w_dur
@@ -87,6 +93,14 @@ class PlannerConfig:
     #: enough to miss the start of a short pass. 7 days is the point beyond
     #: which the elements, not the algorithm, set the achievable accuracy.
     max_tle_age_days: float = 7.0
+    #: Forecast calibration (weather.site_calibration): length of the training
+    #: window that ends before the plan, and the forecast lead it is fitted at.
+    #: Both match experiments/exp4_weather_value.py.
+    calibration_train_days: int = 90
+    calibration_lead_days: int = 1
+    #: Nightly cap applied when a window budget is given without an explicit
+    #: capacity; 3 observations per night is the setting exp 4 evaluates.
+    nightly_capacity: int = 3
 
 
 # ---------------------------------------------------------------------------

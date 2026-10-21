@@ -1,0 +1,152 @@
+{
+  "data": {
+    "source": "WSISEG (Xie et al. 2020)",
+    "url": "https://codeload.github.com/CV-Application/WSISEG-Database/zip/refs/heads/master",
+    "n_images": 400,
+    "size": [
+      480,
+      450
+    ],
+    "cameras": 1,
+    "label_share": {
+      "cloud": 0.35792957175925927,
+      "sky": 0.2836970138888889,
+      "undefined": 0.3583734143518518
+    }
+  },
+  "protocol": {
+    "cv": "blocked 5-fold over the image sequence",
+    "seed": 20261021,
+    "unet": {
+      "input": 160,
+      "base_channels": 16,
+      "epochs": 30,
+      "batch": 16,
+      "optimiser": "AdamW, cosine schedule",
+      "augmentation": "90-degree rotations, flips"
+    },
+    "pixel_gbm": {
+      "pixels_per_image": 1500,
+      "features": 15
+    }
+  },
+  "pooled": {
+    "ratio_fixed": {
+      "pixel_accuracy": 0.7255405942835138,
+      "cloud_precision": 0.6713965159739441,
+      "cloud_recall": 0.9949768012180391,
+      "cloud_f1": 0.8017698686370982,
+      "cloud_iou": 0.6691284484101079,
+      "fraction_mae": 0.269910745209854,
+      "fraction_corr": 0.856408214311304,
+      "n_images": 400,
+      "fold_iou": [
+        0.6881399951903604,
+        0.6325391662371659,
+        0.6593329628201348,
+        0.7517896356161267,
+        0.6129508636065392
+      ],
+      "fold_fraction_mae": [
+        0.2561820726503076,
+        0.29624588022284465,
+        0.27719897638582014,
+        0.20229768240782658,
+        0.31762911438247077
+      ],
+      "seconds": 1.0081693999964045
+    },
+    "ratio_tuned": {
+      "pixel_accuracy": 0.9234163562561637,
+      "cloud_precision": 0.9234734124220915,
+      "cloud_recall": 0.9406671244391492,
+      "cloud_f1": 0.9319909761972613,
+      "cloud_iou": 0.8726433535915519,
+      "fraction_mae": 0.03469447353286881,
+      "fraction_corr": 0.9937957290573055,
+      "n_images": 400,
+      "fold_iou": [
+        0.8683316946534109,
+        0.8620294552923754,
+        0.8782551677867004,
+        0.9067880902565213,
+        0.8422301155655304
+      ],
+      "fold_fraction_mae": [
+        0.041145182572524794,
+        0.04109688000128646,
+        0.03385191861012239,
+        0.028295685800989383,
+        0.02908270067942101
+      ],
+      "seconds": 9.119621099998767
+    },
+    "pixel_gbm": {
+      "pixel_accuracy": 0.9681666082425026,
+      "cloud_precision": 0.9674897520727191,
+      "cloud_recall": 0.9757221598044179,
+      "cloud_f1": 0.971588517661084,
+      "cloud_iou": 0.9447468589629129,
+      "fraction_mae": 0.0117482431212601,
+      "fraction_corr": 0.998278423240226,
+      "n_images": 400,
+      "fold_iou": [
+        0.9440970681629199,
+        0.9391690141032482,
+        0.9405842866488505,
+        0.9583020790939227,
+        0.9390075359790757
+      ],
+      "fold_fraction_mae": [
+        0.0129969762812988,
+        0.016175304018653063,
+        0.011958644728380336,
+        0.011833999780749997,
+        0.0057762907972183
+      ],
+      "seconds": 520.3975134999964
+    },
+    "unet": {
+      "pixel_accuracy": 0.9578518225263601,
+      "cloud_precision": 0.9607784829541125,
+      "cloud_recall": 0.9637893666684829,
+      "cloud_f1": 0.9622815696278357,
+      "cloud_iou": 0.9273050776237307,
+      "fraction_mae": 0.012240671376480286,
+      "fraction_corr": 0.9977964951186764,
+      "n_images": 400,
+      "fold_iou": [
+        0.9291254604231799,
+        0.9239215756560725,
+        0.9195857489168886,
+        0.9459645362995315,
+        0.9140927804191563
+      ],
+      "fold_fraction_mae": [
+        0.01298074242448126,
+        0.012962268572663523,
+        0.01553267144875321,
+        0.011276038958462095,
+        0.008451635478041342
+      ],
+      "seconds": 2673.6214542999987
+    }
+  },
+  "tuned_thresholds": [
+    0.74,
+    0.74,
+    0.74,
+    0.74,
+    0.74
+  ],
+  "unet_final_loss": 0.12078135251998902,
+  "model_path": "cache\\ml\\models\\cloudcam_unet.pt",
+  "_meta": {
+    "generated_utc": "2026-10-21T17:01:38+00:00",
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "sgp4_version": "2.27"
+  },
+  "gbm_model_path": "cache\\ml\\models\\cloudcam_gbm.pkl"
+}

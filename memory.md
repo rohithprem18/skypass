@@ -2,7 +2,7 @@
 
 Complete working memory of the SkyPass project for an assistant taking it over.
 Everything here was verified against the code and `results/*.json` on
-**13 Oct 2026**. The manuscripts (in `final_paper/`) are deliberately
+**21 Oct 2026** (release v2.0.0). The manuscripts (in `final_paper/`) are deliberately
 out of scope; this file is about the system, its experiments and its results.
 
 ---
@@ -30,32 +30,39 @@ same engine. Runtime dependency: only `sgp4` (Python >= 3.9). Licence MIT.
 
 ---
 
-## 2. Status snapshot (13 Oct 2026)
+## 2. Status snapshot (21 Oct 2026)
 
-* **Git:** last commit `9a288c4`. Everything since is uncommitted, including
-  experiment 9 and its results, generator fixes, `final_paper/`, `CLAUDE.md`,
-  this file. The public repository is behind the working tree.
-* **Tests:** `python -m pytest tests -q` -> 42 passed (2.7 s, no network).
+* **Version 2.0.0** (tag `v2.0.0`). v2 adds two optional learned components
+  (`skypass/ml/`, extra `[ml]`): a U-Net cloud nowcast from whole-sky camera
+  images and a gradient-boosted satellite-brightness model trained on IAU CPS
+  SCORE. It also closes the live-planner gap: `plan()` calibrates by default and
+  the CLI/web app expose `--capacity` and `--budget`.
+* **Tests:** `python -m pytest tests -q` -> 71 passed (no network; the ML tests
+  skip when NumPy is absent).
 * **Deployment:** Vercel. `vercel.json` builds `webapp/ui` and rewrites `/api/*`
   to `api/index.py` (wraps `webapp.server`). Branch `origin/vercel` exists.
-* **Experiments:** 1-9 all have results in `results/`. Experiment 9 (bootstrap)
-  was run on 13 Oct 2026 and reproduces experiment 4 exactly.
+* **Experiments:** 1-11 all have results in `results/`. Experiment 9 (bootstrap)
+  reproduces experiment 4 exactly. Experiments 10 (sky camera) and 11
+  (brightness) were run on 21 Oct 2026.
 
 ---
 
 ## 3. Read this first: traps and known gaps
 
-1. **The live planner does not calibrate the forecast.** `skypass.pipeline.plan()`
-   (used by the CLI and the web app) passes the *raw* Open-Meteo cloud forecast
-   into the score (`pipeline.py:168`). Calibration (`weather.fit_calibration`) is
-   only applied inside the experiments (`experiments/exp4_weather_value.py`).
-   Experiment 4 shows the raw forecast is *worse than ignoring weather* under a
-   nightly quota. Fixing this is the top engineering task (section 11).
-2. **The live planner does not offer the regime where weather helps.** CLI `plan()`
-   uses `optimal_schedule` (no per-night limit, no window budget). The web app uses
-   `capacity_schedule(..., per_night=True)` when a `capacity` query parameter is
-   given. Neither exposes `budget_schedule`, the window-budget scheduler that is
-   the only regime with a measured weather benefit.
+1. **The live planner calibrates by default (fixed in v2).** `pipeline.plan()`
+   fits `weather.site_calibration` (90 prior nights, previous-runs vs ERA5) and
+   applies it before scoring; `calibrate=False` / `--no-calibrate` scores the raw
+   forecast, which exp 4 shows is worse than ignoring weather under a quota.
+2. **The budget regime is exposed (fixed in v2).** `plan(capacity=K)` /
+   `--capacity K` is the nightly quota, `plan(budget=N)` / `--budget N` the window
+   budget (the only regime with a measured weather benefit). The web app takes
+   the same `capacity` / `budget` query parameters.
+2b. **The learned brightness model drifts.** Out-of-sample over time it does not
+   beat a per-family fitted sphere (exp 11), so `ScoreWeights.magnitude_model`
+   stays `"sphere"`; `"learned"` / `--learned-brightness` is opt-in. Retrain
+   (`exp11_brightness.py`) as SCORE grows. The camera segmenters are trained on
+   one camera (WSISEG); transfer to other cameras is untested. The deployed
+   segmenter is the pixel GBM (more accurate per pixel than the U-Net in exp 10).
 3. **Pin `models=era5` on the Open-Meteo archive endpoint** (`weather.py:161`).
    The default "best match" archive series *is* the archived forecast for recent
    dates, so verifying against it gives a fake perfect skill of 1.0. This bug was hit.
@@ -130,6 +137,15 @@ Each stage is a pure function of the previous one, so stages can be ablated
   ISS 2.0, CSS 1.8, NOAA 1.5, METEOR 1.4, METOP 1.3, HST 1.3, else 1.0.
 * Multiplicative on purpose: a failed hard condition must zero the score. Do not
   make it additive.
+* Optional learned magnitude (`magnitude_model="learned"`): `scoring._learned_magnitude`
+  replaces the sphere `m` with `skypass.ml.brightness.BrightnessModel.predict_pass`
+  (falls back to the sphere if the model or `[ml]` is missing).
+  `VisibilityReport.magnitude_model` records which was used.
+* Optional nowcast: `plan(nowcast=c, nowcast_hours=1.0)` overrides the scored cloud
+  for the hours from `t0` (floor) for `ceil(nowcast_hours)+1` hours; the CLI's
+  `--sky-image IMG` computes `c` with `skypass.ml.cloudcam.cloud_fraction`
+  (pixel GBM by default, U-Net fallback).
+  A measured nowcast is not calibrated. `ValueError` outside [0, 1].
 
 ### 4.5 Weather (`skypass/weather.py`)
 * `forecast(site, days)`: operational hourly total cloud from Open-Meteo.
@@ -209,6 +225,7 @@ Preset stations (`GROUND_STATIONS`, chosen to span cloud climates):
 
 ```bash
 python -m pip install -e ".[experiments]"   # sgp4 at runtime; numpy, matplotlib, skyfield for experiments
+python -m pip install -e ".[ml]"            # numpy, pandas, scikit-learn, Pillow, torch (learned components)
 python -m skypass fetch [--amsat]           # download + archive element sets
 python -m skypass stations                  # list presets
 python -m skypass archives                  # list archived element files
@@ -216,12 +233,17 @@ python -m skypass passes --days 1           # geometric passes, no scoring
 python -m skypass plan --days 7 --ics results/plan.ics
 #   plan flags: --station, --lat/--lon/--alt/--name, --mask, --twilight, --gap,
 #   --sat ISS,NOAA, --limit, --radio, --no-weather, --w-elev, --csv/--json/--ics,
-#   --json-all, --limit-rows, global --archive-dir
-python -m pytest tests -q                   # 42 tests
+#   --json-all, --limit-rows, global --archive-dir,
+#   v2: --capacity K, --budget N, --no-calibrate, --learned-brightness, --sky-image IMG
+python -m pytest tests -q                   # 71 tests
 
 python experiments/expN_*.py                # regenerate results/*.json
 python experiments/make_tables.py           # results -> generated/ (+ updates final_paper/)
-python experiments/make_figures.py [--font cm|times] [--wide 6.0] [--out DIR]
+python experiments/make_figures.py [--font cm|times] [--wide 6.0] [--col 2.75] [--out DIR]
+python experiments/diagrams/build_diagrams.py [--out DIR]   # TikZ diagrams (tectonic)
+python experiments/exp10_cloudcam.py [--epochs 30]          # ~1 h CPU, downloads WSISEG
+python experiments/exp10_cloudcam.py --final-gbm            # only retrain the deployable GBM
+python experiments/exp11_brightness.py                      # ~1 min, downloads SCORE
 
 python webapp/server.py                     # http://localhost:8000 (serves built UI)
 cd webapp/ui && npm ci && npm run build     # React build; npm run dev for Vite on :5173
@@ -245,12 +267,13 @@ Paths are anchored in `skypass/paths.py` (`PROJECT_ROOT`, `CACHE_DIR`,
 | Path | Contents |
 |---|---|
 | `skypass/` | engine: `config, tle, timeutil, geometry, passes, scoring, weather, scheduler, pipeline, report, spacetrack, cli, paths` |
-| `experiments/` | `exp1`-`exp9`, `_common.py`, `make_tables.py`, `make_figures.py`, `check_paper.py` |
-| `tests/` | 42 deterministic unit tests, no network |
+| `skypass/ml/` | optional learned components: `cloudcam.py` (WSISEG loader, R/B threshold, pixel GBM, U-Net, `cloud_fraction`), `brightness.py` (SCORE loader, sphere baselines, `BrightnessModel`) |
+| `experiments/` | `exp1`-`exp11`, `_common.py`, `make_tables.py`, `make_figures.py`, `check_paper.py`, `diagrams/` (TikZ sources) |
+| `tests/` | 71 deterministic unit tests, no network (`test_ml.py`, `test_planner_modes.py` new in v2) |
 | `results/` | experiment outputs (JSON + console logs); the only data source for reported numbers |
 | `figures/` | generated vector figures (PDF tracked) |
 | `tle_archive/` | dated element-set archives (tracked) |
-| `cache/` | Open-Meteo responses (gitignored) |
+| `cache/` | Open-Meteo responses, ML datasets and trained models under `cache/ml/` (gitignored) |
 | `webapp/`, `api/` | web server + React UI; Vercel entry point |
 | `docs/` | setup notes (e.g. `docs/spacetrack-setup.md`) |
 | `generated/` | result macros and tables built by `make_tables.py` |
@@ -406,6 +429,53 @@ Cluster bootstrap over the 6 stations, 10,000 resamples, seed 20260101, percenti
 Raw at 50%: clear +29.9 [+3.6, +90.1]. With six clusters the intervals are
 approximate and probably too narrow. Calibrated-minus-raw difference not tested.
 
+### Exp 10: cloud nowcasting from whole-sky images (`exp10_cloudcam.py`)
+WSISEG (Xie et al. 2020): 400 whole-sky images, 480x450, one camera; labels cloud /
+sky / undefined. Blocked 5-fold CV over the image sequence (consecutive frames are
+near-duplicates). Seed 20261021. Methods: red/blue ratio at the classical 0.6, ratio
+with the threshold tuned on training pixels, `PixelGBM` (HistGradientBoosting on 15
+per-pixel colour/texture features, 1,500 pixels per image), `UNet` (input 160 px,
+base 16, 30 epochs, masked BCE, 90-degree rotations and flips).
+
+| Method | Pixel acc | Cloud IoU | Cloud-fraction MAE | r |
+|---|---|---|---|---|
+| R/B = 0.6 | 72.6% | 0.669 | 27.0 pp | 0.856 |
+| R/B tuned | 92.3% | 0.873 | 3.5 pp | 0.994 |
+| **Pixel GBM** | **96.8%** | **0.945** | **1.2 pp** | 0.998 |
+| U-Net | 95.8% | 0.927 | 1.2 pp | 0.998 |
+
+The GBM beats the U-Net on IoU in all five folds (0.944/0.929, 0.939/0.924,
+0.941/0.920, 0.958/0.946, 0.939/0.914); for the cloud fraction they tie. The GBM is
+the deployed segmenter (`cloudcam.default_segmenter()` loads
+`cache/ml/models/cloudcam_gbm.pkl` if present, else the U-Net). Final models are
+trained on all 400 images. Runtime about 1 h on CPU (the U-Net dominates).
+
+### Exp 11: learned satellite brightness (`exp11_brightness.py`)
+IAU CPS SCORE (CC-BY 4.0), filtered: magnitude and SatChecker geometry present,
+illuminated, not `potentially_discrepant`, above horizon, ACS 3 (solar sail,
+most of the raw rows) excluded -> **17,216 observations, 2,709 satellites,
+13 families** (Starlink 8,937, Kuiper 2,478, ...), 2019-12 to 2026-10.
+Seed 20261021. Models: `sphere_skypass` (tabulated std mag, default 5.0),
+`sphere_fitted` (per-family median std mag from the training fold),
+`learned_hgb` (HistGradientBoosting; phase, log range, elevation, solar elevation,
+log orbital altitude, sphere prediction, family, band).
+
+GroupKFold(5) by NORAD id (every prediction is for an unseen satellite):
+
+| Model | MAE | RMSE | within 1 mag | visible/invisible acc (6 mag) |
+|---|---|---|---|---|
+| Sphere (current) | 1.86 | 2.55 | 30.5% | 59.7% |
+| Sphere (fitted per family) | 1.51 | 2.08 | 42.7% | 66.8% |
+| **Learned** | **0.83** | **1.33** | **73.7%** | **80.3%** |
+
+Temporal split (train < 2025-07-01, n=12,063; test after, n=5,153; six families
+appear only in the test period): sphere 2.31, fitted 1.99, **learned 2.00** MAE;
+on established families fitted 1.26 vs learned 1.60. The learned model does not
+transfer across time (new object classes, Starlink design drift). Permutation
+importance (MAE increase): orbital altitude 0.27, family 0.27, band 0.12, phase
+0.11, sphere prediction 0.07. CV 48 s. A residual-on-sphere hybrid was tried and
+was worse; not adopted.
+
 ---
 
 ## 9. What the results mean (state them this way)
@@ -422,6 +492,13 @@ approximate and probably too narrow. Calibrated-minus-raw difference not tested.
   algorithm, limits accuracy beyond a few days.
 * **Scheduling:** exact and cheap; greedy-by-score is near-optimal on average,
   greedy-by-elevation can be very bad; a GA is unnecessary.
+* **Learned components help where training data match deployment.** Learned
+  segmentation (pixel GBM or U-Net) reads the cloud fraction from an image to
+  1.2 pp, against 3.5 pp for the tuned colour-ratio rule and 27 pp for the
+  classical fixed threshold (one camera; transfer untested; planning value of the nowcast not measured, because
+  no public camera archive covers the evaluation nights). Learned photometry is
+  much better for unseen satellites of known families but does not beat a fitted
+  sphere over time; the sphere stays the default.
 
 Do **not** say: weather value evaluated at seven stations (it is six; skill is
 seven); raw forecast is always worse than ignoring weather; epoch-correct geometry
@@ -437,23 +514,31 @@ stage; CelesTrak and AMSAT are independent; calibration slopes are "0.56 and bel
   with `models=era5` (truth). No key. Cached in `cache/`.
 * **Space-Track**: historical elements, credentials required (`skypass/spacetrack.py`,
   rate-limited, cached; setup in `docs/spacetrack-setup.md`).
+* **IAU CPS SCORE** (`https://score.cps.iau.org/download-all`): measured satellite
+  magnitudes, CC-BY 4.0. Any publication must carry SCORE's acknowledgement and
+  NSF disclaimer (in the README and the Springer paper). Not redistributed.
+* **WSISEG** (`github.com/CV-Application/WSISEG-Database`): 400 whole-sky images,
+  480x450, one camera (ASC100-1006), labels 255 cloud / 100 sky / 0 undefined.
+  No licence stated: cite Xie et al. 2020 (AMT 13, 1953) and do not redistribute.
+* The MMT satellite-photometry database (HTTP 403) and SWIMCAT (request form) were
+  tried and are not used.
 
 ---
 
 ## 11. Open work (prioritised)
 
-1. **Calibrate in the live planner.** In `pipeline.plan()` (and `webapp/server.py`),
-   fit `fit_calibration` on the preceding 90 days of `previous_runs` vs `reanalysis`
-   (night hours) and apply `CloudCalibration.apply_series` before scoring. Add a
-   test. Consider `--raw-forecast` to keep the old behaviour.
-2. **Expose the budget regime.** Add `budget_schedule` to the CLI (e.g.
-   `--per-night K --budget N`) and the web app; this is where the forecast pays.
-3. **Commit and push** (nothing since `9a288c4`); consider a tagged release with a
-   Zenodo DOI.
-4. More evidence: a second season, more stations (narrows the bootstrap CI),
+1. **Measure the planning value of the camera nowcast.** Needs camera images
+   co-located with a station over the evaluation nights (none public); a local
+   camera at Chennai would allow it. Also test the U-Net on a second camera.
+2. **Keep the brightness model current.** Retrain on SCORE regularly; consider
+   per-family recency weighting, which is the failure mode exp 11 shows.
+3. **Web app:** expose `--learned-brightness` and an image-upload nowcast
+   (CLI only so far). Done in v2: calibration by default, `capacity` / `budget`.
+4. Consider a Zenodo DOI for the `v2.0.0` tag.
+5. More evidence: a second season, more stations (narrows the bootstrap CI),
    threshold sensitivity (20/30/40%), full 635-object evaluation instead of 300,
    lead-time sweep under the budget regime.
-5. Archive weather inputs (or a manifest) so experiments 3, 4, 7, 9 stay reproducible.
+6. Archive weather inputs (or a manifest) so experiments 3, 4, 7, 9 stay reproducible.
 
 ---
 

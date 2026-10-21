@@ -702,6 +702,9 @@ def audit_macros():
     benefit that is not uniform, calibration slopes quoted as an upper bound
     that two stations exceed, and heavy-tailed ageing errors quoted by mean only.
     """
+    e1 = load("exp1_accuracy")
+    if e1:
+        mac("SkyfieldElev", num(e1["part_b_skyfield"]["d_elmax_deg"]["mean"], 4))
     e3, e4 = load("exp3_forecast"), load("exp4_weather_value")
     words = ["zero", "one", "two", "three", "four", "five", "six", "seven",
              "eight", "nine", "ten"]
@@ -756,6 +759,52 @@ def audit_macros():
             mac("JaccardNinety", num(rows[0.9], 2))
 
 
+def ml_macros():
+    """Experiments 10 (cloud camera) and 11 (learned brightness)."""
+    b = load("exp11_brightness")
+    if b:
+        d, gcv, tmp = b["data"], b["grouped_cv"], b["temporal"]
+        mac("BrightObs", d["n_observations"])
+        mac("BrightSats", d["n_satellites"])
+        mac("BrightFamilies", len(d["families"]))
+        mac("BrightSplitDate", tmp["split_date"][:7])
+        for key, tag in (("sphere_skypass", "Sphere"), ("sphere_fitted", "Fitted"),
+                         ("learned_hgb", "Learned")):
+            g, t = gcv[key], tmp[key]
+            mac(f"BrightMae{tag}", num(g["mae"], 2))
+            mac(f"BrightSatMae{tag}", num(g["per_satellite_mae"], 2))
+            mac(f"BrightHalf{tag}", num(100 * g["within_0p5"], 0))
+            mac(f"BrightVis{tag}", num(g["visibility_balanced_accuracy"], 2))
+            mac(f"BrightTempMae{tag}", num(t["mae"], 2))
+            mac(f"BrightTempVis{tag}", num(t["visibility_balanced_accuracy"], 2))
+            mac(f"BrightTempEst{tag}", num(t["mae_established"], 2))
+            mac(f"BrightTempNew{tag}", num(t["mae_new_or_rare"], 2))
+        sl = tmp["by_family_mae"].get("STARLINK")
+        if sl:
+            mac("BrightStarlinkLearned", num(sl["learned_hgb"], 2))
+            mac("BrightStarlinkFitted", num(sl["sphere_fitted"], 2))
+        mac("BrightTestOnlyFamilies", len(tmp["test_only_families"]))
+    c = load("exp10_cloudcam")
+    if c:
+        mac("CamImages", c["data"]["n_images"])
+        mac("CamEpochs", c["protocol"]["unet"]["epochs"])
+        for key, tag in (("ratio_fixed", "Fixed"), ("ratio_tuned", "Tuned"),
+                         ("pixel_gbm", "Gbm"), ("unet", "Unet")):
+            p = c["pooled"][key]
+            mac(f"Cam{tag}Acc", num(100 * p["pixel_accuracy"], 1))
+            mac(f"Cam{tag}Iou", num(p["cloud_iou"], 3))
+            mac(f"Cam{tag}Fone", num(p["cloud_f1"], 3))
+            mac(f"Cam{tag}Frac", num(100 * p["fraction_mae"], 1))
+            mac(f"Cam{tag}Corr", num(p["fraction_corr"], 3))
+        th = c.get("tuned_thresholds") or []
+        if th:
+            mac("CamThreshLo", num(min(th), 2))
+            mac("CamThreshHi", num(max(th), 2))
+            lo, hi = num(min(th), 2), num(max(th), 2)
+            mac("CamThreshRange", f"{lo} in every fold" if lo == hi
+                else f"{lo} to {hi} across folds")
+
+
 def env_macros():
     for name in ("exp1_accuracy", "exp4_weather_value", "exp6_pipeline"):
         d = load(name)
@@ -770,7 +819,8 @@ def main():
     print("Generating LaTeX tables...")
     for fn in (tab_accuracy, tab_elements, tab_forecast, tab_weather_value,
                tab_scheduling, tab_pipeline, tab_structure,
-               tab_tleage, tab_histtle, tab_bootstrap, audit_macros, env_macros):
+               tab_tleage, tab_histtle, tab_bootstrap, audit_macros, ml_macros,
+               env_macros):
         try:
             fn()
         except Exception as exc:                      # noqa: BLE001

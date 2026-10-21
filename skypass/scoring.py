@@ -73,6 +73,7 @@ class VisibilityReport:
     observer_dark: Optional[bool] = None
     sun_elev_deg: Optional[float] = None
     magnitude: Optional[float] = None
+    magnitude_model: Optional[str] = None
     phase_deg: Optional[float] = None
     cloud: Optional[float] = None
     rejected: Optional[str] = None
@@ -92,6 +93,24 @@ def geometric_quality(p: Pass, w: ScoreWeights) -> tuple:
     f_el = min(max(p.el_max_deg, 0.0) / w.elev_sat_deg, 1.0)
     f_du = min(max(p.duration_s, 0.0) / w.dur_sat_s, 1.0)
     return f_el, f_du, w.w_elev * f_el + w.w_dur * f_du
+
+
+def _learned_magnitude(name: str, apex, psi: float,
+                       sun_elev_deg: Optional[float]) -> Optional[float]:
+    """Magnitude from the learned model, or None to fall back to the sphere.
+
+    Imported lazily: the core planner must keep working with ``sgp4`` alone.
+    """
+    try:
+        from .ml.brightness import default_model
+        model = default_model()
+    except ImportError:
+        return None
+    if model is None or sun_elev_deg is None:
+        return None
+    sat_alt_km = math.sqrt(sum(c * c for c in apex.r_teme)) - 6378.137
+    return model.predict_pass(name, apex.range_km, math.degrees(psi),
+                              apex.el_deg, sun_elev_deg, sat_alt_km)
 
 
 def score_pass(p: Pass, sat: Satrec, tracker: Tracker,
@@ -136,6 +155,11 @@ def score_pass(p: Pass, sat: Satrec, tracker: Tracker,
         rep.phase_deg = math.degrees(psi)
         rep.magnitude = apparent_magnitude(standard_magnitude(p.name),
                                            apex.range_km, psi)
+        rep.magnitude_model = "sphere"
+        if w.magnitude_model == "learned":
+            learned = _learned_magnitude(p.name, apex, psi, rep.sun_elev_deg)
+            if learned is not None:
+                rep.magnitude, rep.magnitude_model = learned, "learned"
         span = max(w.mag_limit - w.mag_bright, 1e-9)
         rep.f_mag = max(w.mag_floor,
                         min(1.0, (w.mag_limit - rep.magnitude) / span))

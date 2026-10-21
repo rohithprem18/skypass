@@ -56,6 +56,10 @@ def format_plan(result: PlanResult, limit: int = 25) -> str:
     ub = result.upper_bound
     if result.weather_used:
         wx = f"forecast applied ({result.weather_hours} hourly samples)"
+        cal = result.calibration
+        if cal is not None:
+            wx += (f", calibrated vs ERA5: cloud = {cal.intercept:.3f} + "
+                   f"{cal.slope:.3f} x forecast (n={cal.n})")
     else:
         wx = "NOT applied (weather-blind)"
     pct = (100.0 * sch.objective / ub) if ub else 0.0
@@ -67,6 +71,14 @@ def format_plan(result: PlanResult, limit: int = 25) -> str:
         f"mode {result.mode}",
         f" Window {result.t0:%Y-%m-%d %H:%M} -> {result.t1:%Y-%m-%d %H:%M} UTC",
         f" Weather: {wx}",
+    ]
+    if result.budget is not None:
+        lines.append(f" Budget: at most {result.budget} observations in the "
+                     f"window, {result.capacity} per night ({sch.algorithm})")
+    elif result.capacity is not None:
+        lines.append(f" Quota: at most {result.capacity} observations per "
+                     f"night ({sch.algorithm})")
+    lines += [
         "=" * 78,
         "",
         " Visibility funnel",

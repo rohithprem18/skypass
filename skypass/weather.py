@@ -39,6 +39,9 @@ PREVIOUS_RUNS_API = "https://previous-runs-api.open-meteo.com/v1/forecast"
 
 DEFAULT_CACHE_DIR = CACHE_DIR
 
+#: Fewer common hours than this and a calibration fit is not trusted.
+MIN_CALIBRATION_HOURS = 24
+
 
 class WeatherUnavailable(RuntimeError):
     """Raised when the service cannot be reached after retries."""
@@ -62,9 +65,12 @@ def _fetch_json(url: str, cache_dir: Optional[str] = DEFAULT_CACHE_DIR,
     """
     path = None
     if cache_dir and use_cache:
-        os.makedirs(cache_dir, exist_ok=True)
-        path = _cache_file(cache_dir, url)
-        if os.path.exists(path):
+        try:
+            os.makedirs(cache_dir, exist_ok=True)
+            path = _cache_file(cache_dir, url)
+        except OSError:
+            path = None                  # read-only deployment: no disk cache
+        if path and os.path.exists(path):
             try:
                 with open(path, encoding="utf-8") as fh:
                     return json.load(fh)
@@ -79,8 +85,11 @@ def _fetch_json(url: str, cache_dir: Optional[str] = DEFAULT_CACHE_DIR,
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 data = json.loads(r.read().decode())
             if path:
-                with open(path, "w", encoding="utf-8") as fh:
-                    json.dump(data, fh)
+                try:
+                    with open(path, "w", encoding="utf-8") as fh:
+                        json.dump(data, fh)
+                except OSError:
+                    pass
             return data
         except Exception as exc:                       # noqa: BLE001
             last = exc
@@ -308,7 +317,7 @@ def fit_calibration(pred: CloudSeries, truth: CloudSeries,
     if hour_filter is not None:
         keys = [k for k in keys if hour_filter(k)]
     n = len(keys)
-    if n < 24:
+    if n < MIN_CALIBRATION_HOURS:
         return CloudCalibration(0.0, 1.0, n, float("nan"))
     xs = [pred.values[k] for k in keys]
     ys = [truth.values[k] for k in keys]
@@ -321,6 +330,35 @@ def fit_calibration(pred: CloudSeries, truth: CloudSeries,
     slope = sxy / sxx
     corr = sxy / ((sxx * syy) ** 0.5) if syy > 0 else 0.0
     return CloudCalibration(my - slope * mx, slope, n, corr)
+
+
+def site_calibration(site: Site, before: dt.date, train_days: int = 90,
+                     lead_days: int = 1,
+                     cache_dir: Optional[str] = DEFAULT_CACHE_DIR
+                     ) -> CloudCalibration:
+    """Fit the operational calibration for ``site`` from data before ``before``.
+
+    This is the procedure the weather-value experiment evaluates, packaged so
+    the planner applies the same correction it was measured with: forecasts
+    issued ``lead_days`` ahead over the ``train_days`` ending the day before the
+    planned period, verified against ERA5 (``models=era5`` pinned, see
+    :func:`reanalysis`), restricted to local night hours. The window ends before
+    the plan starts, so nothing about the planned nights leaks into the fit.
+
+    ERA5 lags real time by several days; the hours it has not yet published
+    come back empty and simply drop out of the common timestamps. With fewer
+    than 24 usable hours :func:`fit_calibration` returns the identity mapping,
+    so a short record degrades to the raw forecast rather than failing.
+    Raises :class:`WeatherUnavailable` when the service cannot be reached.
+    """
+    tr_end = before - dt.timedelta(days=1)
+    tr_start = tr_end - dt.timedelta(days=max(1, int(train_days)) - 1)
+    runs = previous_runs(site, tr_start, tr_end, lead_days=(lead_days,),
+                         cache_dir=cache_dir)
+    fc = runs.get(lead_days, CloudSeries({}, f"lead-{lead_days}d"))
+    truth = reanalysis(site, tr_start, tr_end, cache_dir=cache_dir)
+    return fit_calibration(fc, truth,
+                           hour_filter=night_hours_filter(site.lon_deg))
 
 
 @dataclass

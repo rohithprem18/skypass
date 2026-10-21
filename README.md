@@ -5,7 +5,7 @@
 <h1 align="center">SkyPass</h1>
 
 <p align="center">
-  <strong>Weather-aware satellite pass prediction, visibility analysis, and observation scheduling.</strong>
+  <strong>Weather-aware satellite pass prediction, visibility analysis, and observation scheduling,<br>with learned cloud nowcasting and brightness prediction.</strong>
 </p>
 
 <p align="center">
@@ -53,6 +53,10 @@ React planning console.
 - **Practical exports** to terminal output, CSV, JSON, and iCalendar (`.ics`).
 - **Observation console** with night ranking, pass timelines, weather context,
   decision explanations, a field run sheet, and a live countdown mode.
+- **Learned components (v2, optional)**: a U-Net that reads the cloud fraction
+  from a whole-sky camera image as a sub-hourly nowcast, and gradient-boosted
+  trees that predict a satellite's apparent magnitude from pass geometry,
+  trained on measured magnitudes from the IAU CPS SCORE repository.
 
 ## Quick Start
 
@@ -97,6 +101,28 @@ Useful options include:
 | `--mask 15` | Set the minimum elevation in degrees |
 | `--gap 10` | Reserve setup time between observations in minutes |
 | `--w-elev 0.7` | Increase elevation's contribution to the pass score |
+| `--capacity 3` | At most 3 observations per night (a fixed nightly quota) |
+| `--budget 30` | At most 30 observations over the window, so cloudy nights can be skipped |
+| `--learned-brightness` | Predict magnitudes with the learned model instead of the diffuse sphere |
+| `--sky-image sky.jpg` | Use a whole-sky camera image as the cloud nowcast for the next hour |
+
+### Learned components
+
+The learned models are optional and need the `[ml]` extra (adds NumPy, pandas,
+scikit-learn, Pillow and PyTorch). Their training data are downloaded from the
+providers by the experiment scripts and are not redistributed here; the scripts
+also save the trained models under `cache/ml/models/`.
+
+```bash
+python -m pip install -e ".[ml,experiments]"
+python experiments/exp11_brightness.py      # downloads SCORE, trains the brightness model
+python experiments/exp10_cloudcam.py        # downloads WSISEG, trains the cloud U-Net
+python -m skypass plan --budget 30 --learned-brightness --sky-image sky.jpg
+```
+
+The brightness model is much better than the sphere for satellites it has not
+seen, but it drifts as satellite designs change, so retrain it regularly; the
+sphere stays the default.
 
 Run `python -m skypass fetch` regularly. CelesTrak serves current elements, so
 the dated local archive is what keeps historical predictions reproducible.
@@ -154,6 +180,7 @@ Vite serves the UI at [http://localhost:5173](http://localhost:5173) and proxies
 | Pass extraction | Brackets horizon crossings coarsely, then refines them by bisection to 0.1 seconds |
 | Visibility | Models conical Earth shadow, twilight, refraction, phase angle, and Lambertian-sphere brightness |
 | Weather | Retrieves Open-Meteo forecasts and calibrates cloud probabilities against ERA5 |
+| Learned (optional) | U-Net cloud nowcast from a whole-sky image; gradient-boosted magnitude model trained on SCORE |
 | Scheduling | Solves weighted interval, nightly-capacity, and multi-night-budget problems with exact dynamic programming |
 | Output | Produces a readable timetable plus CSV, JSON, and `.ics` files |
 
@@ -182,12 +209,12 @@ for observation in result.schedule.selected:
 
 This repository is the companion implementation for:
 
-> **SkyPass: A Weather-Aware Integrated Satellite Transit Planning and
-> Observation System**<br>
+> **SkyPass: Weather-Aware Satellite Pass Scheduling with Learned Cloud
+> Nowcasting and Brightness Prediction for Small Ground Stations**<br>
 > Rohith Prem S and Dr. R. Selvakumar<br>
 > Saveetha Engineering College, Chennai, India
 
-The experiments are organized around eight questions:
+The experiments are organized around eleven questions:
 
 | Script | Question |
 |---|---|
@@ -199,6 +226,9 @@ The experiments are organized around eight questions:
 | `exp6_pipeline` | How does the full pipeline scale and respond to score weights? |
 | `exp7_structure` | Why does weather help between nights more than within one night? |
 | `exp8_tle_age` | How quickly does prediction quality decay with element-set age? |
+| `exp9_bootstrap` | How certain are the weather gains, resampling whole stations? |
+| `exp10_cloudcam` | Can a learned model read cloud cover from whole-sky images? |
+| `exp11_brightness` | Can a learned model predict satellite brightness better than the sphere? |
 
 Generate paper figures and tables from the saved experiment outputs:
 
@@ -220,7 +250,8 @@ are in [docs/spacetrack-setup.md](docs/spacetrack-setup.md).
 
 ```text
 skypass/          Core propagation, geometry, scoring, weather, and scheduling
-experiments/      Nine validation experiments plus figure/table generators
+skypass/ml/       Optional learned components: cloud nowcast, brightness model
+experiments/      Eleven validation experiments, figure/table/diagram generators
 tests/            Deterministic unit tests; no network required
 results/          Experiment outputs consumed by the paper
 figures/          Generated scientific figures
@@ -242,7 +273,9 @@ python -m pytest tests -q
 ```
 
 The suite covers coordinate transforms, shadow geometry, photometry, TLE parsing,
-pass extraction, weather calibration, and all three schedulers. Scheduling tests
+pass extraction, weather calibration, all three schedulers, the planner modes,
+the nowcast hook and the learned components (skipped if the `[ml]` extra is
+absent). Scheduling tests
 compare optimized solutions against exhaustive search over randomized instances.
 
 The frontend can be checked independently:
@@ -260,6 +293,19 @@ npm run build
 - [Open-Meteo](https://open-meteo.com/) for operational forecasts, archived
   forecasts, and ERA5 reanalysis.
 - [Space-Track](https://www.space-track.org/) for optional historical element sets.
+- [IAU CPS SCORE](https://score.cps.iau.org/) for measured satellite magnitudes
+  (CC-BY 4.0), used to train the brightness model.
+- [WSISEG](https://github.com/CV-Application/WSISEG-Database) whole-sky images
+  with cloud labels (Xie et al., 2020), used to train the cloud U-Net.
+
+This research made use of data and/or services provided by the International
+Astronomical Union Centre for the Protection of the Dark and Quiet Sky (IAU CPS)
+SatHub. The development of SCORE has been supported by the National Science
+Foundation (NSF) under grant number: AST 2332736. SCORE is hosted at the NSF
+NOIRLab. Any opinions, findings, and conclusions or recommendations expressed in
+this material are those of the author(s) and do not necessarily reflect the
+views of the NSF NOIRLab, the SKAO, the IAU, or any host or member institution of
+the IAU CPS.
 
 Space-Track credentials are read from environment variables or a git-ignored
 local file and are never written to generated outputs.

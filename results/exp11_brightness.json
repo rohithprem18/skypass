@@ -1,0 +1,325 @@
+{
+  "data": {
+    "source": "IAU CPS SCORE",
+    "url": "https://score.cps.iau.org/download-all",
+    "n_observations": 17216,
+    "n_satellites": 2709,
+    "excluded": [
+      "ACS 3",
+      "potentially_discrepant",
+      "not illuminated",
+      "below horizon"
+    ],
+    "time_range": [
+      "2019-12-14 02:32:31.488000+00:00",
+      "2026-10-19 01:14:25+00:00"
+    ],
+    "families": {
+      "STARLINK": 8937,
+      "KUIPER": 2478,
+      "SPACEMOBILE": 1208,
+      "QIANFAN": 1163,
+      "BLUEWALKER": 853,
+      "ROCKET BODY": 794,
+      "OTHER": 778,
+      "HULIANWANG": 376,
+      "PELICAN": 332,
+      "DEBRIS": 170,
+      "GUOWANG": 113,
+      "ONEWEB": 13,
+      "TIANQI": 1
+    }
+  },
+  "protocol": {
+    "cv": "GroupKFold(5) by NORAD id",
+    "seed": 20261021,
+    "visibility_limit_mag": 6.0
+  },
+  "grouped_cv": {
+    "sphere_skypass": {
+      "n": 17216,
+      "mae": 1.8640491570210806,
+      "rmse": 2.5496940301983004,
+      "median_ae": 1.4985124655019137,
+      "bias": 0.9011660414720033,
+      "within_0p5": 0.1425418215613383,
+      "within_1p0": 0.305239312267658,
+      "visibility_accuracy": 0.5970027881040892,
+      "visibility_balanced_accuracy": 0.5922672650602803,
+      "per_satellite_mae": 2.431555639325029
+    },
+    "sphere_fitted": {
+      "n": 17216,
+      "mae": 1.506356374588643,
+      "rmse": 2.081357378476444,
+      "median_ae": 1.2094367527376866,
+      "bias": 0.2414741880149477,
+      "within_0p5": 0.2406482342007435,
+      "within_1p0": 0.42692843866171004,
+      "visibility_accuracy": 0.667692843866171,
+      "visibility_balanced_accuracy": 0.656471192508321,
+      "per_satellite_mae": 1.9333132378408977
+    },
+    "learned_hgb": {
+      "n": 17216,
+      "mae": 0.8271098094258584,
+      "rmse": 1.327654992528477,
+      "median_ae": 0.4764260622559364,
+      "bias": 0.18062304990624808,
+      "within_0p5": 0.5151603159851301,
+      "within_1p0": 0.7369307620817844,
+      "visibility_accuracy": 0.8025092936802974,
+      "visibility_balanced_accuracy": 0.8042399824053115,
+      "per_satellite_mae": 0.7062511550738253
+    }
+  },
+  "by_family": {
+    "BLUEWALKER": {
+      "n": 853,
+      "satellites": 1,
+      "sphere_skypass": 4.33791537539515,
+      "sphere_fitted": 3.636096027910205,
+      "learned_hgb": 3.9060677467580267
+    },
+    "DEBRIS": {
+      "n": 170,
+      "satellites": 143,
+      "sphere_skypass": 5.588081674717546,
+      "sphere_fitted": 2.967138023301851,
+      "learned_hgb": 0.6633432604582928
+    },
+    "GUOWANG": {
+      "n": 113,
+      "satellites": 3,
+      "sphere_skypass": 1.5304261659765126,
+      "sphere_fitted": 0.8566873266807948,
+      "learned_hgb": 0.6510336575912958
+    },
+    "HULIANWANG": {
+      "n": 376,
+      "satellites": 27,
+      "sphere_skypass": 1.8616191082207685,
+      "sphere_fitted": 0.4040609099073109,
+      "learned_hgb": 0.36242989223124034
+    },
+    "KUIPER": {
+      "n": 2478,
+      "satellites": 102,
+      "sphere_skypass": 1.1367870531471556,
+      "sphere_fitted": 0.8945459362838438,
+      "learned_hgb": 0.5718006547421512
+    },
+    "ONEWEB": {
+      "n": 13,
+      "satellites": 10,
+      "sphere_skypass": 3.3886101136671276,
+      "sphere_fitted": 0.50562306894972,
+      "learned_hgb": 0.43041110746133476
+    },
+    "OTHER": {
+      "n": 778,
+      "satellites": 219,
+      "sphere_skypass": 3.85335916057397,
+      "sphere_fitted": 2.578641493659446,
+      "learned_hgb": 0.5803231071457701
+    },
+    "PELICAN": {
+      "n": 332,
+      "satellites": 1,
+      "sphere_skypass": 2.7539350328212073,
+      "sphere_fitted": 3.7038464307985266,
+      "learned_hgb": 1.8480564599392095
+    },
+    "QIANFAN": {
+      "n": 1163,
+      "satellites": 73,
+      "sphere_skypass": 1.032605573214047,
+      "sphere_fitted": 0.5887058160208964,
+      "learned_hgb": 0.45465608277600733
+    },
+    "ROCKET BODY": {
+      "n": 794,
+      "satellites": 167,
+      "sphere_skypass": 3.066620475641435,
+      "sphere_fitted": 1.94849172197727,
+      "learned_hgb": 0.7501483462349384
+    },
+    "SPACEMOBILE": {
+      "n": 1208,
+      "satellites": 12,
+      "sphere_skypass": 2.5750934273403563,
+      "sphere_fitted": 1.2853503984441486,
+      "learned_hgb": 1.1009132482019806
+    },
+    "STARLINK": {
+      "n": 8937,
+      "satellites": 1950,
+      "sphere_skypass": 1.4599691487302964,
+      "sphere_fitted": 1.4361645279467505,
+      "learned_hgb": 0.6313947375775103
+    },
+    "TIANQI": {
+      "n": 1,
+      "satellites": 1,
+      "sphere_skypass": 0.8434571779615299,
+      "sphere_fitted": 0.10441314651526579,
+      "learned_hgb": 0.41362038179419436
+    }
+  },
+  "temporal": {
+    "split_date": "2025-07-01",
+    "n_train": 12063,
+    "n_test": 5153,
+    "n_test_established": 3284,
+    "n_test_new_or_rare": 1869,
+    "train_families": [
+      "BLUEWALKER",
+      "HULIANWANG",
+      "KUIPER",
+      "PELICAN",
+      "QIANFAN",
+      "SPACEMOBILE",
+      "STARLINK"
+    ],
+    "test_only_families": [
+      "DEBRIS",
+      "GUOWANG",
+      "ONEWEB",
+      "OTHER",
+      "ROCKET BODY",
+      "TIANQI"
+    ],
+    "sphere_skypass": {
+      "n": 5153,
+      "mae": 2.3086210775758262,
+      "rmse": 3.3197860318201893,
+      "median_ae": 1.634519918037777,
+      "bias": 1.7188937033441585,
+      "within_0p5": 0.11798952066757229,
+      "within_1p0": 0.26605860663691056,
+      "visibility_accuracy": 0.6390452163788085,
+      "visibility_balanced_accuracy": 0.5438511805090969,
+      "mae_established": 1.6125782271770468,
+      "mae_new_or_rare": 3.531630558961376
+    },
+    "sphere_fitted": {
+      "n": 5153,
+      "mae": 1.994134504081726,
+      "rmse": 3.023497279709376,
+      "median_ae": 1.3865999243157554,
+      "bias": 1.4369213838536596,
+      "within_0p5": 0.16883368911313798,
+      "within_1p0": 0.3522220065980982,
+      "visibility_accuracy": 0.7316126528235979,
+      "visibility_balanced_accuracy": 0.6708970981191682,
+      "mae_established": 1.257532745251827,
+      "mae_new_or_rare": 3.28840961162447
+    },
+    "learned_hgb": {
+      "n": 5153,
+      "mae": 1.9969554780015049,
+      "rmse": 2.3265198022234816,
+      "median_ae": 1.9581706714520175,
+      "bias": 1.3031234779186212,
+      "within_0p5": 0.11915389093731807,
+      "within_1p0": 0.2604308169998059,
+      "visibility_accuracy": 0.5447312245294004,
+      "visibility_balanced_accuracy": 0.5093251578604194,
+      "mae_established": 1.600179947335382,
+      "mae_new_or_rare": 2.6941255383051694
+    },
+    "by_family_mae": {
+      "BLUEWALKER": {
+        "n": 2,
+        "sphere_skypass": 1.7185873261727287,
+        "sphere_fitted": 2.79325349111742,
+        "learned_hgb": 1.4588268869893848
+      },
+      "DEBRIS": {
+        "n": 170,
+        "sphere_skypass": 5.588081674717546,
+        "sphere_fitted": 5.131194679506015,
+        "learned_hgb": 3.071229123731413
+      },
+      "GUOWANG": {
+        "n": 113,
+        "sphere_skypass": 1.5304261659765126,
+        "sphere_fitted": 1.126749412026657,
+        "learned_hgb": 1.6111405948260848
+      },
+      "HULIANWANG": {
+        "n": 102,
+        "sphere_skypass": 1.5224492187486878,
+        "sphere_fitted": 0.6781457631269726,
+        "learned_hgb": 1.1217454698481326
+      },
+      "KUIPER": {
+        "n": 1473,
+        "sphere_skypass": 1.2329716808144509,
+        "sphere_fitted": 0.9648202524049366,
+        "learned_hgb": 0.9117387524016434
+      },
+      "ONEWEB": {
+        "n": 13,
+        "sphere_skypass": 3.3886101136671276,
+        "sphere_fitted": 2.926177229867344,
+        "learned_hgb": 3.2187179172682265
+      },
+      "OTHER": {
+        "n": 778,
+        "sphere_skypass": 3.85335916057397,
+        "sphere_fitted": 3.423315877943897,
+        "learned_hgb": 2.6881733702834123
+      },
+      "QIANFAN": {
+        "n": 15,
+        "sphere_skypass": 4.215839619842074,
+        "sphere_fitted": 3.31592335253192,
+        "learned_hgb": 3.3879939734336384
+      },
+      "ROCKET BODY": {
+        "n": 794,
+        "sphere_skypass": 3.066620475641435,
+        "sphere_fitted": 3.078905168423564,
+        "learned_hgb": 2.7667964290332367
+      },
+      "SPACEMOBILE": {
+        "n": 669,
+        "sphere_skypass": 2.3771374141781654,
+        "sphere_fitted": 1.4627367489606016,
+        "learned_hgb": 1.374428163957321
+      },
+      "STARLINK": {
+        "n": 1023,
+        "sphere_skypass": 1.6297850370109477,
+        "sphere_fitted": 1.5693941284953283,
+        "learned_hgb": 2.760852122946562
+      },
+      "TIANQI": {
+        "n": 1,
+        "sphere_skypass": 0.8434571779615299,
+        "sphere_fitted": 0.38102429416174655,
+        "learned_hgb": 1.0742131853021464
+      }
+    }
+  },
+  "permutation_importance_mae": {
+    "phase angle": 0.10897437247632843,
+    "log range": 0.0006334529148694035,
+    "elevation": 0.043122540658697736,
+    "solar elevation": 0.014777011261051864,
+    "log orbital altitude": 0.2746986367040676,
+    "sphere prediction": 0.06506134746423346,
+    "family": 0.27092635594348924,
+    "band": 0.1161044618334524
+  },
+  "cv_seconds": 48.380383199997596,
+  "model_path": "cache\\ml\\models\\brightness_hgb.pkl",
+  "_meta": {
+    "generated_utc": "2026-10-21T15:59:44+00:00",
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "sgp4_version": "2.27"
+  }
+}

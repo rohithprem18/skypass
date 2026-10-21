@@ -8,6 +8,7 @@ explain how many passes were lost at each stage and why.
 from __future__ import annotations
 
 import datetime as dt
+import math
 import time
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence
@@ -16,11 +17,13 @@ from sgp4.api import Satrec
 
 from .config import (DEFAULT_SITE, PlannerConfig, ScoreWeights, Site)
 from .passes import Pass, PropagationCounter, Tracker, find_passes
-from .scheduler import Schedule, optimal_schedule
+from .scheduler import (Schedule, budget_schedule, capacity_schedule,
+                        optimal_schedule)
 from .scoring import MODE_OPTICAL, apply_scores
 from .tle import TleRecord, fresh_records, latest_archive, load_archive
-from .timeutil import utcnow
-from .weather import CloudSeries, WeatherUnavailable, forecast
+from .timeutil import as_naive_utc, hour_key, utcnow
+from .weather import (MIN_CALIBRATION_HOURS, CloudCalibration, CloudSeries,
+                      WeatherUnavailable, forecast, site_calibration)
 
 
 @dataclass
@@ -55,6 +58,11 @@ class PlanResult:
     funnel: Funnel = field(default_factory=Funnel)
     weather_used: bool = False
     weather_hours: int = 0
+    #: The forecast calibration applied before scoring, or None when the raw
+    #: forecast was used (``calibrate=False``, weather-blind, or no fit).
+    calibration: Optional[CloudCalibration] = None
+    capacity: Optional[int] = None
+    budget: Optional[int] = None
     runtime: Dict[str, float] = field(default_factory=dict)
     propagations: int = 0
 
@@ -76,6 +84,12 @@ class PlanResult:
             "mode": self.mode,
             "weather_used": self.weather_used,
             "weather_hours": self.weather_hours,
+            "calibrated": self.calibration is not None,
+            "calibration": (self.calibration.as_dict()
+                            if self.calibration else None),
+            "capacity_per_night": self.capacity,
+            "window_budget": self.budget,
+            "algorithm": sch.algorithm if sch else "",
             "funnel": self.funnel.as_dict(),
             "objective": round(sch.objective, 4) if sch else 0.0,
             "upper_bound": round(self.upper_bound, 4),
@@ -142,13 +156,42 @@ def plan(site: Site = DEFAULT_SITE,
          name_filter: Optional[str] = None,
          records: Optional[Sequence[TleRecord]] = None,
          scheduler=optimal_schedule,
+         calibrate: bool = True,
+         calibration: Optional[CloudCalibration] = None,
+         capacity: Optional[int] = None,
+         budget: Optional[int] = None,
+         nowcast: Optional[float] = None,
+         nowcast_hours: float = 1.0,
          verbose: bool = False) -> PlanResult:
-    """Run the full pipeline: elements -> passes -> scores -> timetable."""
+    """Run the full pipeline: elements -> passes -> scores -> timetable.
+
+    By default the cloud forecast is calibrated against ERA5 before scoring
+    (:func:`skypass.weather.site_calibration`), the configuration the paper
+    evaluates; ``calibrate=False`` scores the raw forecast. A prefitted
+    ``calibration`` is used as given instead of being fitted.
+
+    Scheduling follows the observing constraints supplied:
+
+    * neither ``capacity`` nor ``budget``: ``scheduler`` (default
+      :func:`optimal_schedule`, unlimited observations);
+    * ``capacity`` K only: at most K observations per observing night
+      (:func:`capacity_schedule`), a fixed nightly quota;
+    * ``budget`` N: at most N observations over the whole horizon with at most
+      ``capacity`` (default ``cfg.nightly_capacity``) per night
+      (:func:`budget_schedule`). Only this mode lets the station skip a cloudy
+      night, which is where the forecast adds value.
+    """
     cfg = cfg or PlannerConfig()
     weights = weights or ScoreWeights()
     t0 = t0 or utcnow()
     t1 = t0 + dt.timedelta(days=days)
     timing: Dict[str, float] = {}
+    if capacity is not None and capacity < 1:
+        raise ValueError(f"capacity must be >= 1, got {capacity}")
+    if budget is not None and budget < 1:
+        raise ValueError(f"budget must be >= 1, got {budget}")
+    if budget is not None and capacity is None:
+        capacity = cfg.nightly_capacity
 
     # 1. Element sets ------------------------------------------------------
     tic = time.perf_counter()
@@ -172,6 +215,46 @@ def plan(site: Site = DEFAULT_SITE,
             clouds = None
     timing["weather"] = time.perf_counter() - tic
 
+    # 2b. Forecast calibration --------------------------------------------
+    # The raw model cloud field is over-confident; scoring it directly is the
+    # configuration the experiments find worse than ignoring weather under a
+    # nightly quota. Map it to E[observed cloud | forecast] first.
+    tic = time.perf_counter()
+    scored_clouds = clouds
+    applied: Optional[CloudCalibration] = None
+    if clouds is not None and weather_aware and calibrate:
+        if calibration is None:
+            try:
+                calibration = site_calibration(
+                    site, as_naive_utc(t0).date(),
+                    train_days=cfg.calibration_train_days,
+                    lead_days=cfg.calibration_lead_days)
+            except WeatherUnavailable as exc:
+                if verbose:
+                    print(f"  [warn] calibration data unavailable, "
+                          f"scoring the raw forecast: {exc}")
+                calibration = None
+        if calibration is not None and calibration.n >= MIN_CALIBRATION_HOURS:
+            applied = calibration
+            scored_clouds = calibration.apply_series(clouds)
+        elif calibration is not None and verbose:
+            print(f"  [warn] only {calibration.n} calibration hours, "
+                  f"scoring the raw forecast")
+    # 2c. Sky-camera nowcast ------------------------------------------------
+    # An observed cloud fraction (skypass.ml.cloudcam) is a measurement, not a
+    # forecast, so it replaces the calibrated values for the next
+    # ``nowcast_hours`` instead of being calibrated itself. This is the
+    # sub-hourly signal the forecast lacks within a night.
+    if nowcast is not None and weather_aware:
+        if not 0.0 <= nowcast <= 1.0:
+            raise ValueError(f"nowcast must be a cloud fraction in [0, 1], got {nowcast}")
+        base = dict(scored_clouds.values) if scored_clouds is not None else {}
+        start = as_naive_utc(t0).replace(minute=0, second=0, microsecond=0)
+        for h in range(int(math.ceil(nowcast_hours)) + 1):
+            base[hour_key(start + dt.timedelta(hours=h))] = float(nowcast)
+        scored_clouds = CloudSeries(base, label="nowcast+forecast")
+    timing["calibrate"] = time.perf_counter() - tic
+
     # 3. Propagation and pass extraction ----------------------------------
     tic = time.perf_counter()
     counter = PropagationCounter()
@@ -181,14 +264,28 @@ def plan(site: Site = DEFAULT_SITE,
 
     # 4. Scoring -----------------------------------------------------------
     tic = time.perf_counter()
-    apply_scores(passes, sats, tracker, clouds=clouds, weights=weights,
+    apply_scores(passes, sats, tracker, clouds=scored_clouds, weights=weights,
                  mode=mode, weather_aware=weather_aware)
+    if applied is not None:
+        # ``cloud`` is the calibrated value the score used; keep the forecast
+        # as issued alongside it so a reader can see what the model said.
+        for p in passes:
+            if p.detail.get("cloud") is not None:
+                p.detail["cloud_raw"] = round(clouds.at(p.tca), 3)
     timing["score"] = time.perf_counter() - tic
 
     # 5. Conflict resolution ----------------------------------------------
     tic = time.perf_counter()
     candidates = [p for p in passes if p.score >= cfg.score_floor]
-    sched = scheduler(candidates, site.setup_gap_min)
+    if budget is not None:
+        sched = budget_schedule(candidates, site.setup_gap_min, capacity,
+                                budget, lon_deg=site.lon_deg)
+    elif capacity is not None:
+        sched = capacity_schedule(candidates, site.setup_gap_min,
+                                  capacity=capacity, per_night=True,
+                                  lon_deg=site.lon_deg)
+    else:
+        sched = scheduler(candidates, site.setup_gap_min)
     timing["schedule"] = time.perf_counter() - tic
     timing["total"] = sum(timing.values())
 
@@ -219,4 +316,5 @@ def plan(site: Site = DEFAULT_SITE,
                       candidates=candidates, schedule=sched, funnel=f,
                       weather_used=clouds is not None and weather_aware,
                       weather_hours=len(clouds) if clouds else 0,
+                      calibration=applied, capacity=capacity, budget=budget,
                       runtime=timing, propagations=counter.calls)

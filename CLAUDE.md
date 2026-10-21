@@ -4,6 +4,8 @@ Weather-aware satellite transit planning: turns public orbital elements and publ
 weather forecasts into a conflict-free, executable night of observations for one
 small ground station. Ships as a CLI, a Python library, and a React planning console,
 all driven by the same engine. Companion implementation for the papers in `final_paper/`.
+**Version 2.0.0** (tag `v2.0.0`) adds two optional learned components in `skypass/ml/`:
+a whole-sky-camera cloud nowcast and a satellite-brightness model.
 
 - **Repo:** github.com/rohithprem18/skypass (public) · MIT · Python ≥ 3.9
 - **Author:** Rohith Prem S (`rohithprem18`, rohithprem91@gmail.com), CSE, Saveetha
@@ -43,14 +45,17 @@ all driven by the same engine. Companion implementation for the papers in `final
 
 ```
 skypass/          Core engine: propagation, geometry, scoring, weather, scheduling
-experiments/      9 validation experiments + figure/table generators + paper checker
-tests/            42 deterministic unit tests, no network
+skypass/ml/       Optional learned components (extra `[ml]`): cloudcam.py, brightness.py
+experiments/      11 validation experiments + figure/table generators + paper checker;
+                  experiments/diagrams/ holds the TikZ diagram sources
+tests/            71 deterministic unit tests, no network (ML tests skip without numpy)
 results/          Experiment outputs (JSON + console logs) — the papers' only data source
 generated/        Result macros (numbers.tex) and tables, built by make_tables.py
 figures/          Generated vector figures (PDF tracked; PNG previews gitignored)
-final_paper/      The only manuscripts: ieee/ (6 pp), springer/ (12 pp), reports/ (audit)
+final_paper/      The only manuscripts: ieee/ (6 pp), springer/ (18 pp), reports/ (audit)
 tle_archive/      Dated element-set archives (tracked on purpose)
-cache/            Cached Open-Meteo responses (gitignored, regenerated on demand)
+cache/            Cached Open-Meteo responses, ML datasets and trained models under
+                  cache/ml/ (gitignored, regenerated on demand)
 webapp/           Python stdlib server + React UI
 api/              Vercel serverless entry point
 docs/             Setup notes and assets
@@ -81,6 +86,8 @@ Paths are anchored in `skypass/paths.py` (`PROJECT_ROOT`, `CACHE_DIR`, `RESULTS_
 | `pipeline.py` | `plan()` — the whole chain; `PlanResult`, `Funnel` |
 | `report.py` | Terminal timetable, CSV, JSON, iCalendar |
 | `spacetrack.py` | Optional historical elements (credentials required) |
+| `ml/cloudcam.py` | WSISEG loader, red/blue ratio rule, `PixelGBM`, `UNet`, `default_segmenter()`, `cloud_fraction()` |
+| `ml/brightness.py` | SCORE loader and filters, sphere baselines, `BrightnessModel` (gradient-boosted magnitude) |
 
 **Public API:** `from skypass import plan, GROUND_STATIONS` — see `skypass/__init__.py`
 for the full `__all__`.
@@ -102,6 +109,13 @@ hard requirement (eclipsed, bright sky, overcast) must score zero regardless of
 geometry. Do not make this additive; that is exactly the failure mode of
 weather-blind planners.
 
+Learned options (v2): `ScoreWeights.magnitude_model="learned"` (CLI
+`--learned-brightness`, web `brightness=learned`) replaces the sphere magnitude and
+falls back to it when the model or `[ml]` is missing. `plan(nowcast=c)` (CLI
+`--sky-image IMG`) overrides the scored cloud for the next hour with a camera
+measurement, which is not calibrated. The sphere stays the default because the
+learned photometry does not transfer across time (exp 11).
+
 ### Schedulers (`scheduler.py`)
 
 - `optimal_schedule` — weighted interval scheduling, exact, O(n log n)
@@ -122,10 +136,16 @@ python -m skypass stations                    # list presets
 python -m skypass archives                    # list archived element files
 python -m skypass passes --days 1             # geometric passes, no scoring
 python -m skypass plan --days 7 --ics results/plan.ics
-python -m pytest tests -q                     # 42 tests, no network
+python -m pip install -e ".[ml]"              # numpy, pandas, scikit-learn, Pillow, torch
+python -m skypass plan --budget 30 --learned-brightness --sky-image sky.jpg
+python -m pytest tests -q                     # 71 tests, no network
 
 python experiments/expN_*.py                  # regenerate results/*.json
+python experiments/exp10_cloudcam.py          # ~1 h CPU; downloads WSISEG, trains U-Net + GBM
+python experiments/exp10_cloudcam.py --final-gbm   # only retrain the deployable GBM
+python experiments/exp11_brightness.py        # ~1 min; downloads SCORE, trains the model
 python experiments/make_figures.py            # results → figures/*.pdf
+python experiments/diagrams/build_diagrams.py # TikZ diagrams (arch, passfind, quota_budget, geometry, unet)
 python experiments/make_tables.py             # results → generated/, then updates both final papers
 python experiments/check_paper.py             # citations, cross-refs, macros, figures (final_paper/ieee)
 
@@ -136,7 +156,8 @@ cd final_paper/springer && tectonic -X compile skypass-sn.tex
 ```
 
 Useful `plan` flags: `--radio`, `--no-weather`, `--sat ISS,NOAA`, `--mask`, `--gap`,
-`--w-elev`, `--lat/--lon/--alt/--name`, `--csv/--json/--ics`, `--limit`.
+`--w-elev`, `--lat/--lon/--alt/--name`, `--csv/--json/--ics`, `--limit`,
+`--capacity K`, `--budget N`, `--no-calibrate`, `--learned-brightness`, `--sky-image IMG`.
 
 ---
 
@@ -160,6 +181,10 @@ Preset stations span cloud climates on purpose: chennai, bengaluru (monsoon), le
 - **Space-Track** — optional, historical elements only; credentials from env or
   `.env.local` / `.env` / `.spacetrack` (all gitignored). See `docs/spacetrack-setup.md`.
   Credentials are never written into generated output.
+- **IAU CPS SCORE** — measured satellite magnitudes, CC-BY 4.0. Any publication must carry
+  SCORE's acknowledgement and NSF disclaimer (README and both papers have it). Not redistributed.
+- **WSISEG** — 400 labelled whole-sky images, one camera, no licence: cite Xie et al. 2020,
+  do not redistribute. Both datasets are downloaded into `cache/ml/` by the experiments.
 
 ---
 
@@ -172,14 +197,19 @@ Preset stations span cloud climates on purpose: chennai, bengaluru (monsoon), le
 2. **`tle_archive/` is tracked deliberately.** CelesTrak serves only current elements,
    so without the dated archive a past prediction cannot be reproduced. Same reasoning
    for `results/`, `figures/*.pdf` and `generated/`.
-3. **Every number in the papers flows through `generated/numbers.tex`** (147 macros).
+3. **Every number in the papers flows through `generated/numbers.tex`** (about 200 macros).
    Never hand-type a result into the LaTeX; re-run `make_tables.py`, which also copies
    the values into `final_paper/ieee/generated/` and the inlined block of
    `final_paper/springer/skypass-sn.tex`.
 4. **Paper figures are copies.** `make_figures.py` writes to `figures/`. The IEEE copy
-   uses 5 of them in `final_paper/ieee/figures/` (`--font times`); the Springer copy uses
-   `Fig1.pdf`-`Fig3.pdf` flat in its folder (`--font cm --wide 6.0`, renamed). Copy them
-   across after regenerating, or the uploads go stale.
+   uses `fig_tle_age`, `fig_budget_modes`, `fig_scheduler` and `fig_cloudcam_strip` in
+   `final_paper/ieee/figures/` (`--font times`) plus an inline colour TikZ architecture.
+   The Springer copy uses flat files `Fig1`-`Fig13` (`--font cm --wide 6.0 --col 2.75`,
+   renamed by first citation): Fig1 arch, Fig2 passfind, Fig3 geometry, Fig4 unet
+   (TikZ, from `experiments/diagrams/build_diagrams.py`), Fig5a accuracy, Fig5b
+   tle_age, Fig6 forecast_skill, Fig7 quota_budget (TikZ), Fig8a lead_sweep, Fig8b
+   calibration, Fig9 budget_modes, Fig10 scheduler, Fig11 funnel, Fig12 cloudcam,
+   Fig13 brightness. Copy them across after regenerating, or the uploads go stale.
 5. **Never commit secrets.** `.env*` is gitignored; `*.docx`/`*.pptx` review files too.
 6. **Element age is a first-class constraint**, not housekeeping — it is the single
    largest lever on prediction accuracy.
@@ -209,19 +239,23 @@ the folder's *contents*; compile with pdfLaTeX).
 |---|---|---|
 | Target | IEEE conference (venue not chosen) | SN Computer Science (Springer Nature) |
 | Format | IEEEtran conference, 2-col | `sn-jnl`, 1-col, `sn-mathphys-num` |
-| Length | **6 pages** (hard limit, full to the last line) | 12 pages (journal has no limit) |
-| References | 30 (2020+ set) | 17, DOIs included |
-| Figures | 5 + TikZ architecture | `Fig1.pdf` (architecture), `Fig2.pdf`, `Fig3.pdf` |
-| Title | SkyPass: Exact Weather-Aware Scheduling of Satellite Passes for Small Ground Stations | SkyPass: Weather-Aware Satellite Pass Scheduling for Small Ground Stations and the Decision-Dependent Value of Cloud Forecasts |
+| Length | **6 pages** (hard limit, full to the last line) | **about 18 pages** (authors' limit, raised from 15 for v2; journal has none) |
+| References | 30 (same five ML swaps as Springer) | 30, incl. foundational SGP4 sources, four 2026 papers, SCORE and WSISEG; DOIs where they exist |
+| Figures | colour TikZ architecture + 4 charts + ML results table | 13 figures (15 panels): five colour TikZ diagrams + charts |
+| Title | SkyPass: Exact Weather-Aware Pass Scheduling with Learned Sky and Brightness Models | SkyPass: Weather-Aware Satellite Pass Scheduling with Learned Cloud Nowcasting and Brightness Prediction for Small Ground Stations |
 
 - Springer allows **one `.tex` file** (no `\input`): macros are inlined, figures flat.
+- **Layout is uniform on purpose.** Springer: a preamble override centres one text block on
+  every page (sn-jnl hard-codes two-sided mode, so the `oneside` option alone does nothing)
+  and the class's `\flushbottom` is left in force: do not add `\raggedbottom` back. IEEE:
+  `\balance` before the bibliography equalises the last page's columns.
 - Prose rules from this file apply. Neither paper uses bold run-in paragraph labels
   (the user asked for them to be removed); the Springer abstract is one unlabelled
   paragraph in Purpose / Methods / Results / Conclusion order, without the word "must".
 - Both carry an AI-use statement (Springer: Experimental Setup; IEEE: Acknowledgements)
   that the authors must confirm. The Springer copy has no author-contributions section
   (removed at the user's request).
-- `final_paper/reports/` holds the audit: change log (C1-C19, P1-P7, V1-V7), claim
+- `final_paper/reports/` holds the audit: change log (C1-C19, P1-P11, V1-V7), claim
   matrix, citation audit, validation report, compliance checklist, peer review and
   readiness report.
 - XeTeX note: local Tectonic builds use XeTeX; the IEEE preamble has a XeTeX-only
@@ -243,6 +277,12 @@ the folder's *contents*; compile with pdfLaTeX).
   **+55.0 %** under a tight budget, but **−0.2 %** under a fixed nightly quota
 - TLE ageing: 0.05 s (1 day) → 4.3 s (1 week) → 75.3 s (1 month) culmination error
 - Scale: 635 objects × 7 days → 12,438 passes in 104.4 s, scheduling 2.1 ms
+- Sky camera (exp 10, WSISEG, blocked 5-fold): cloud-fraction error 27.0 pp (R/B 0.6),
+  3.5 pp (tuned R/B), **1.2 pp** (pixel GBM and U-Net); IoU 0.669 / 0.873 / **0.945** /
+  0.927. The GBM wins every fold and is the deployed segmenter (no torch needed)
+- Brightness (exp 11, SCORE, 17,216 obs, 2,709 sats): unseen-satellite MAE 1.86 (sphere)
+  → 1.51 (fitted sphere) → **0.83 mag** (learned); after 2025-07 the learned model ties
+  the fitted sphere (2.00 vs 1.99), so the sphere stays the default
 
 **The two findings worth preserving:** a forecast is only worth something when the
 planner may *skip a night* (it cannot discriminate within one night, where cloud is
@@ -255,12 +295,12 @@ Do not restate the unqualified "worse than ignoring weather" form (audit C2).
 
 ## Known inconsistencies / open items
 
-- **The live planner does not calibrate the forecast** (found 13 Oct 2026). `pipeline.plan()`
-  and `webapp/server.py` pass the raw Open-Meteo forecast to the score; calibration exists
-  only in `experiments/exp4_weather_value.py`. The CLI uses `optimal_schedule` (no K, no
-  budget) and the web app a per-night `capacity_schedule`; neither exposes `budget_schedule`.
-  The shipped tool therefore runs the configuration the experiments say gains nothing.
-  See `memory.md` section 11.
+- **Live-planner gap closed in v2.** `pipeline.plan()` calibrates the forecast by default
+  (`weather.site_calibration`, `--no-calibrate` to disable), and the CLI and web app expose
+  `--capacity` / `--budget` (`capacity_schedule`, `budget_schedule`).
+- **Learned-component limits:** the camera models are trained on one camera (transfer
+  untested) and the nowcast's planning value is unmeasured (no public camera archive covers
+  the evaluation nights); the brightness model drifts with satellite design, retrain it.
 - **Audit corrections (13 Oct 2026)** are in `final_paper/` and must not be undone:
   weather value at **6** stations (skill at 7); raw forecast worse than ignoring weather
   **only under the quota**; epoch-correct geometry **lowers** the half-budget clear gain
@@ -269,9 +309,8 @@ Do not restate the unqualified "worse than ignoring weather" form (audit C2).
   `skypass-prob` arm. See `final_paper/reports/change_log.md`.
 - **Bootstrap done.** `results/exp9_bootstrap.json` reproduces exp 4 exactly. Half budget:
   EV +19.0% [+9.2, +24.9], clear +37.6% [+3.1, +80.4]; quota intervals include zero.
-- **Nothing since commit `9a288c4` is committed.** The public repository is behind the
-  working tree. Removing `paper/`, `overleaf/` and the old `docs/*.pdf` will show as
-  deletions of tracked files in the next commit.
+- **v2.0.0 committed and tagged** (21 Oct 2026); it also removed the old `paper/`,
+  `overleaf/` and `docs/*.pdf` from the tracked tree.
 - Authors still to confirm: AI-use statement, funding and competing interests; ORCIDs.
 - A Tata Technologies InnoVent submission package was built **outside this repo** at
   `../SkyPass_Tata_InnoVent_Submission/`. It is deliberately not tracked here.

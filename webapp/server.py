@@ -34,10 +34,12 @@ from skypass.geometry import site_ecef, sun_elevation
 from skypass.passes import Tracker
 from skypass.pipeline import plan
 from skypass.report import compass, write_ics
-from skypass.scheduler import capacity_schedule, observing_night
+from skypass.scheduler import observing_night
 from skypass.scoring import MODE_OPTICAL, MODE_RADIO
 from skypass.timeutil import utcnow
 from skypass.tle import latest_archive, load_archive
+from skypass.weather import (MIN_CALIBRATION_HOURS, WeatherUnavailable,
+                             forecast, site_calibration)
 
 # Importable both as `python webapp/server.py` and as `webapp.server`.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -61,6 +63,9 @@ WEB_OBJECT_LIMIT = 140
 
 _LOCK = threading.Lock()
 _RECORDS = None
+#: Forecast calibrations already fitted this process, keyed by site and day.
+#: A fit reads 90 days of forecasts and reanalysis; it changes once a day.
+_CALIBRATIONS = {}
 
 
 def records():
@@ -93,6 +98,38 @@ def sky_track(site, sat, p, n=28):
     return out
 
 
+def calibration_for(site, day):
+    """The site's ERA5 forecast calibration for plans starting on ``day``.
+
+    Returns None when the data cannot be fetched or the record is too short to
+    trust, in which case the plan scores the raw forecast and says so.
+    """
+    key = (round(site.lat_deg, 4), round(site.lon_deg, 4), day.isoformat())
+    with _LOCK:
+        if key in _CALIBRATIONS:
+            return _CALIBRATIONS[key]
+    cfg = PlannerConfig()
+    try:
+        cal = site_calibration(site, day,
+                               train_days=cfg.calibration_train_days,
+                               lead_days=cfg.calibration_lead_days)
+    except (WeatherUnavailable, KeyError, ValueError):
+        return None                          # do not cache a transient failure
+    if cal.n < MIN_CALIBRATION_HOURS:
+        cal = None
+    with _LOCK:
+        _CALIBRATIONS[key] = cal
+    return cal
+
+
+def _count(q, name):
+    """A non-negative integer query parameter; 0 when absent or malformed."""
+    try:
+        return max(0, int(q.get(name) or 0))
+    except (TypeError, ValueError):
+        return 0
+
+
 def resolve_site(q) -> Site:
     """Build a Site from a preset key or explicit coordinates."""
     key = (q.get("station") or "").lower()
@@ -122,35 +159,40 @@ def build_plan(q):
     days = max(0.5, min(float(q.get("days", 2) or 2), 7.0))
     mode = MODE_RADIO if q.get("mode") == "radio" else MODE_OPTICAL
     weather = q.get("weather", "1") not in ("0", "false", "no")
-    try:
-        capacity = int(q.get("capacity") or 0)
-    except (TypeError, ValueError):
-        capacity = 0
+    calibrate = q.get("calibrate", "1") not in ("0", "false", "no")
+    # An observing budget is what makes the weather forecast worth consulting
+    # (Sec. V-D of the paper), so the interface offers it as a first-class knob:
+    # ``capacity`` caps each night, ``budget`` caps the whole window and lets
+    # the planner skip a cloudy night (nightly cap defaults to the config's).
+    capacity = _count(q, "capacity")
+    budget = _count(q, "budget")
+    constraints = {"capacity": capacity or None, "budget": budget or None}
+    # ``brightness=learned`` swaps the diffuse-sphere magnitude for the model
+    # trained on SCORE (needs the ``[ml]`` extra; falls back to the sphere).
+    weights = ScoreWeights(magnitude_model=(
+        "learned" if q.get("brightness") == "learned" else "sphere"))
 
     cfg = PlannerConfig()
     recs = records()[:WEB_OBJECT_LIMIT]
+    t0 = utcnow()
 
     # Fetch the forecast once so the weather-aware and "if it cleared" views
     # see the same sky and the second view costs no extra network call.
     clouds = None
     if weather:
         try:
-            from skypass.weather import forecast
             clouds = forecast(site, days=int(min(16, max(1, days + 1))))
         except Exception:                              # noqa: BLE001
             clouds = None
+    calibration = (calibration_for(site, t0.date())
+                   if weather and calibrate and clouds is not None else None)
 
-    result = plan(site=site, days=days, records=recs, cfg=cfg, mode=mode,
-                  weather_aware=weather, clouds=clouds, fetch_weather=False,
-                  weights=ScoreWeights())
-
-    # An observing budget is what makes the weather forecast worth consulting
-    # (Sec. V-D of the paper), so the interface offers it as a first-class knob.
+    result = plan(site=site, days=days, t0=t0, records=recs, cfg=cfg,
+                  mode=mode, weather_aware=weather, clouds=clouds,
+                  fetch_weather=False, weights=weights,
+                  calibrate=calibration is not None, calibration=calibration,
+                  **constraints)
     sched = result.schedule
-    if capacity > 0 and result.candidates:
-        sched = capacity_schedule(result.candidates, site.setup_gap_min,
-                                  capacity=capacity, per_night=True,
-                                  lon_deg=site.lon_deg)
 
     sats = {}
     for r in recs:
@@ -184,14 +226,10 @@ def build_plan(q):
     # Re-plan ignoring weather so the interface can say which it is.
     if_clear, blocked = [], 0
     if weather and clouds is not None and not passes:
-        alt = plan(site=site, days=days, records=recs, cfg=cfg, mode=mode,
-                   weather_aware=False, clouds=clouds, fetch_weather=False,
-                   weights=ScoreWeights())
+        alt = plan(site=site, days=days, t0=t0, records=recs, cfg=cfg,
+                   mode=mode, weather_aware=False, clouds=clouds,
+                   fetch_weather=False, weights=weights, **constraints)
         alt_sched = alt.schedule
-        if capacity > 0 and alt.candidates:
-            alt_sched = capacity_schedule(alt.candidates, site.setup_gap_min,
-                                          capacity=capacity, per_night=True,
-                                          lon_deg=site.lon_deg)
         if_clear = shape((alt_sched.selected if alt_sched else [])[:12])
         blocked = len(alt_sched.selected) if alt_sched else 0
 
@@ -208,7 +246,12 @@ def build_plan(q):
                    "days": days},
         "mode": mode,
         "weather_used": result.weather_used,
-        "capacity": capacity,
+        "calibrated": result.calibration is not None,
+        "calibration": (result.calibration.as_dict()
+                        if result.calibration else None),
+        "capacity": result.capacity or 0,
+        "budget": budget,
+        "algorithm": sched.algorithm if sched else "",
         "funnel": {"catalogue": f.catalogue, "geometric": f.geometric,
                    "sunlit": f.sunlit, "dark": f.dark_sky,
                    "bright": f.bright_enough, "clear": f.cloud_clear,
@@ -262,6 +305,7 @@ def _pass_json(site, sats, p, tracker=None, track=True, selected=True,
         "range_km": round(p.range_tca_km),
         "magnitude": d.get("magnitude"),
         "cloud": d.get("cloud"),
+        "cloud_raw": d.get("cloud_raw", d.get("cloud")),
         "score": round(p.score, 3),
         "priority": p.priority,
         "night": observing_night(p, site.lon_deg).isoformat(),

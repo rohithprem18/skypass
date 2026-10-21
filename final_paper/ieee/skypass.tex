@@ -25,6 +25,7 @@
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 \usepackage{url}
+\usepackage{balance}  % equal column lengths on the last page
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning, fit, backgrounds}
 
@@ -35,7 +36,7 @@
 
 \begin{document}
 
-\title{SkyPass: Exact Weather-Aware Scheduling of\\Satellite Passes for Small Ground Stations}
+\title{SkyPass: Exact Weather-Aware Pass Scheduling\\with Learned Sky and Brightness Models}
 
 \author{\IEEEauthorblockN{Rohith Prem S}
 \IEEEauthorblockA{\textit{Student}\\
@@ -55,34 +56,35 @@ selvakumarr@saveetha.ac.in}
 \maketitle
 
 \begin{abstract}
-Observation planning at a small ground station is presently distributed across
+Observation planning at a small ground station is distributed across
 unconnected tools: one predicts passes, another evaluates optical visibility,
-cloud conditions are checked manually, and conflicts between overlapping passes
-are resolved by the operator. Cloud cover is the least well handled of these,
-since conventional predictors enumerate passes without reference to it. This
-paper presents SkyPass, an integrated planner that carries a catalogue of
-orbital elements through propagation, pass extraction, visibility scoring,
-cloud-forecast integration and exact conflict resolution to an executable
-timetable. Pass extraction uses coarse bracketing with bisection refinement,
-achieving \SkyfieldTca~s mean agreement with an independent implementation while
-requiring \CallReduction$\times$ fewer propagator evaluations than a dense scan.
-Conflict resolution is formulated as weighted interval scheduling under a
-nightly observing budget and solved exactly by a dynamic program whose running
-time grows linearly with the number of candidate passes and the nightly limit;
-it matched exhaustive search on all \SchedTrials~randomised instances tested. Forecast
-skill is verified against ERA5 reanalysis at \SkillStationsWord{} stations and
-scheduling value at \EvalStationsWord{}, over \EvalDays~days. The principal finding
-is that forecast value is determined by the decision the forecast informs: a
-station required to observe every night obtains no benefit, whereas one able to
-select its observing nights improves realised yield by \BudgetGainEV\% (expected
-value) and \BudgetGainClear\% (clear-sky count). Calibrating the forecast
-against reanalysis raises the gain in every regime tested; under a nightly quota
-the uncalibrated forecast performs worse than disregarding weather.
+and cloud and conflicts between overlapping passes are left to the operator.
+This paper presents SkyPass, an integrated planner that carries orbital elements
+through propagation, pass extraction, visibility scoring, cloud-forecast
+calibration and exact conflict resolution to an executable timetable, with two
+optional learned components. Pass extraction agrees with an independent
+implementation to \SkyfieldTca~s while requiring \CallReduction$\times$ fewer
+propagator evaluations than a dense scan. Conflict resolution under a nightly
+observing budget is solved exactly by a dynamic program linear in the number of
+candidate passes and the nightly limit; it matched exhaustive search on all
+\SchedTrials~randomised instances. Forecast skill is verified against ERA5
+reanalysis at \SkillStationsWord{} stations and scheduling value at
+\EvalStationsWord{}, over \EvalDays~days. Forecast value is determined by the
+decision it informs: a station required to observe every night obtains no
+benefit, whereas one able to select its nights improves realised yield by
+\BudgetGainEV\% (expected value) and \BudgetGainClear\% (clear-sky count), and
+calibration raises the gain in every regime. Learned segmentation reads the
+cloud fraction of a whole-sky camera image to within \CamGbmFrac{} percentage
+points, against \CamTunedFrac{} for a tuned colour-ratio rule, and
+gradient-boosted trees trained on \BrightObs{} measured magnitudes reduce the
+brightness error for unseen satellites from \BrightMaeFitted{} to
+\BrightMaeLearned{} mag, an advantage that does not persist into a later period
+with new satellite designs.
 \end{abstract}
 
 \begin{IEEEkeywords}
-satellite pass prediction, SGP4, ground station scheduling, interval scheduling,
-forecast calibration, optical observation
+satellite pass prediction, ground station scheduling, interval scheduling,
+forecast calibration, cloud segmentation, machine learning
 \end{IEEEkeywords}
 
 % ===========================================================================
@@ -102,30 +104,25 @@ applications display a weather indication beside a pass, but to our knowledge
 none allow the forecast to \emph{rank} passes or drive a scheduling decision,
 and none resolve conflicts between overlapping passes.
 
-The treatment of weather is the more consequential omission. At the site used as
-a running example (Chennai, India, \ang{12.92}\,N), the mean observed cloud
-cover over optically viable passes was \CloudChennai\%, under which most
-geometrically favourable passes are not observable. A predictor ranking passes
-by culmination elevation will nonetheless recommend an overcast night. The
-scheduling omission is less apparent. Once several satellites are tracked
-their passes overlap, and a single-aperture station must select among them. The
-literature addressing this problem does so from the operator side of the link,
-as spacecraft tasking and satellite range scheduling, formulated as mathematical
-programs or addressed with metaheuristics and learning methods~\cite{li2023srsp,
-song2023cluster, ou2023drl, wang2024avns, wang2021agile}. Such formulations
-impose constraints a small station does not have, and solver dependencies it
-cannot justify.
+Weather is the more consequential omission. At the running example (Chennai,
+India, \ang{12.92}\,N) mean observed cloud over optically viable passes was
+\CloudChennai\%, yet a predictor ranking by elevation still recommends an
+overcast night. Once several satellites are tracked their passes also overlap,
+and a single-aperture station must select among them; the scheduling literature
+treats this from the operator side, as spacecraft tasking and range
+scheduling~\cite{li2023srsp, song2023cluster, ou2023drl, wang2024avns,
+wang2021agile}, with constraints and solvers a small station does not need.
 
-This paper shows that the small-station problem admits a substantially simpler
-exact formulation, and that the treatment of weather is what improves realised
-outcomes. The contributions are: an integrated pipeline accounting for the
+The contributions are: an integrated pipeline accounting for the
 passes removed by each physical constraint; a validated pass extractor; exact
 capacity-constrained conflict resolution requiring neither a solver nor a
 metaheuristic; a weather claim verified against ERA5
 reanalysis~\cite{hersbach2020era5}; two negative results, namely that
 weather-awareness yields no benefit under a fixed nightly quota and that the
-uncalibrated forecast degrades performance there; and a measured element-set
-error budget over \AgeComparisons{} aged comparisons.
+uncalibrated forecast degrades performance there; a measured element-set
+error budget over \AgeComparisons{} aged comparisons; and two learned
+components, a cloud nowcast read from whole-sky images and a data-driven
+photometric model, each evaluated against classical baselines.
 
 % ===========================================================================
 \section{Related Work}
@@ -134,36 +131,34 @@ SGP4 and its two-line element sets remain the standard
 basis for rapid satellite position prediction~\cite{vallado2022fundamentals,
 acciarini2025sgp4}. Accuracy is limited by the element sets rather than the
 propagator: TLE-derived positions carry errors that grow with element-set age,
-as measured against on-board GPS~\cite{kovar2022tle} and estimated
-statistically~\cite{curzi2021tle}.
+as measured against on-board GPS~\cite{kovar2022tle}.
 
 Whether a satellite is \emph{seen} depends on
 illumination and photometry, not only geometry. Standard treatments use a
 conical Earth-shadow model~\cite{vallado2022fundamentals} and a diffuse-sphere
 phase function for apparent magnitude~\cite{fankhauser2023brightness}, and
-recent megaconstellation brightness work has refined
-these~\cite{mallama2021starlink, lawler2022visibility}.
+megaconstellation brightness work has refined these~\cite{mallama2021starlink}.
+Measured magnitudes are now collected in bulk by the IAU CPS SCORE
+repository~\cite{score2026}, which makes a learned photometric model possible.
 
 Satellite range scheduling is an oversubscribed
 combinatorial problem~\cite{li2023srsp}, usually approached with multi-objective
-optimisation, metaheuristics or reinforcement learning~\cite{petelin2021ground,
-ou2023drl}. Earth observation scheduling is a large adjacent
-literature~\cite{wang2021agile, eddy2021mis}, in which cloud cover appears as an
-uncertainty to be hedged during imaging tasking~\cite{wang2020robust,
-wang2021robust}, although always on the \emph{operator} side. Where the
-underlying structure is single-machine interval selection, exact polynomial
-algorithms exist: weighted interval scheduling is a textbook dynamic
-program~\cite{cormen2022introduction}, and harder members of the family continue
-to attract exact methods~\cite{muir2023interval}.
+optimisation, metaheuristics or reinforcement learning~\cite{ou2023drl}. Earth observation scheduling is a large adjacent
+literature~\cite{wang2021agile, eddy2021mis}, in which cloud is an uncertainty
+hedged during imaging tasking~\cite{wang2020robust, wang2021robust}, always on
+the \emph{operator} side. Weighted interval scheduling, the single-machine
+case, is a textbook dynamic program~\cite{cormen2022introduction}.
 
 Professional observatories schedule around
 weather using queue schedulers that re-plan as conditions
 change~\cite{zhang2024grris, xie2024astrosa}, but assume an institutional
 software stack and on-site sky monitoring. Forecast verification and forecast
-value are mature fields~\cite{brown2021met, turner2022hrrr}, and statistical
+value are mature fields~\cite{brown2021met}, and statistical
 post-processing is essential before a forecast drives a
-decision~\cite{vannitsem2021postprocessing}. To our knowledge this machinery has
-not been applied to observer-side pass planning.
+decision~\cite{vannitsem2021postprocessing}. Sky imaging estimates cloud by
+thresholding the red-to-blue ratio~\cite{long2006retrieving} or, more recently,
+with convolutional segmentation~\cite{xie2020segcloud}. To our knowledge neither
+has been applied to observer-side pass planning.
 
 % ===========================================================================
 \section{System Design}
@@ -175,43 +170,51 @@ is the mechanism by which the weather claim is evaluated.
 
 \begin{figure}[htbp]
 \centering
+\definecolor{dOrbit}{HTML}{0072B2}\definecolor{dWeather}{HTML}{009E73}%
+\definecolor{dScore}{HTML}{CC79A7}\definecolor{dPlan}{HTML}{E69F00}%
+\definecolor{dOut}{HTML}{D55E00}\definecolor{dLearn}{HTML}{56B4E9}%
 \begin{tikzpicture}[
   font=\scriptsize,
   node distance=1.8mm,
-  box/.style={draw, rounded corners=1.6pt, align=center, inner sep=1.8pt,
-              minimum height=4.6mm, text width=20mm, fill=black!3},
-  src/.style={draw, dashed, rounded corners=1.6pt, align=center,
-              inner sep=1.6pt, minimum height=4.2mm, text width=16mm,
-              fill=black!0},
-  result/.style={draw, rounded corners=1.6pt, align=center,
-                 inner sep=1.8pt, minimum height=4.6mm, text width=16mm,
-                 fill=black!8},
-  ar/.style={-{Latex[length=1.5mm]}, thin},
+  box/.style={draw=#1, line width=0.6pt, rounded corners=1.6pt, align=center,
+              inner sep=1.8pt, minimum height=4.6mm, text width=20mm, fill=#1!14},
+  src/.style={draw=black!55, dashed, rounded corners=1.6pt, align=center,
+              inner sep=1.6pt, minimum height=4.2mm, text width=16mm, fill=white},
+  ml/.style={draw=dLearn!90!black, densely dotted, line width=0.7pt,
+             rounded corners=1.6pt, align=center, inner sep=1.6pt,
+             minimum height=4.2mm, text width=16mm, fill=dLearn!14},
+  ar/.style={-{Latex[length=1.5mm]}, line width=0.5pt, draw=#1},
+  ar/.default=black!70,
 ]
-\node[box] (tle)   {\textbf{1} Element sets\\\tiny archive, validate};
-\node[box, below=of tle]  (prop) {\textbf{2} Propagation\\\tiny SGP4, TEME$\to$ECEF};
-\node[box, below=of prop] (pass) {\textbf{3} Pass extraction\\\tiny bracket + bisect};
-\node[box, below=of pass] (score){\textbf{4} Visibility score\\\tiny shadow, magnitude};
-\node[box, below=of score](sched){\textbf{5} Scheduling\\\tiny exact DP, budget $K$};
+\node[box=dOrbit] (tle)   {\textbf{1} Element sets\\\tiny archive, validate};
+\node[box=dOrbit, below=of tle]  (prop) {\textbf{2} Propagation\\\tiny SGP4, TEME$\to$ECEF};
+\node[box=dOrbit, below=of prop] (pass) {\textbf{3} Pass extraction\\\tiny bracket + bisect};
+\node[box=dScore, below=of pass] (score){\textbf{4} Visibility score\\\tiny shadow, magnitude};
+\node[box=dPlan, below=of score](sched){\textbf{5} Scheduling\\\tiny exact DP, budget $K$};
 
 \node[src, left=5mm of tle]   (ct)  {CelesTrak\\AMSAT};
-\node[src, left=5mm of score] (om)  {Open-Meteo\\forecast};
-\node[src, below=2.2mm of om] (cal) {calibration\\\tiny vs.\ ERA5};
+\node[src, left=5mm of score, yshift=2.2mm] (om)  {Open-Meteo\\forecast};
+\node[box=dWeather, text width=16mm, below=4.4mm of om] (cal) {calibration\\\tiny vs.\ ERA5};
+\node[ml, right=5mm of pass] (lb)  {learned\\magnitude};
+\node[ml, right=5mm of score] (cam) {sky camera\\\tiny learned nowcast};
 
-\node[result, right=5mm of sched] (ics) {timetable\\\tiny CSV / ICS / JSON};
+\node[box=dOut, text width=16mm, right=5mm of sched] (ics) {timetable\\\tiny CSV / ICS / JSON};
 
 \draw[ar] (ct)   -- (tle);
-\draw[ar] (tle)  -- (prop);
-\draw[ar] (prop) -- (pass);
-\draw[ar] (pass) -- (score);
-\draw[ar] (score)-- (sched);
-\draw[ar] (om)   -- (cal);
-\draw[ar] (cal.east) -- ++(2.5mm,0) |- (score.west);
-\draw[ar] (sched)-- (ics);
+\draw[ar=dOrbit] (tle)  -- (prop);
+\draw[ar=dOrbit] (prop) -- (pass);
+\draw[ar=dOrbit] (pass) -- (score);
+\draw[ar=dScore] (score)-- (sched);
+\draw[ar=dWeather] (om)   -- (cal);
+\draw[ar=dWeather] (cal.east) -- ++(2.5mm,0) |- (score.west);
+\draw[ar=dLearn!90!black] (lb.west) -- ++(-2.5mm,0) |- ([yshift=1.2mm]score.east);
+\draw[ar=dLearn!90!black] ([yshift=-1.2mm]cam.west) -- ([yshift=-1.2mm]score.east);
+\draw[ar=dPlan] (sched)-- (ics);
 \end{tikzpicture}
 \caption{SkyPass pipeline. The cloud forecast is calibrated against reanalysis
 before it is allowed to influence the score; the scheduler then resolves
-conflicts exactly under the station's nightly observing budget.}
+conflicts exactly under the station's observing budget. Dotted: optional learned
+components.}
 \label{fig:arch}
 \end{figure}
 
@@ -230,36 +233,13 @@ Atmospheric refraction~\cite{stuhl2021refraction} is reported but not applied to
 the horizon mask, so results do not depend on assumed surface conditions.
 
 Because cost is dominated by propagator calls, pass extraction is designed to
-minimise them (Algorithm~\ref{alg:passes}). Elevation is sampled on a coarse
+minimise them. Elevation is sampled on a coarse
 grid to \emph{bracket} horizon crossings; within a pass elevation is smooth and
 unimodal, so a sign change of $\varepsilon(t) - \varepsilon_\mathrm{mask}$
 between adjacent samples brackets exactly one crossing. Each bracket is refined
 by bisection to \SI{0.1}{\second}, and culmination by golden-section search. The
 coarse step is $P/240$ bounded to \SIrange{5}{30}{\second}, so short-period
 orbits, whose passes are shortest, are sampled most finely.
-
-\begin{algorithm}[htbp]
-\caption{Pass extraction for one object}
-\label{alg:passes}
-\begin{algorithmic}[1]
-\Require element set $\sigma$, window $[t_0,t_1)$, mask $\varepsilon_m$,
-         tolerance $\delta$
-\State $h \gets \max(5,\min(\Delta_\mathrm{max}, P(\sigma)/240))$
-\State $t \gets t_0$; \; $e_\mathrm{prev} \gets \varepsilon(\sigma,t)$;
-       \; $a \gets \textbf{nil}$
-\While{$t < t_1$}
-  \State $t' \gets \min(t+h,\,t_1)$; \; $e \gets \varepsilon(\sigma,t')$
-  \If{$e_\mathrm{prev} < \varepsilon_m \le e$}
-     \State $a \gets \textsc{Bisect}(t,t',\varepsilon_m,\text{rising},\delta)$
-  \ElsIf{$e_\mathrm{prev} \ge \varepsilon_m > e$ \textbf{and} $a \ne$ \textbf{nil}}
-     \State $l \gets \textsc{Bisect}(t,t',\varepsilon_m,\text{setting},\delta)$
-     \State $c \gets \textsc{GoldenMax}(a,l,\delta)$
-     \State \textbf{emit} pass $(a,c,l)$; \; $a \gets \textbf{nil}$
-  \EndIf
-  \State $t \gets t'$; \; $e_\mathrm{prev} \gets e$
-\EndWhile
-\end{algorithmic}
-\end{algorithm}
 
 \subsection{Visibility scoring}
 Each pass receives a score $S \in [0,1]$ combining a geometric quality term with
@@ -337,6 +317,22 @@ in time, so applying the budget per night and solving each night independently
 remains exact. Nights are defined in local solar time so that an evening and the
 small hours that follow belong to the same session.
 
+\subsection{Learned components}
+\label{sec:learned}
+Two optional models replace hand-built approximations. The hourly forecast
+cannot discriminate within a night (Section~\ref{sec:value}); a whole-sky
+camera can. Two segmenters label each pixel of a camera image as cloud or sky:
+a U-Net~\cite{ronneberger2015unet} with three down-sampling stages, trained with
+a cross-entropy masked to the fisheye and with rotations and flips, since the sky
+has no preferred azimuth; and gradient-boosted trees on fifteen per-pixel colour
+and texture features. The cloud fraction of the image replaces $\hat{c}$ for the
+next hour. For photometry, gradient-boosted regression
+trees~\cite{friedman2001greedy} predict the apparent magnitude from the phase
+angle, range, elevation, solar elevation and orbital altitude at culmination,
+the prediction of \eqref{eq:mag}, the satellite family and the observing band.
+The family is known for every catalogued object, so the model applies to
+satellites that have never been measured.
+
 % ===========================================================================
 \section{Experimental Setup}
 \label{sec:setup}
@@ -360,6 +356,15 @@ Skyfield~\cite{skyfield}, which shares only the certified SGP4 core and
 implements time scales, frames and event finding independently. All runs are
 single-threaded, under Python~\PythonVersion{} with \texttt{sgp4}~\SgpVersion{}
 on a commodity laptop.
+
+Measured magnitudes come from SCORE~\cite{score2026}: after removing flagged,
+unilluminated and below-horizon rows and the solar sail ACS~3, \BrightObs{}
+observations of \BrightSats{} satellites remain, cross-validated in five folds
+grouped by satellite and split in time at \BrightSplitDate. Sky images are the
+\CamImages{} labelled images of WSISEG~\cite{xie2020segcloud}, cross-validated in
+five contiguous blocks. Baselines see identical data: the red-to-blue ratio
+rule~\cite{long2006retrieving} at 0.6 and tuned, and the sphere with tabulated or
+per-family fitted standard magnitudes.
 
 % ===========================================================================
 \section{Results}
@@ -388,10 +393,8 @@ very short grazing transits that peak barely above the mask.
 Sub-second numerical agreement is meaningful only if the orbital elements
 support that precision. In the operational catalogue the median element-set age
 was \EpochMedian~days (\EpochUnderOne\% under one day). CelesTrak and AMSAT
-element sets differ by a mean of \ProviderTcaMean~s in culmination over
-\ProviderN{} matched passes, but the median difference is \ProviderTcaMedian~s:
-the two providers largely redistribute the same upstream sets, so this bounds
-redistribution differences rather than independent orbit determination.
+differ by a median of \ProviderTcaMedian~s in culmination over \ProviderN{}
+passes, bounding redistribution rather than orbit-determination differences.
 
 To measure
 decay with staleness we obtained historical element sets for \AgeObjects{}
@@ -494,32 +497,21 @@ scheduled passes falling under clear sky rises from \BudgetBlindClearRate\% to
 \BudgetClearRate\%, and tightening the budget to a quarter of the nights raises
 the threshold-model gain to \TightGainClear\%.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.85\columnwidth]{fig_calibration.pdf}
-\caption{Fitted forecast reliability. A perfectly reliable forecast would lie on
-the dotted diagonal; the fitted slopes are far below one, so the raw model field
-over-states its own discrimination.}
-\label{fig:calib}
-\end{figure}
-
 Calibration raises the gain in every regime. Under the quota,
 supplying the model cloud field directly to the score costs \QuotaRawEV\%
 relative to disregarding weather; under the half budget the raw field still
 helps (\RawBudgetEV\% and \RawBudgetClear\%) but less than the calibrated one.
-Fig.~\ref{fig:calib} indicates the cause: fitted slopes lie between \SlopeMin{}
+The fitted calibration indicates the cause: slopes lie between \SlopeMin{}
 and \SlopeMax{} and intercepts between \InterceptMin{} and \InterceptMax{}, so
 clear forecasts are followed by more cloud than predicted and cloudy ones by
 less. Calibration \eqref{eq:calib} shrinks the forecast toward climatology in
 proportion to its demonstrated reliability.
 
-Repeating the evaluation with epoch-correct geometry, that is, with the element
-set current on each night, raises the threshold-model gain under the
-quota from \QuotaGainClear\% to \HistQuotaClear\% and at a quarter budget from
-\TightGainClear\% to \HistTightClear\%, but lowers it at the half budget from
-\BudgetGainClear\% to \HistBudgetClear\%, the expected-value gain there being
-unchanged at \HistBudgetEV\%. Back-propagated geometry therefore does not
-inflate the result systematically, although it is not uniformly conservative.
+With epoch-correct geometry (the element set current on each night) the
+threshold-model gain rises under the quota to \HistQuotaClear\% and at a quarter
+budget to \HistTightClear\%, but falls at the half budget to \HistBudgetClear\%,
+the expected-value gain there staying at \HistBudgetEV\%: back-propagated
+geometry does not inflate the result systematically.
 
 \subsection{Conflict resolution in practice}
 \label{sec:schedresults}
@@ -544,46 +536,55 @@ catalogue scale.}
 \label{fig:sched}
 \end{figure}
 
-On real candidate sets, an order-based genetic algorithm of the type common in
-the satellite-tasking literature (population \GAPopulation, \GAGenerations{}
-generations) attains \GAPct\% of the optimum but requires approximately
-\GASlowdown$\times$ more time, a ratio that depends on that search budget. Once
-the problem is recognised as interval scheduling, an exact polynomial solution
-is available and a metaheuristic is unnecessary. Scheduling is in any case not the bottleneck, the dynamic
-program handling \DPBigN{} candidates in \DPBigMs~ms against the seconds to
-minutes required for propagation.
+On real candidate sets an order-based genetic algorithm (population
+\GAPopulation, \GAGenerations{} generations) attains \GAPct\% of the optimum at
+about \GASlowdown$\times$ the time, so a metaheuristic is unnecessary; the
+dynamic program handles \DPBigN{} candidates in \DPBigMs~ms.
 
 \subsection{End-to-end behaviour}
 \label{sec:pipeline}
 
-The funnel is steep and physically interpretable (Fig.~\ref{fig:funnel}): at the
+The visibility funnel is steep and physically interpretable: at the
 demonstration site, \DemoGeometric{} geometric passes reduce to \DemoSunlit{}
 sunlit, \DemoDark{} with the observer in darkness, \DemoBright{} bright enough
 to detect, \DemoCandidates{} above the score floor once forecast cloud is
-weighted in, and \DemoScheduled{} scheduled. A weather-blind tool would present
-the operator with the earlier, substantially larger counts. Per-station runs also provide a physical consistency check:
-Svalbard (\ang{78.2}\,N) returns the largest number of geometric and sunlit
-passes of any station, yet \emph{zero} optically observable passes, since in
-late August the Sun does not fall below the \ang{-6} dark-sky threshold there.
+weighted in, and \DemoScheduled{} scheduled. Svalbard (\ang{78.2}\,N) has the
+most geometric passes of any station yet \emph{zero} observable ones, the Sun
+never falling below \ang{-6} there in late August.
+
+Planning \DemoObjects{} objects over \DemoHorizon{} days takes \DemoRuntime~s,
+dominated by propagation. Varying $w_e$ from 0.3 to 0.7 leaves a Jaccard overlap
+of at least \JaccardMid{} with the default timetable, so the physical
+constraints, not the weighting, govern the outcome.
+
+\subsection{Learned components}
+\label{sec:mlres}
+
+The fixed colour-ratio threshold does not transfer to this camera,
+misestimating the image cloud fraction by \CamFixedFrac{} points on average;
+tuned on the training images it errs by \CamTunedFrac{}. Both learned segmenters
+reduce the error to \CamGbmFrac{} points (Fig.~\ref{fig:cloudcam}), with cloud
+intersection-over-union \CamGbmIou{} for the pixel classifier and \CamUnetIou{}
+for the U-Net. The classifier wins every fold and is deployed, needing no
+deep-learning framework. All images come from one camera.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\columnwidth]{fig_funnel.pdf}
-\caption{Visibility funnel for the demonstration station: of \DemoGeometric{}
-geometric passes over \DemoHorizon{} days, \DemoScheduled{} survive to the
-timetable. Cloud enters the score as a continuous weight rather than a hard
-cut, so the penultimate stage is the score floor.}
-\label{fig:funnel}
+\includegraphics[width=\columnwidth]{fig_cloudcam_strip.pdf}
+\caption{Held-out whole-sky images, their labels, and the predictions of the
+tuned colour-ratio rule and the two learned segmenters (cloud white, sky blue,
+undefined dark).}
+\label{fig:cloudcam}
 \end{figure}
 
-Planning \DemoObjects{} objects over \DemoHorizon{} days takes \DemoRuntime~s
-single-threaded, dominated by propagation, which scales linearly in objects and
-horizon. The timetable is also stable against the score weights: varying $w_e$
-from 0.3 to 0.7 leaves a Jaccard overlap of at least \JaccardMid{} with the
-default timetable, falling to \JaccardNinety{} once elevation dominates
-($w_e \ge 0.9$) and to \JaccardDurOnly{} with duration alone. Within the
-moderate range the physical constraints, not the weighting, govern the
-outcome.
+For satellites absent from training the learned photometry errs by
+\BrightMaeLearned{} mag, against \BrightMaeFitted{} for the sphere with fitted
+per-family standard magnitudes and \BrightMaeSphere{} with tabulated ones;
+orbital altitude and family carry most of its skill. Trained before
+\BrightSplitDate{} and tested after, however, it ties the fitted sphere
+(\BrightTempMaeLearned{} against \BrightTempMaeFitted{} mag): better on the
+\BrightTestOnlyFamilies{} new families, worse on established ones as designs
+change. The sphere stays the default.
 
 % ===========================================================================
 \section{Discussion and Limitations}
@@ -592,12 +593,10 @@ outcome.
 Cloud cover is an imperfect proxy for observing conditions: total cloud
 fraction on a reanalysis grid cell of order \SI{25}{\kilo\metre} describes a
 line of sight only coarsely, and transparency, seeing, cloud height and aerosol
-are not modelled. A local all-sky camera could supply a better nowcast, to
-which the calibration of Section~\ref{sec:calib} would apply unchanged, and
-sub-hourly skill would let a quota-constrained planner discriminate within a
-night. Neither value model captures partial credit; a station with a specific
-instrument would be better served by its own value function, which the
-scheduler accepts unchanged.
+are not modelled. A camera nowcast can be read from an image with small error
+(Section~\ref{sec:mlres}), but its planning value could not be measured, since no
+public camera archive covers the evaluation nights. Neither value model captures
+partial credit; the scheduler accepts a station's own value function unchanged.
 
 The gains pool \EvalStationsWord{} stations and \EvalDays{} nights in one
 season. Their 95\% intervals come from a bootstrap that resamples whole stations
@@ -606,10 +605,10 @@ too narrow, and the calibrated-minus-raw difference was not tested separately.
 
 We assume one instrument observing one object at a time;
 multiple apertures or a station network break the interval-scheduling structure
-and would require a different algorithm. Photometry is approximate, since
-\eqref{eq:mag} models every object as a diffuse sphere, so the magnitude gate is
-an ordering rather than a prediction. The ageing measurement is single-season
-and restricted to low Earth orbit, where drag-driven decay dominates.
+and would require a different algorithm. The learned photometry narrows the
+gap between the sphere's ordering and a prediction only while its training data
+describe the satellites in orbit. The ageing measurement is single-season and
+restricted to low Earth orbit, where drag-driven decay dominates.
 
 % ===========================================================================
 \section{Conclusion}
@@ -633,19 +632,33 @@ value) and \BudgetGainClear\% (clear-sky count). Second, calibration against
 reanalysis raises the gain in every regime tested, and under a quota it is the
 difference between a loss and break-even. Both findings should carry over to
 other small facilities, though only one setting is tested here: the value of a
-forecast is a property of the decision it informs. The implementation and
+forecast is a property of the decision it informs. The learned components
+extend the same principle: segmentation of a whole-sky image supplies the
+sub-hourly signal a quota-bound station lacks, and learned photometry predicts
+magnitudes for unseen satellites far better than the sphere, but only while its
+training data describe the satellites in orbit. The implementation and
 experiment scripts are released under the MIT licence.
 
 \section*{Acknowledgements}
 The authors thank the Department of Artificial Intelligence and Machine Learning
 and the Department of Computer Science and Engineering, Saveetha Engineering
 College, Chennai, for their support of this work. This work uses public orbital
-element sets from CelesTrak and AMSAT, and weather data from Open-Meteo
-including ECMWF forecasts and ERA5 reanalysis. A generative AI assistant
+element sets from CelesTrak and AMSAT, weather data from Open-Meteo including
+ECMWF forecasts and ERA5 reanalysis, and the WSISEG sky-image database of
+Xie et al. We thank the observers whose measurements are collected in SCORE
+(CC-BY 4.0). This research made use of data and/or services provided by the
+International Astronomical Union Centre for the Protection of the Dark and Quiet
+Sky (IAU CPS) SatHub. The development of SCORE has been supported by the
+National Science Foundation (NSF) under grant number: AST 2332736. SCORE is
+hosted at the NSF NOIRLab. Any opinions, findings, and conclusions or
+recommendations expressed in this material are those of the author(s) and do not
+necessarily reflect the views of the NSF NOIRLab, the SKAO, the IAU, or any host
+or member institution of the IAU CPS. A generative AI assistant
 (Claude, Anthropic) was used to edit and restructure the text of all sections
 and to write the scripts that build the manuscript; the authors reviewed all
 such output and take responsibility for the content.
 
+\balance
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
 

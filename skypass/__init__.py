@@ -14,7 +14,7 @@ from .scheduler import (Schedule, brute_force_optimal, genetic_schedule,
                         greedy_max_elevation, optimal_schedule)
 from .scoring import MODE_OPTICAL, MODE_RADIO, score_pass
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 
 __all__ = [
     "DEFAULT_SITE", "GROUND_STATIONS", "PlannerConfig", "ScoreWeights", "Site",

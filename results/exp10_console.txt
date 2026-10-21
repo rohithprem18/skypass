@@ -1,0 +1,16 @@
+
+==========================================================================
+ 10  Cloud nowcasting from whole-sky images  (400 images, 480x450)
+==========================================================================
+  fold 1/5: ratio_fixed IoU 0.688  ratio_tuned IoU 0.868  pixel_gbm IoU 0.944  unet IoU 0.929
+  fold 2/5: ratio_fixed IoU 0.633  ratio_tuned IoU 0.862  pixel_gbm IoU 0.939  unet IoU 0.924
+  fold 3/5: ratio_fixed IoU 0.659  ratio_tuned IoU 0.878  pixel_gbm IoU 0.941  unet IoU 0.920
+  fold 4/5: ratio_fixed IoU 0.752  ratio_tuned IoU 0.907  pixel_gbm IoU 0.958  unet IoU 0.946
+  fold 5/5: ratio_fixed IoU 0.613  ratio_tuned IoU 0.842  pixel_gbm IoU 0.939  unet IoU 0.914
+  ratio_fixed  acc 0.726  IoU 0.669  F1 0.802  fraction MAE 27.0 pp  r 0.856
+  ratio_tuned  acc 0.923  IoU 0.873  F1 0.932  fraction MAE 3.5 pp  r 0.994
+  pixel_gbm    acc 0.968  IoU 0.945  F1 0.972  fraction MAE 1.2 pp  r 0.998
+  unet         acc 0.958  IoU 0.927  F1 0.962  fraction MAE 1.2 pp  r 0.998
+  model -> C:\Users\admin\Documents\projctss\SkyPass\cache\ml\models\cloudcam_unet.pt
+
+  -> C:\Users\admin\Documents\projctss\SkyPass\results\exp10_cloudcam.json

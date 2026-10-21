@@ -32,7 +32,8 @@ def part_a(records, days, cfg):
     rows = {}
     for key, site in GROUND_STATIONS.items():
         r = plan(site=site, days=days, records=records, cfg=cfg,
-                 mode=MODE_OPTICAL, weather_aware=True, fetch_weather=True)
+                 mode=MODE_OPTICAL, weather_aware=True, fetch_weather=True,
+                 calibrate=False)
         f = r.funnel
         rows[key] = r.summary()
         print(f"  {site.name[:19]:<20}{f.geometric:8d}{f.sunlit:8d}"
@@ -67,7 +68,8 @@ def part_b(records, days, cfg, site):
         clouds = None
     ref = plan(site=site, days=days, records=records, cfg=cfg,
                weights=ScoreWeights(w_elev=0.5, w_dur=0.5),
-               clouds=clouds, weather_aware=True, fetch_weather=False)
+               clouds=clouds, weather_aware=True, fetch_weather=False,
+               calibrate=False)
     ref_keys = {p.key() for p in ref.schedule.selected}
     print(f"  {'w_elev':>7}{'w_dur':>7}{'sched':>7}{'Jaccard':>9}"
           f"{'mean elMax':>12}{'mean dur s':>12}{'mean cloud':>12}")
@@ -75,7 +77,8 @@ def part_b(records, days, cfg, site):
     for w in (0.0, 0.1, 0.3, 0.5, 0.7, 0.9, 1.0):
         r = plan(site=site, days=days, records=records, cfg=cfg,
                  weights=ScoreWeights(w_elev=w, w_dur=1.0 - w),
-                 clouds=clouds, weather_aware=True, fetch_weather=False)
+                 clouds=clouds, weather_aware=True, fetch_weather=False,
+                 calibrate=False)
         sel = r.schedule.selected
         keys = {p.key() for p in sel}
         jac = (len(keys & ref_keys) / len(keys | ref_keys)) if (keys | ref_keys) else 1.0
@@ -116,7 +119,8 @@ def part_d(records, days, cfg, site):
     """Emit a real deliverable so the exported artefacts are exercised."""
     banner("6D  Exported artefacts for the demonstration plan")
     r = plan(site=site, days=days, records=records, cfg=cfg,
-             mode=MODE_OPTICAL, weather_aware=True, fetch_weather=True)
+             mode=MODE_OPTICAL, weather_aware=True, fetch_weather=True,
+             calibrate=False)
     sel = r.schedule.selected
     out_dir = RESULTS_DIR
     paths = {

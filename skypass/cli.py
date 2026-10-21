@@ -80,13 +80,26 @@ def cmd_passes(args) -> int:
 
 def cmd_plan(args) -> int:
     site = resolve_site(args)
-    weights = ScoreWeights(w_elev=args.w_elev, w_dur=1.0 - args.w_elev)
-    res = plan(site=site, days=args.days,
+    weights = ScoreWeights(w_elev=args.w_elev, w_dur=1.0 - args.w_elev,
+                           magnitude_model="learned" if args.learned_brightness
+                           else "sphere")
+    nowcast = None
+    if args.sky_image:
+        try:
+            from .ml.cloudcam import cloud_fraction
+        except ImportError as exc:      # optional [ml] dependencies missing
+            print(f"error: --sky-image needs the [ml] extra ({exc})")
+            return 2
+        nowcast = cloud_fraction(args.sky_image)
+        print(f"  sky camera nowcast: cloud fraction {nowcast:.2f} for the next hour")
+    res = plan(site=site, days=args.days, nowcast=nowcast,
                mode=MODE_RADIO if args.radio else MODE_OPTICAL,
                weather_aware=not args.no_weather,
                fetch_weather=not args.no_weather,
                weights=weights, archive_dir=args.archive_dir,
-               limit=args.limit, name_filter=args.sat, verbose=True)
+               limit=args.limit, name_filter=args.sat,
+               calibrate=not args.no_calibrate,
+               capacity=args.capacity, budget=args.budget, verbose=True)
     print(format_plan(res, limit=args.limit_rows))
     sel = res.schedule.selected if res.schedule else []
     if args.csv:
@@ -110,6 +123,16 @@ def cmd_archives(args) -> int:
 
 
 # ---------------------------------------------------------------------------
+def _positive_int(text: str) -> int:
+    try:
+        v = int(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"not an integer: {text!r}")
+    if v < 1:
+        raise argparse.ArgumentTypeError(f"must be >= 1, got {v}")
+    return v
+
+
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
         prog="skypass",
@@ -153,8 +176,25 @@ def build_parser() -> argparse.ArgumentParser:
                    help="radio mode: ignore illumination and magnitude")
     p.add_argument("--no-weather", action="store_true",
                    help="ablation: plan weather-blind")
+    p.add_argument("--no-calibrate", action="store_true",
+                   help="ablation: score the raw forecast instead of the "
+                        "ERA5-calibrated one")
+    p.add_argument("--capacity", type=_positive_int, metavar="K",
+                   help="at most K observations per observing night")
+    p.add_argument("--budget", type=_positive_int, metavar="N",
+                   help="at most N observations over the whole window, so "
+                        "cloudy nights can be skipped (nightly cap: "
+                        "--capacity, default %d)" % PlannerConfig().nightly_capacity)
     p.add_argument("--w-elev", type=float, default=0.5,
                    help="weight on the elevation term (duration gets 1-w)")
+    p.add_argument("--learned-brightness", action="store_true",
+                   help="predict magnitudes with the learned model "
+                        "(experiments/exp11_brightness.py trains it; needs the "
+                        "[ml] extra) instead of the diffuse sphere")
+    p.add_argument("--sky-image", metavar="IMAGE",
+                   help="whole-sky camera image: replace the forecast for the "
+                        "next hour with the camera's cloud nowcast "
+                        "(experiments/exp10_cloudcam.py trains the model)")
     p.add_argument("--csv"), p.add_argument("--ics"), p.add_argument("--json")
     p.add_argument("--json-all", action="store_true")
     p.set_defaults(func=cmd_plan)
