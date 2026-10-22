@@ -45,7 +45,7 @@ plt.rcParams.update({
     "legend.fontsize": 7,
     "xtick.labelsize": 7,
     "ytick.labelsize": 7,
-    "axes.grid": True,
+    "axes.grid": False,          # clean figures: no background grid
     "grid.alpha": 0.25,
     "grid.linewidth": 0.4,
     "axes.axisbelow": True,
@@ -195,8 +195,14 @@ def fig_budget_modes():
                          "budget-25pct") if k in bm]
     labels = {"nightly-quota": "every\nnight", "budget-75pct": "75% of\nnights",
               "budget-50pct": "50% of\nnights", "budget-25pct": "25% of\nnights"}
+    # A single-column layout (two-column papers) needs short labels to print
+    # at true size; the wide layout keeps the descriptive ones.
+    compact = WIDE < 4.5
+    if compact:
+        labels = {"nightly-quota": "quota", "budget-75pct": "75%",
+                  "budget-50pct": "50%", "budget-25pct": "25%"}
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.05 if compact else 2.5))
     xs = list(range(len(order)))
     w = 0.38
     sky = [bm[k]["gain_clear_pct"] for k in order]
@@ -209,9 +215,10 @@ def fig_budget_modes():
     ax1.set_xticks(xs)
     ax1.set_xticklabels([labels[k] for k in order])
     ax1.set_ylabel("gain vs. weather-blind (%)")
-    ax1.set_xlabel("observing budget for the window")
+    if not compact:
+        ax1.set_xlabel("observing budget for the window")
     ax1.set_title("(a) value of the forecast")
-    ax1.legend(frameon=False)
+    ax1.legend(frameon=False, fontsize=6 if compact else None)
 
     blind = [100 * bm[k]["success_rate_blind"] for k in order]
     sp = [100 * bm[k]["success_rate_skypass_prob"] for k in order]
@@ -221,10 +228,16 @@ def fig_budget_modes():
             label="SkyPass", edgecolor="white", linewidth=0.4)
     ax2.set_xticks(xs)
     ax2.set_xticklabels([labels[k] for k in order])
-    ax2.set_ylabel("scheduled passes under clear sky (%)")
-    ax2.set_xlabel("observing budget for the window")
-    ax2.set_title("(b) share of passes under clear sky")
-    ax2.legend(frameon=False)
+    if compact:
+        ax2.set_ylabel("passes under clear sky (%)")
+        ax2.set_title("(b) clear-sky share")
+        fig.supxlabel("share of nights the window budget allows", fontsize=7, y=-0.07)
+        fig.subplots_adjust(wspace=0.42)
+    else:
+        ax2.set_ylabel("scheduled passes under clear sky (%)")
+        ax2.set_xlabel("observing budget for the window")
+        ax2.set_title("(b) share of passes under clear sky")
+    ax2.legend(frameon=False, fontsize=6 if compact else None)
     _save(fig, "fig_budget_modes")
 
 
@@ -275,7 +288,7 @@ def fig_calibration():
     ax.set_title("Forecast reliability is far from the diagonal")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
-    ax.legend(frameon=False, fontsize=6)
+    ax.legend(frameon=True, framealpha=0.92, edgecolor="none", fontsize=6)
     _save(fig, "fig_calibration")
 
 
@@ -286,26 +299,33 @@ def fig_scheduler():
     a = d["part_a_exactness"]["heuristics"]
     c = d["part_c_scaling"]
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.3))
+    compact = WIDE < 4.5
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.0 if compact else 2.3))
 
     # Two decimals matter here: greedy-on-the-score reaches 99.95%, which at one
     # decimal prints as "100.0" and would read as exact when it is not.
     names = sorted(a, key=lambda k: a[k]["mean_ratio_to_optimum"])
     vals = [100.0 * a[k]["mean_ratio_to_optimum"] for k in names]
     short = [k.replace("greedy-", "") for k in names]
+    if compact:
+        brief = {"highest-value": "by score", "earliest-finish": "earliest",
+                 "max-elevation": "elevation", "longest-duration": "duration"}
+        short = [brief.get(k, k) for k in short]
     # Greedy on the true objective is near-optimal; the proxy rules are not.
     # Colouring them apart is the honest reading of this panel.
     colours = [C["orange"] if k != "greedy-highest-value" else C["sky"]
                for k in names]
-    bars = ax1.barh(short + ["DP (exact)"], vals + [100.0],
+    bars = ax1.barh(short + ["exact DP" if compact else "DP (exact)"], vals + [100.0],
                     color=colours + [C["blue"]],
                     edgecolor="white", linewidth=0.5)
     ax1.set_xlim(min(vals) - 7, 101.5)
-    ax1.set_xlabel("mean objective, % of the exact optimum")
-    ax1.set_title("(a) proxy rules lose value; score-greedy does not")
+    ax1.set_xlabel("% of the exact optimum" if compact
+                   else "mean objective, % of the exact optimum")
+    ax1.set_title("(a) greedy rules" if compact
+                  else "(a) proxy rules lose value; score-greedy does not")
     for b, v in zip(bars, vals + [100.0]):
         ax1.text(v - 0.5, b.get_y() + b.get_height() / 2, f"{v:.2f}",
-                 va="center", ha="right", fontsize=6, color="white")
+                 va="center", ha="right", fontsize=5.5 if compact else 6, color="white")
 
     ns = [r["n"] for r in c]
     ms = [1000 * r["mean_s"] for r in c]
@@ -313,9 +333,12 @@ def fig_scheduler():
     ref = [ms[0] * (n / ns[0]) for n in ns]
     ax2.loglog(ns, ref, "k:", lw=0.9, label="linear reference")
     ax2.set_xlabel("candidate passes $n$")
-    ax2.set_ylabel("scheduling time (ms)")
-    ax2.set_title("(b) exact DP scales linearly in practice")
-    ax2.legend(frameon=False)
+    ax2.set_ylabel("time (ms)" if compact else "scheduling time (ms)")
+    ax2.set_title("(b) DP run time" if compact
+                  else "(b) exact DP scales linearly in practice")
+    ax2.legend(frameon=False, fontsize=6 if compact else None,
+               loc="upper left")
+    fig.subplots_adjust(wspace=0.5 if compact else 0.42)
     _save(fig, "fig_scheduler")
 
 
@@ -352,7 +375,6 @@ def fig_funnel():
                     ha="center", va="bottom", fontsize=7.5, zorder=3)
     ax.set_ylabel("passes (log scale)")
     ax.set_ylim(floor, max(vals) * 6.0)
-    ax.grid(axis="y", which="major", alpha=0.25, linewidth=0.4)
     ax.set_axisbelow(True)
     # No in-figure title: Springer artwork rules keep titles in the caption.
     _save(fig, "fig_funnel")
@@ -436,7 +458,6 @@ def fig_accuracy():
     ax.yaxis.set_major_formatter(
         matplotlib.ticker.FuncFormatter(
             lambda v, _: f"{v:g}" if v >= 0.01 else ""))
-    ax.grid(axis="y", which="both", alpha=0.25, linewidth=0.4)
     ax.set_axisbelow(True)
     # Legend above the axes so it can never sit on top of the data. No axes
     # title: the LaTeX caption carries it, and a title here would collide with
@@ -474,15 +495,14 @@ def fig_tle_age():
         # The numerical noise floor: below this line the algorithm, not the
         # elements, would be the limiting term.
         ax.axhline(floor, color=C["grey"], ls=":", lw=1.1)
-        ax.annotate("numerical floor\n(vs. Skyfield)", (mids[0], floor),
-                    xytext=(2, 4), textcoords="offset points",
-                    fontsize=5.8, color=C["grey"], va="bottom")
+        ax.annotate("numerical floor (vs. Skyfield)", (mids[-1], floor),
+                    xytext=(0, 2), textcoords="offset points",
+                    fontsize=5.8, color=C["grey"], ha="right", va="bottom")
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlabel("element-set age at prediction time (days)")
     ax.set_ylabel("culmination-time error (s)")
     ax.set_title("Elements dominate beyond a few days", fontsize=8)
-    ax.grid(True, which="both", alpha=0.22, linewidth=0.4)
     ax.set_axisbelow(True)
     ax.legend(frameon=False, loc="upper left")
     _save(fig, "fig_tle_age")
@@ -580,7 +600,7 @@ def fig_cloudcam():
     axr = axm.twinx()
     b2 = axr.bar(x + w / 2, fmae, w, color=C["orange"], label="cloud-fraction error (pp)")
     for b, v in zip(b1, iou):
-        axm.annotate(f"{v:.2f}", (b.get_x() + b.get_width() / 2, v), xytext=(0, 1),
+        axm.annotate(f"{v:.3f}", (b.get_x() + b.get_width() / 2, v), xytext=(0, 1),
                      textcoords="offset points", ha="center", va="bottom", fontsize=6.5)
     for b, v in zip(b2, fmae):
         axr.annotate(f"{v:.1f}", (b.get_x() + b.get_width() / 2, v), xytext=(0, 1),

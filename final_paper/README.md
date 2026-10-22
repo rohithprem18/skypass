@@ -55,5 +55,6 @@ python experiments/check_paper.py   # citations, cross-references, macros, figur
 IEEE paper `\input`s into `ieee/generated/`, and replaces the inlined macro block
 in `springer/skypass-sn.tex` (Springer forbids `\input`).
 
-Figures: `python experiments/make_figures.py --font times --out <dir>` for IEEE,
+Figures: `python experiments/make_figures.py --font times --wide 3.45 --out <dir>` for IEEE
+(compact single-column charts),
 `--font cm --wide 6.0 --out <dir>` for Springer (then rename to `FigN.pdf`).

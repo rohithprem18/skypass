@@ -203,13 +203,16 @@ Preset stations span cloud climates on purpose: chennai, bengaluru (monsoon), le
    `final_paper/springer/skypass-sn.tex`.
 4. **Paper figures are copies.** `make_figures.py` writes to `figures/`. The IEEE copy
    uses `fig_tle_age`, `fig_budget_modes`, `fig_scheduler` and `fig_cloudcam_strip` in
-   `final_paper/ieee/figures/` (`--font times`) plus an inline colour TikZ architecture.
+   `final_paper/ieee/figures/` (`--font times --wide 3.45`: the two-panel charts switch to a
+   compact single-column layout below 4.5 in) plus an inline colour TikZ architecture.
    The Springer copy uses flat files `Fig1`-`Fig13` (`--font cm --wide 6.0 --col 2.75`,
    renamed by first citation): Fig1 arch, Fig2 passfind, Fig3 geometry, Fig4 unet
    (TikZ, from `experiments/diagrams/build_diagrams.py`), Fig5a accuracy, Fig5b
    tle_age, Fig6 forecast_skill, Fig7 quota_budget (TikZ), Fig8a lead_sweep, Fig8b
    calibration, Fig9 budget_modes, Fig10 scheduler, Fig11 funnel, Fig12 cloudcam,
    Fig13 brightness. Copy them across after regenerating, or the uploads go stale.
+   Charts are deliberately grid-free (`axes.grid: False` in `make_figures.py`, at the
+   authors' request); keep only reference lines that carry meaning.
 5. **Never commit secrets.** `.env*` is gitignored; `*.docx`/`*.pptx` review files too.
 6. **Element age is a first-class constraint**, not housekeeping — it is the single
    largest lever on prediction accuracy.
@@ -247,7 +250,12 @@ the folder's *contents*; compile with pdfLaTeX).
 - Springer allows **one `.tex` file** (no `\input`): macros are inlined, figures flat.
 - **Layout is uniform on purpose.** Springer: a preamble override centres one text block on
   every page (sn-jnl hard-codes two-sided mode, so the `oneside` option alone does nothing)
-  and the class's `\flushbottom` is left in force: do not add `\raggedbottom` back. IEEE:
+  and the class's `\flushbottom` is left in force: do not add `\raggedbottom` back. Its
+  even vertical spacing depends on the preamble block that lowers `\clubpenalty` /
+  `\widowpenalty` to 500 (the class's 10000 forced early page breaks that `\flushbottom`
+  turned into 60-85 pt gaps above headings), adds `\parskip` stretch and tightens the
+  float separations; keep it. Use `\mathbf{1}` for indicators (`\mathbb{1}` has no glyph).
+  IEEE:
   `\balance` before the bibliography equalises the last page's columns.
 - Prose rules from this file apply. Neither paper uses bold run-in paragraph labels
   (the user asked for them to be removed); the Springer abstract is one unlabelled

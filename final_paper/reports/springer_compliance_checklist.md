@@ -73,7 +73,7 @@ conference has been named, so only IEEE-wide requirements can be checked.
 | Index Terms. | Present. Met |
 | IEEE reference style. | `IEEEtran.bst`. Met |
 | AI-generated content disclosed in the Acknowledgements, naming the system and sections (IEEE author guidelines on AI-generated text). | Draft statement added. **Author confirmation.** |
-| Figures legible at print size. | **Not met.** Three wide figures (Figs. 3, 5 and 6 in the IEEE numbering) were laid out for a two-column span and print at about half scale (lettering about 3.5 pt). Fixing this within 6 pages needs one figure removed or a seventh page; this is an author decision (see readiness report). |
+| Figures legible at print size. | Met. The two-panel charts (Figs. 3 and 4) are rendered in a compact single-column layout at the column width, so the lettering prints at true size; Fig. 2 and the camera strip are column-width; Fig. 1 is inline TikZ. |
 | Page limit. | 6 pages, typical for IEEE conferences. Confirm against the chosen conference. |
 | PDF eXpress / font embedding. | Not checked: requires the conference's PDF eXpress ID. |
 

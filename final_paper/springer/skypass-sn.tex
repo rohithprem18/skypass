@@ -59,6 +59,21 @@
 %% reference list ends on the same baseline as the text pages.
 \setlength{\bibsep}{\dimexpr\bibsep\relax plus 3pt}
 
+%% Even vertical spacing. The class forbids any club or widow line (penalty
+%% 10000), so a page breaks early whenever a short paragraph cannot split, and
+%% \flushbottom then pushes the whole shortfall into the space above the next
+%% heading or float. Strong but finite penalties still avoid single lines, a
+%% little paragraph stretch spreads any remaining shortfall thinly instead of
+%% into one gap, and a tighter float separation keeps a caption followed by a
+%% heading from leaving a visibly larger gap than the rest of the page.
+\clubpenalty=500
+\widowpenalty=500
+\displaywidowpenalty=500
+\setlength{\parskip}{0pt plus 2pt}
+\setlength{\textfloatsep}{14pt plus 2pt minus 2pt}
+\setlength{\floatsep}{12pt plus 2pt minus 2pt}
+\setlength{\intextsep}{12pt plus 2pt minus 2pt}
+
 \theoremstyle{thmstyleone}%
 \newtheorem{theorem}{Theorem}%
 \newtheorem{proposition}[theorem]{Proposition}%
@@ -288,11 +303,12 @@ Small Ground Stations}
 
 \affil*[1]{\orgdiv{Department of Computer Science and Engineering},
 \orgname{Saveetha Engineering College}, \orgaddress{\city{Chennai},
-\postcode{602105}, \state{Tamil Nadu}, \country{India}}}
+\state{Tamil Nadu}, \country{India}}}
 
-\affil[2]{\orgdiv{Department of Artificial Intelligence and Machine Learning},
+\affil[2]{\orgdiv{Associate Professor, Department of Artificial Intelligence and
+Machine Learning},
 \orgname{Saveetha Engineering College}, \orgaddress{\city{Chennai},
-\postcode{602105}, \state{Tamil Nadu}, \country{India}}}
+\state{Tamil Nadu}, \country{India}}}
 
 \abstract{Observation planning at a small ground station is split across
 unconnected tools that predict passes, judge visibility and leave cloud and
@@ -420,8 +436,9 @@ passes; the visibility score (purple) combines geometry, brightness and sky;
 the weather branch (green) calibrates the cloud forecast against ERA5
 reanalysis on the 90 nights before planning; the exact scheduler (amber)
 selects passes under the nightly limit and window budget; the timetable
-(vermilion) is exported as calendar, tabular and web output. Dashed boxes are
-external inputs.}
+(vermilion) is exported as calendar, tabular and web output. Dashed grey boxes
+are external inputs; the dashed light-blue lane holds the optional learned
+components.}
 \label{fig:arch}
 \end{figure}
 
@@ -499,9 +516,9 @@ elevation $\varepsilon$.}
 \subsection{Weather integration and calibration}
 \label{sec:calib}
 The sky factor is $f_s = 1 - \hat{c}$, where $\hat{c}$ is the expected cloud
-fraction at culmination, interpolated linearly between hourly samples. Crucially
-$\hat{c}$ is \emph{not} the raw forecast, which is heavily over-confident as a
-predictor. We fit
+fraction at culmination, interpolated linearly between hourly samples. It is
+\emph{not} the raw forecast, which is heavily over-confident as a predictor. We
+fit
 \begin{equation}
 \hat{c} = \mathbb{E}[c \mid c_f] = a + b\,c_f
 \label{eq:calib}
@@ -630,16 +647,16 @@ authors reviewed all such output and take responsibility for the content.
 \label{sec:accuracy}
 
 Fig.~\ref{fig:accuracy}a compares SkyPass against both references over
-\NSats{} objects and \NMatched{} matched passes. Against Skyfield, mean agreement is \SkyfieldAos~s on acquisition and
-\SkyfieldTca~s on culmination, and culmination elevation agrees to
+\NSats{} objects and \NMatched{} matched passes. Against Skyfield, mean
+agreement is \SkyfieldAos~s on acquisition and \SkyfieldTca~s on culmination, and culmination elevation agrees to
 \SkyfieldElev\textdegree. The apparent \DenseAos~s ``deviation'' from the
 dense scan is not SkyPass error: a \SI{1}{\second} grid locates a crossing only
 to within its own step, so it lags the true crossing by a mean of
 \SI{0.5}{\second}, and the refined estimator is therefore more accurate than the
 brute-force reference it is conventionally compared against. The cost difference
 is large: \CallsFast{} propagator evaluations against \CallsDense{}, a factor of
-\CallReduction. Detection recall is \Recall\%, the residual being very short
-grazing transits that peak barely above the mask.
+\CallReduction. Detection recall is \Recall\%, the residual being short grazing
+transits that peak barely above the mask.
 
 \begin{figure}[htbp]
 \centering
@@ -684,11 +701,11 @@ against ERA5 at all seven stations over \ForecastDays{} days, scoring the
 operational decision of whether an hour is clear enough to observe at a
 \ClearThreshold\% cloud threshold. Because accuracy misleads when clear hours
 are rare, we report the Heidke skill score, a chance-corrected measure in wide
-use for categorical verification~\cite{ebert2022rare}
-(Fig.~\ref{fig:skill}). Skill decays from HSS
-\HssOne{} at one day to \HssThree{} at three and \HssSeven{} at seven, beating
-persistence (\HssPersistence) early but no longer by five to seven days, so a
-weather-aware planner is best run on a rolling short horizon. Skill is also
+use for categorical verification~\cite{ebert2022rare} (Fig.~\ref{fig:skill}).
+Skill decays from HSS \HssOne{} at one day to \HssThree{} at three and
+\HssSeven{} at seven, beating persistence (\HssPersistence) up to three days
+ahead but not from four days on, so a weather-aware planner is best run on a
+rolling short horizon. Skill is also
 strongly site-dependent, the spread between stations being comparable to the
 decay with lead time and lowest at the two monsoon stations: the expected benefit
 is a local property rather than a universal constant.
@@ -712,7 +729,7 @@ days (Svalbard has no observable passes), and every timetable is scored against
 ERA5. Since the
 valuation of a clouded observation is a modelling choice, we report both an
 \emph{expected value} model, $\sum_j v_j (1-c_j)$, and a \emph{threshold} model,
-$\sum_j v_j \mathbb{1}[c_j \le \theta]$ with $\theta = \ClearThresholdEval\%$.
+$\sum_j v_j \mathbf{1}[c_j \le \theta]$ with $\theta = \ClearThresholdEval\%$.
 Two operating rules are compared (Fig.~\ref{fig:rules}): a fixed nightly quota,
 and a window budget that lets the station skip nights.
 
@@ -730,15 +747,13 @@ Under a fixed nightly quota the forecast yields no benefit: \QuotaGainEV\% and
 \QuotaGainClear\% under the two models, against oracle headroom of
 \QuotaOracleEV\% and \QuotaOracleClear\%, and the station-bootstrap intervals
 of both gains include zero (\QuotaGainEVLo{} to \QuotaGainEVHi\% and
-\QuotaGainClearLo{} to \QuotaGainClearHi\%). Per station the picture is the
-same: the oracle shows substantial headroom at every station, while the
-forecast-driven planner gains at most a few per cent and loses at three, and no
-forecast lead time from one to seven days changes this
-(Fig.~\ref{fig:leadcal}a). It is not
-uninformative, since
-forecast and observed cloud correlate at $r = \PassCorr$ at the candidate-pass
-timestamps and the clearest-forecast decile does find clearer skies, reducing
-observed cloud by $\CloudReduction$. The limitation is that a quota permits only
+\QuotaGainClearLo{} to \QuotaGainClearHi\%). The same holds per station: the
+oracle shows substantial headroom at every station, while the forecast-driven
+planner gains at most a few per cent and loses at three, and no forecast lead
+time from one to seven days changes this (Fig.~\ref{fig:leadcal}a). The forecast
+is not uninformative: forecast and observed cloud correlate at $r = \PassCorr$
+at the candidate-pass timestamps, and the clearest-forecast decile does find
+clearer skies, reducing observed cloud by $\CloudReduction$. The limitation is that a quota permits only
 \emph{reordering within a night}, which two measured properties defeat: cloud is
 autocorrelated over the hours a session spans, the between-night standard
 deviation being $\BtwWthRatio\times$ the within-night value, while the
@@ -873,8 +888,7 @@ most of the gap, to \CamTunedAcc\% of pixels and \CamTunedFrac{} points. Both
 learned segmenters are better again (Fig.~\ref{fig:cloudcam}). The U-Net reaches
 a cloud intersection-over-union of \CamUnetIou{} and the pixel classifier
 \CamGbmIou{}, and both estimate the cloud fraction to within \CamGbmFrac{}
-points. The pixel
-classifier was the more accurate segmenter in every fold, plausibly because its
+points. The pixel classifier was the more accurate segmenter in every fold, plausibly because its
 texture features resolve cloud edges that the U-Net, trained at 160 pixels,
 smooths; for the cloud fraction the two are equivalent, and SkyPass deploys the
 pixel classifier, which needs no deep-learning framework. All images come from

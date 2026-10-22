@@ -98,14 +98,13 @@ attend to one object at a time.
 
 Existing tools address only parts of this problem. Pass predictors compute rise
 and set times from two-line elements (TLEs) and the SGP4
-propagator~\cite{vallado2022fundamentals, acciarini2025sgp4}, and some add an
-illumination test so that optical observers are not shown daylight passes. A few
-applications display a weather indication beside a pass, but to our knowledge
-none allow the forecast to \emph{rank} passes or drive a scheduling decision,
-and none resolve conflicts between overlapping passes.
+propagator~\cite{vallado2022fundamentals, acciarini2025sgp4}, some with an
+illumination test; a few show a weather indication beside a pass, but to our
+knowledge none let the forecast \emph{rank} passes or resolve conflicts between
+them.
 
-Weather is the more consequential omission. At the running example (Chennai,
-India, \ang{12.92}\,N) mean observed cloud over optically viable passes was
+Weather is the more consequential omission. At the example site (Chennai,
+India, \ang{12.92}\,N) the mean observed cloud over optically viable passes was
 \CloudChennai\%, yet a predictor ranking by elevation still recommends an
 overcast night. Once several satellites are tracked their passes also overlap,
 and a single-aperture station must select among them; the scheduling literature
@@ -151,8 +150,8 @@ case, is a textbook dynamic program~\cite{cormen2022introduction}.
 
 Professional observatories schedule around
 weather using queue schedulers that re-plan as conditions
-change~\cite{zhang2024grris, xie2024astrosa}, but assume an institutional
-software stack and on-site sky monitoring. Forecast verification and forecast
+change~\cite{zhang2024grris, xie2024astrosa}, but assume institutional software
+and on-site sky monitoring. Forecast verification and forecast
 value are mature fields~\cite{brown2021met}, and statistical
 post-processing is essential before a forecast drives a
 decision~\cite{vannitsem2021postprocessing}. Sky imaging estimates cloud by
@@ -271,19 +270,17 @@ radio mode the illumination and photometric terms are dropped.
 \subsection{Weather integration and calibration}
 \label{sec:calib}
 The sky factor is $f_s = 1 - \hat{c}$, where $\hat{c}$ is the expected cloud
-fraction at culmination, interpolated linearly between hourly samples. Crucially
-$\hat{c}$ is \emph{not} the raw forecast, which is heavily over-confident as a
-predictor. We fit
+fraction at culmination, interpolated linearly between hourly samples. It is
+\emph{not} the raw forecast, which is heavily over-confident. We fit
 \begin{equation}
 \hat{c} = \mathbb{E}[c \mid c_f] = a + b\,c_f
 \label{eq:calib}
 \end{equation}
 by least squares on a window that \emph{ends before} the period being planned,
 restricted to local night hours, and clip $\hat{c}$ to $[0,1]$. The slope $b$
-quantifies the strength of the
-signal: $b \approx 1$ indicates that the forecast may be used directly, whereas
-$b \approx 0$ indicates that it carries little information, in which case the
-calibrated value converges toward site climatology, the appropriate fallback. For the threshold value model the planner instead weights
+measures the signal: $b \approx 1$ means the forecast can be used directly,
+$b \approx 0$ that the calibrated value falls back to site climatology. For the
+threshold value model the planner instead weights
 each pass by the calibrated probability of clear sky,
 $P(c \le \theta \mid c_f)$, estimated in ten forecast bins on the same window
 and shrunk toward the site's base rate with 20 pseudo-observations, so each value
@@ -381,11 +378,10 @@ Against Skyfield, mean agreement is \SkyfieldAos~s on acquisition and
 \SkyfieldTca~s on culmination. The apparent \DenseAos~s ``deviation'' from the
 dense scan is not SkyPass error: a \SI{1}{\second} grid locates a crossing only
 to within its own step, so it lags the true crossing by a mean of
-\SI{0.5}{\second}. The refined estimator is thus more accurate than the
-brute-force reference it is conventionally compared against. The cost
-difference is large: \CallsFast{} propagator evaluations against \CallsDense{},
+\SI{0.5}{\second}, so the refined estimator is the more accurate of the two.
+The cost difference is large: \CallsFast{} propagator evaluations against \CallsDense{},
 a factor of \CallReduction. Detection recall is \Recall\%, the residual being
-very short grazing transits that peak barely above the mask.
+short grazing transits that peak barely above the mask.
 
 \subsection{Element-set limits on prediction accuracy}
 \label{sec:elements}
@@ -417,28 +413,22 @@ the same order as the \SkyfieldTca~s numerical agreement of
 Section~\ref{sec:accuracy}, so neither term dominates at that age. Degradation
 is then sharply super-linear and heavy-tailed: a mean of \AgeWeek~s (median
 \AgeWeekMedian~s) at 7--14 days, \AgeFortnight~s at 14--30, and \AgeMonth~s
-(median \AgeMonthMedian~s) beyond a month. The design consequence is that a 5--7
-day staleness cutoff is appropriate for timing-critical work, beyond which the
-elements rather than the algorithm set achievable accuracy, and that daily
-element refresh is the single largest lever on prediction accuracy.
+(median \AgeMonthMedian~s) beyond a month. A 5--7 day staleness cutoff therefore
+suits timing-critical work, and daily element refresh is the single largest
+lever on prediction accuracy.
 
 \subsection{Skill of the cloud forecast}
 \label{sec:forecast}
 
-Weather-aware planning is justified only if the forecast is informative at the
-lead times over which an observer plans. Archived forecasts were verified
-against ERA5 across all seven stations over \ForecastDays{} days, scoring the
-operational binary decision of whether a given hour is sufficiently clear to
-observe at a \ClearThreshold\% cloud threshold. Accuracy alone is misleading
-when clear hours are rare, so we report the Heidke skill score, a
-chance-corrected measure in wide use for categorical forecast
-verification~\cite{ebert2022rare}.
-
-Skill decays steadily with lead time, from HSS \HssOne{} at one day to
-\HssThree{} at three days and \HssSeven{} at seven. The one-day forecast
-outperforms both naive baselines (persistence \HssPersistence, climatology 0 by
-construction), but by five to seven days it no longer does. A weather-aware
-planner should therefore run on a rolling short horizon and re-plan daily. Skill is also strongly site-dependent, the
+Archived forecasts were verified against ERA5 at all seven stations over
+\ForecastDays{} days, scoring the decision of whether an hour is clear enough to
+observe at a \ClearThreshold\% cloud threshold with the Heidke skill score, a
+chance-corrected measure suited to rare events~\cite{ebert2022rare}. Skill decays
+from HSS \HssOne{} at one day to \HssThree{} at three days and \HssSeven{} at
+seven. The forecast beats both naive baselines (persistence \HssPersistence,
+climatology 0 by construction) up to three days ahead but not from four days on,
+so a weather-aware planner should run on a rolling short horizon and re-plan
+daily. Skill is also strongly site-dependent, the
 spread between stations being comparable to the decay with lead time and lowest
 at the two Indian monsoon stations, Chennai reaching zero skill beyond four
 days. The expected benefit of weather-awareness is thus a local property rather
@@ -453,15 +443,16 @@ days (Svalbard has no observable passes), and every
 timetable is scored against ERA5. Since the
 valuation of a clouded observation is a modelling choice, we report both an
 \emph{expected value} model, $\sum_j v_j (1-c_j)$, and a \emph{threshold} model,
-$\sum_j v_j \mathbb{1}[c_j \le \theta]$ with $\theta = \ClearThresholdEval\%$.
+$\sum_j v_j \mathbf{1}[c_j \le \theta]$ with $\theta = \ClearThresholdEval\%$.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\columnwidth]{fig_budget_modes.pdf}
+\includegraphics[width=\columnwidth]{fig_budget_modes.pdf}
 \caption{Weather-awareness is worth nothing to a station obliged to observe
-every night, and a great deal to one that may choose its nights. (a) Gain over
-the weather-blind exact planner, threshold value model; the oracle plans with
-the observed cloud. (b) Share of scheduled passes under clear sky.}
+every night (quota), and a great deal to one whose window budget lets it use
+75, 50 or 25\% of the nights. (a) Gain over the weather-blind exact planner,
+threshold value model; the oracle plans with the observed cloud. (b) Share of
+scheduled passes under clear sky.}
 \label{fig:budget}
 \end{figure}
 
@@ -529,9 +520,10 @@ average, is optimal in only \GreedyElevOptPct\% of instances, and falls to
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\columnwidth]{fig_scheduler.pdf}
-\caption{(a) Greedy heuristics attain less than the exact dynamic program.
-(b) Scheduling time grows linearly in practice and remains negligible at
+\includegraphics[width=\columnwidth]{fig_scheduler.pdf}
+\caption{(a) Mean objective of greedy selection by score, earliest finish,
+highest elevation and longest duration, as a percentage of the exact optimum.
+(b) Run time of the dynamic program grows linearly and stays negligible at
 catalogue scale.}
 \label{fig:sched}
 \end{figure}
@@ -605,21 +597,18 @@ too narrow, and the calibrated-minus-raw difference was not tested separately.
 
 We assume one instrument observing one object at a time;
 multiple apertures or a station network break the interval-scheduling structure
-and would require a different algorithm. The learned photometry narrows the
-gap between the sphere's ordering and a prediction only while its training data
-describe the satellites in orbit. The ageing measurement is single-season and
-restricted to low Earth orbit, where drag-driven decay dominates.
+and would require a different algorithm. The ageing measurement is
+single-season and restricted to low Earth orbit, where drag-driven decay
+dominates.
 
 % ===========================================================================
 \section{Conclusion}
 
 SkyPass integrates pass prediction, optical visibility analysis, cloud-forecast
-reasoning and exact conflict resolution into a single planner suitable for
-deployment at a small ground station, producing a timetable that exports
-directly to a calendar or a rotator controller. Pass extraction agrees with an
-independent implementation to \SkyfieldTca~s while requiring
-\CallReduction$\times$ fewer propagator calls than dense sampling, and conflict
-resolution is exact at negligible computational cost.
+reasoning and exact conflict resolution into a single planner for a small ground
+station, producing a timetable that exports to a calendar. Pass extraction agrees
+with an independent implementation to \SkyfieldTca~s with \CallReduction$\times$
+fewer propagator calls, and conflict resolution is exact at negligible cost.
 
 Two weather-related findings are of particular relevance to the design of such
 systems. First, a forecast does not by itself improve performance: it is
