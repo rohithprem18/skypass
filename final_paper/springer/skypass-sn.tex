@@ -294,9 +294,9 @@
 
 \begin{document}
 
-\title[Weather-Aware Satellite Pass Scheduling]{SkyPass: Weather-Aware Satellite
-Pass Scheduling with Learned Cloud Nowcasting and Brightness Prediction for
-Small Ground Stations}
+\title[Machine Learning and Exact Optimisation for Weather-Aware Scheduling]{SkyPass:
+A Machine Learning and Exact Optimisation Framework for Weather-Aware
+Satellite~Pass Scheduling at Small Ground Stations}
 
 \author*[1]{\fnm{Rohith Prem} \sur{S}}\email{rohithprem91@gmail.com}
 \author[2]{\fnm{R.} \sur{Selvakumar}}\email{selvakumarr@saveetha.ac.in}
@@ -326,13 +326,13 @@ scheduler matched exhaustive search on all \SchedTrials~instances. Over
 \EvalDays~days, a station required to observe every night gained nothing from
 the forecast, whereas one free to choose its nights raised realised yield by
 \BudgetGainEV\% (expected value) and \BudgetGainClear\% (clear-sky count), and
-calibration raised the gain in every regime. A U-Net and a gradient-boosted
-pixel classifier estimated each image's cloud fraction to within \CamGbmFrac{}
-percentage points, against \CamTunedFrac{} for the best colour-ratio rule, and the learned photometry cut the magnitude error
-for unseen satellites from \BrightMaeFitted{} to \BrightMaeLearned{} mag but did
-not transfer to a later period with new object classes and designs. Forecast
-value depends on the decision it informs, and the learned components help where
-their training data match the deployment.}
+calibration raised the gain in every regime. Learned segmentation estimated
+each image's cloud fraction to within \CamGbmFrac{} percentage points, against
+\CamTunedFrac{} for the best colour-ratio rule, and the learned photometry cut
+the magnitude error for unseen satellites from \BrightMaeFitted{} to
+\BrightMaeLearned{} mag but did not transfer to a later period with new designs.
+Forecast value depends on the decision it informs; the learned components help
+where their training data match deployment.}
 
 \keywords{satellite pass prediction, ground station scheduling, interval scheduling, forecast calibration, cloud segmentation, machine learning}
 

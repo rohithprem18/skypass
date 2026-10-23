@@ -209,8 +209,8 @@ for observation in result.schedule.selected:
 
 This repository is the companion implementation for:
 
-> **SkyPass: Weather-Aware Satellite Pass Scheduling with Learned Cloud
-> Nowcasting and Brightness Prediction for Small Ground Stations**<br>
+> **SkyPass: A Machine Learning and Exact Optimisation Framework for
+> Weather-Aware Satellite Pass Scheduling at Small Ground Stations**<br>
 > Rohith Prem S and Dr. R. Selvakumar<br>
 > Saveetha Engineering College, Chennai, India
 

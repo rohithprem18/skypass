@@ -245,7 +245,7 @@ the folder's *contents*; compile with pdfLaTeX).
 | Length | **6 pages** (hard limit, full to the last line) | **about 18 pages** (authors' limit, raised from 15 for v2; journal has none) |
 | References | 30 (same five ML swaps as Springer) | 30, incl. foundational SGP4 sources, four 2026 papers, SCORE and WSISEG; DOIs where they exist |
 | Figures | colour TikZ architecture + 4 charts + ML results table | 13 figures (15 panels): five colour TikZ diagrams + charts |
-| Title | SkyPass: Exact Weather-Aware Pass Scheduling with Learned Sky and Brightness Models | SkyPass: Weather-Aware Satellite Pass Scheduling with Learned Cloud Nowcasting and Brightness Prediction for Small Ground Stations |
+| Title | SkyPass: Exact Weather-Aware Pass Scheduling with Learned Sky and Brightness Models | SkyPass: A Machine Learning and Exact Optimisation Framework for Weather-Aware Satellite Pass Scheduling at Small Ground Stations |
 
 - Springer allows **one `.tex` file** (no `\input`): macros are inlined, figures flat.
 - **Layout is uniform on purpose.** Springer: a preamble override centres one text block on
