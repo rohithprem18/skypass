@@ -317,16 +317,20 @@ Satellite~Pass Scheduling at Small Ground Stations}
 %% affiliation is designation and department, then institution and city, then
 %% the e-mail in typewriter type. \affilend swallows the full stop the class
 %% appends after every affiliation, which would otherwise follow the e-mail.
+%% The journal requires the corresponding author to be marked: \author* adds the
+%% asterisk, and the unnumbered \affil at the end says what it means.
 \author[1]{\pfx{Dr.} \fnm{R.} \sur{Selvakumar}}
-\author[2]{\fnm{Rohith Prem} \sur{S.}}
+\author*[2]{\fnm{Rohith Prem} \sur{S.}}
 
 \affil[1]{\affilfont\ \orgdiv{Associate Professor, Dept.~of~Artificial~Intelligence~and~Machine~Learning},\hb
-\orgname{Saveetha~Engineering~College}, \orgaddress{\city{Chennai}, \country{India}}\hb
+\orgname{Saveetha~Engineering~College}, \orgaddress{\city{Chennai}, \state{Tamil~Nadu}, \country{India}}\hb
 \texttt{selvakumarr@saveetha.ac.in}\affilend}
 
 \affil[2]{\affilfont\ \orgdiv{Dept.~of~Computer~Science~and~Engineering},\hb
-\orgname{Saveetha~Engineering~College}, \orgaddress{\city{Chennai}, \country{India}}\hb
+\orgname{Saveetha~Engineering~College}, \orgaddress{\city{Chennai}, \state{Tamil~Nadu}, \country{India}}\hb
 \texttt{rohithprem91@gmail.com}\affilend}
+
+\affil{\affilfont *Corresponding author\affilend}
 
 \abstract{Observation planning at a small ground station is split across
 unconnected tools that predict passes, judge visibility and leave cloud and

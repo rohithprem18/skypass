@@ -1,5 +1,6 @@
-<!-- Draft cover letter for SN Computer Science. Fill in every [bracket] and
-     delete this comment before pasting it into the submission form. -->
+<!-- SUPERSEDED (23 Oct 2026): this is the first-version letter, with the old
+     title and author order. Use the cover letter in sn_submission_form.md,
+     section 7, which matches the v2 manuscript. Kept for the record. -->
 
 [Date]
 

@@ -26,7 +26,7 @@ not against generic Springer defaults.
 |---|---|---|
 | Manuscripts with mathematical content may be submitted in LaTeX; the Springer Nature LaTeX template is recommended. | `sn-jnl` class from `Springer_Nature_LaTeX_Template/`, class line and package list copied from the template's `sn-article.tex`. | Met |
 | Provide all editable source files. | `skypass-sn.tex`, `references.bib`, `sn-jnl.cls`, `sn-mathphys-num.bst`, `Fig1.pdf`-`Fig13.pdf`. One `.tex` file, no `\input`. | Met |
-| Title page: title; author names; affiliations (institution, department, city, state, country); corresponding author with active e-mail. | Present. | Met |
+| Title page: title; author names; affiliations (institution, department, city, state, country); corresponding author with active e-mail. | Present: Dr. R. Selvakumar and Rohith Prem S., each affiliation with department, institution, city, state and country and the author's e-mail; Rohith Prem S. marked as corresponding author (asterisk and note). Designation "Associate Professor" kept at the authors' request (production may drop it). | Met |
 | ORCID of the authors, if available. | Not present. | **Author action**: add `\orcid{}` if the authors have ORCIDs. |
 | Structured abstract, 150-250 words, sections Purpose / Methods / Results / Conclusion. | 247 words in that order, but as one unlabelled paragraph: the authors asked for no bold run-in labels. | **Deliberate deviation.** If the editorial office requires the labels, add them back (four words) or enter them in the submission system's structured-abstract fields. |
 | 4-6 keywords. | 6. | Met |

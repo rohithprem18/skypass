@@ -211,7 +211,7 @@ This repository is the companion implementation for:
 
 > **SkyPass: A Machine Learning and Exact Optimisation Framework for
 > Weather-Aware Satellite Pass Scheduling at Small Ground Stations**<br>
-> Rohith Prem S and Dr. R. Selvakumar<br>
+> Dr. R. Selvakumar and Rohith Prem S<br>
 > Saveetha Engineering College, Chennai, India
 
 The experiments are organized around eleven questions:
