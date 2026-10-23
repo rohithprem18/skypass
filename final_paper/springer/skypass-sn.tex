@@ -74,6 +74,21 @@
 \setlength{\floatsep}{12pt plus 2pt minus 2pt}
 \setlength{\intextsep}{12pt plus 2pt minus 2pt}
 
+\newcommand{\affilend}[1]{}% eats the class's trailing full stop after an affiliation
+%% 10 pt affiliations (the class uses 11 pt), so designation and department share a line.
+\makeatletter
+\newcommand{\affilfont}{\fontsize{10bp}{12.5bp}\selectfont}
+%% The class leaves room after the affiliations for its "Corresponding author"
+%% line; with the e-mails moved into the affiliations that room is empty, so
+%% pull the abstract up (a kern, which the class's \addvspace cannot cancel).
+\long\def\abstract#1{\def\@abstract{%
+\kern-52pt%
+\let\paragraph\subabstracthead%
+\abstractfont%
+\abstracthead*{\abstractname}%
+#1\par}}%
+\makeatother
+
 \theoremstyle{thmstyleone}%
 \newtheorem{theorem}{Theorem}%
 \newtheorem{proposition}[theorem]{Proposition}%
@@ -298,17 +313,20 @@
 A Machine Learning and Exact Optimisation Framework for Weather-Aware
 Satellite~Pass Scheduling at Small Ground Stations}
 
-\author*[1]{\fnm{Rohith Prem} \sur{S}}\email{rohithprem91@gmail.com}
-\author[2]{\fnm{R.} \sur{Selvakumar}}\email{selvakumarr@saveetha.ac.in}
+%% Author block in the Springer conference layout the authors asked for: each
+%% affiliation is designation and department, then institution and city, then
+%% the e-mail in typewriter type. \affilend swallows the full stop the class
+%% appends after every affiliation, which would otherwise follow the e-mail.
+\author[1]{\pfx{Dr.} \fnm{R.} \sur{Selvakumar}}
+\author[2]{\fnm{Rohith Prem} \sur{S.}}
 
-\affil*[1]{\orgdiv{Department of Computer Science and Engineering},
-\orgname{Saveetha Engineering College}, \orgaddress{\city{Chennai},
-\state{Tamil Nadu}, \country{India}}}
+\affil[1]{\affilfont\ \orgdiv{Associate Professor, Dept.~of~Artificial~Intelligence~and~Machine~Learning},\hb
+\orgname{Saveetha~Engineering~College}, \orgaddress{\city{Chennai}, \country{India}}\hb
+\texttt{selvakumarr@saveetha.ac.in}\affilend}
 
-\affil[2]{\orgdiv{Associate Professor, Department of Artificial Intelligence and
-Machine Learning},
-\orgname{Saveetha Engineering College}, \orgaddress{\city{Chennai},
-\state{Tamil Nadu}, \country{India}}}
+\affil[2]{\affilfont\ \orgdiv{Dept.~of~Computer~Science~and~Engineering},\hb
+\orgname{Saveetha~Engineering~College}, \orgaddress{\city{Chennai}, \country{India}}\hb
+\texttt{rohithprem91@gmail.com}\affilend}
 
 \abstract{Observation planning at a small ground station is split across
 unconnected tools that predict passes, judge visibility and leave cloud and

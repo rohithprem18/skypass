@@ -255,6 +255,11 @@ the folder's *contents*; compile with pdfLaTeX).
   `\widowpenalty` to 500 (the class's 10000 forced early page breaks that `\flushbottom`
   turned into 60-85 pt gaps above headings), adds `\parskip` stretch and tightens the
   float separations; keep it. Use `\mathbf{1}` for indicators (`\mathbb{1}` has no glyph).
+  Springer title page follows the authors' LNCS-style example: Dr. R. Selvakumar first,
+  e-mails inside each `\affil` (no `\email`, so no "Corresponding author" line), 10 pt
+  `\affilfont`, `\hb` line breaks, `\affilend` eats the class's trailing full stop, and a
+  redefined `\abstract` with `\kern-52pt` closes the gap the missing e-mail line leaves.
+  IEEE uses `\IEEEaftertitletext{\vspace{-1.2\baselineskip}}` to tighten the title block.
   IEEE:
   `\balance` before the bibliography equalises the last page's columns.
 - Prose rules from this file apply. Neither paper uses bold run-in paragraph labels
