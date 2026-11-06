@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 312" width="1280" height="312" role="img" aria-label="Visibility funnel: 1,299 geometric passes reduce to 8 scheduled observations">
+<title>Visibility funnel</title>
+<style>text{font-family:'Inter','Segoe UI','Helvetica Neue',Arial,sans-serif}
+.h{font-size:20px;font-weight:700;fill:#f5f7fa}.c{font-size:14px;fill:#a3adba}.r{font-size:15px;fill:#d7dde4}.num{font-size:15px;font-weight:700;fill:#f5f7fa;animation:num 10s ease infinite}
+.grow{transform-box:fill-box;transform-origin:left center;animation:grow 10s cubic-bezier(.2,.7,.2,1) infinite}
+@keyframes grow{0%{transform:scaleX(0)}12%,92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes num{0%,6%{opacity:0}14%,90%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}</style>
+<rect x="1" y="1" width="1278" height="310" rx="18" fill="#0b1014" stroke="#25313c"/>
+<text x="28" y="42" class="h">From every pass overhead to a night you can execute</text>
+<text x="1252" y="42" text-anchor="end" class="c">Live run: Chennai, 140 objects, 3 days, 6 November 2026</text>
+<text x="268" y="89" text-anchor="end" class="r">Geometric passes above the mask</text>
+<rect class="grow" x="290" y="78" width="880.0" height="14" rx="4" fill="#76b900" style="animation-delay:0.00s"/>
+<text class="num" x="1182.0" y="90" style="animation-delay:0.00s">1,299</text><text x="268" y="126" text-anchor="end" class="r">Sunlit</text>
+<rect class="grow" x="290" y="115" width="569.7" height="14" rx="4" fill="#76b900" style="animation-delay:0.16s"/>
+<text class="num" x="871.7" y="127" style="animation-delay:0.16s">841</text><text x="268" y="163" text-anchor="end" class="r">Observer in darkness</text>
+<rect class="grow" x="290" y="152" width="119.9" height="14" rx="4" fill="#76b900" style="animation-delay:0.32s"/>
+<text class="num" x="421.9" y="164" style="animation-delay:0.32s">177</text><text x="268" y="200" text-anchor="end" class="r">Brighter than the limit</text>
+<rect class="grow" x="290" y="189" width="40.6" height="14" rx="4" fill="#76b900" style="animation-delay:0.48s"/>
+<text class="num" x="342.6" y="201" style="animation-delay:0.48s">60</text><text x="268" y="237" text-anchor="end" class="r">Above the score floor</text>
+<rect class="grow" x="290" y="226" width="9.5" height="14" rx="4" fill="#76b900" style="animation-delay:0.64s"/>
+<text class="num" x="311.5" y="238" style="animation-delay:0.64s">14</text><text x="268" y="274" text-anchor="end" class="r">Scheduled, conflict-free</text>
+<rect class="grow" x="290" y="263" width="6.0" height="14" rx="4" fill="#76b900" style="animation-delay:0.80s"/>
+<text class="num" x="308.0" y="275" style="animation-delay:0.80s">8</text>
+</svg>

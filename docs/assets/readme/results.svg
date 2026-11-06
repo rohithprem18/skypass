@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 168" width="1280" height="168" role="img" aria-label="Measured results">
+<title>Measured results</title>
+<defs><linearGradient id="sh" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".07"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<clipPath id="c"><rect y="4" width="1280" height="160" rx="16"/></clipPath></defs>
+<style>text{font-family:'Inter','Segoe UI','Helvetica Neue',Arial,sans-serif}
+.v{font-size:40px;font-weight:800;fill:#f5f7fa;letter-spacing:-.01em}.a{font-size:16.5px;font-weight:600;fill:#d7dde4}.b{font-size:14px;fill:#a3adba}
+.rise{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.sweep{animation:sw 7s ease-in-out infinite}
+@keyframes sw{0%{transform:translateX(-340px)}55%,100%{transform:translateX(1320px)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}</style>
+<g class="rise" style="animation-delay:0.00s"><rect x="1" y="4" width="202" height="160" rx="16" fill="#0b1014" stroke="#25313c"/>
+<rect x="19" y="24" width="8" height="8" fill="#76b900"/>
+<text x="19" y="84" class="v">23.7×</text><text x="19" y="118" class="a">fewer propagator calls</text><text x="19" y="141" class="b">against a dense scan</text></g><g class="rise" style="animation-delay:0.12s"><rect x="216" y="4" width="202" height="160" rx="16" fill="#0b1014" stroke="#25313c"/>
+<rect x="234" y="24" width="8" height="8" fill="#76b900"/>
+<text x="234" y="84" class="v">99.78%</text><text x="234" y="118" class="a">pass recall</text><text x="234" y="141" class="b">against a dense scan</text></g><g class="rise" style="animation-delay:0.24s"><rect x="431" y="4" width="202" height="160" rx="16" fill="#0b1014" stroke="#25313c"/>
+<rect x="449" y="24" width="8" height="8" fill="#76b900"/>
+<text x="449" y="84" class="v">0.055 s</text><text x="449" y="118" class="a">culmination match</text><text x="449" y="141" class="b">against Skyfield</text></g><g class="rise" style="animation-delay:0.36s"><rect x="646" y="4" width="202" height="160" rx="16" fill="#0b1014" stroke="#25313c"/>
+<rect x="664" y="24" width="8" height="8" fill="#76b900"/>
+<text x="664" y="84" class="v">100%</text><text x="664" y="118" class="a">optimal schedules</text><text x="664" y="141" class="b">on 2,000 test instances</text></g><g class="rise" style="animation-delay:0.48s"><rect x="861" y="4" width="202" height="160" rx="16" fill="#0b1014" stroke="#25313c"/>
+<rect x="879" y="24" width="8" height="8" fill="#76b900"/>
+<text x="879" y="84" class="v">+37.6%</text><text x="879" y="118" class="a">clear-sky observations</text><text x="879" y="141" class="b">at half budget</text></g><g class="rise" style="animation-delay:0.60s"><rect x="1076" y="4" width="202" height="160" rx="16" fill="#0b1014" stroke="#25313c"/>
+<rect x="1094" y="24" width="8" height="8" fill="#76b900"/>
+<text x="1094" y="84" class="v">1.2 pp</text><text x="1094" y="118" class="a">cloud-fraction error</text><text x="1094" y="141" class="b">WSISEG, blocked 5-fold</text></g><g clip-path="url(#c)"><rect class="sweep" y="4" width="300" height="160" fill="url(#sh)"/></g>
+</svg>
