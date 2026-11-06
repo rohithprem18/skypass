@@ -25,7 +25,7 @@
 
 <a id="demo"></a>
 
-## <img src="docs/assets/readme/icons/rocket.png" width="34" align="top" alt=""> See it plan a night
+## <img src="docs/assets/readme/icons/circle-play.svg" width="24" align="absmiddle" alt=""> See it plan a night
 
 <p align="center">
   <img src="docs/assets/readme/demo.gif" width="100%" alt="Recording of the SkyPass console: planning a window, then the overview, planner, passes, weather, schedule and live countdown views.">
@@ -39,7 +39,7 @@
 
 <img src="docs/assets/readme/divider.svg" width="100%" alt="">
 
-## <img src="docs/assets/readme/icons/globe.png" width="34" align="top" alt=""> The problem SkyPass solves
+## <img src="docs/assets/readme/icons/earth.svg" width="24" align="absmiddle" alt=""> The problem SkyPass solves
 
 <table>
 <tr>
@@ -68,56 +68,56 @@ of observations, available as a **command-line tool**, a **Python library** and 
 
 <a id="features"></a>
 
-## <img src="docs/assets/readme/icons/sparkles.png" width="34" align="top" alt=""> Features
+## <img src="docs/assets/readme/icons/layout-grid.svg" width="24" align="absmiddle" alt=""> Features
 
 <table>
 <tr>
 <td width="33%" valign="top">
-<img src="docs/assets/readme/icons/satellite.png" width="56" alt=""><br>
+<img src="docs/assets/readme/icons/satellite.svg" width="34" alt=""><br>
 <b>Accurate pass prediction</b><br>
 <sub>SGP4, TEME-to-ECEF conversion, WGS-84 topocentric geometry and sub-second crossing refinement.</sub>
 </td>
 <td width="33%" valign="top">
-<img src="docs/assets/readme/icons/telescope.png" width="56" alt=""><br>
+<img src="docs/assets/readme/icons/telescope.svg" width="34" alt=""><br>
 <b>Optical visibility analysis</b><br>
 <sub>Earth-shadow geometry, observer twilight, atmospheric refraction, phase angle and apparent magnitude.</sub>
 </td>
 <td width="33%" valign="top">
-<img src="docs/assets/readme/icons/cloud.png" width="56" alt=""><br>
+<img src="docs/assets/readme/icons/cloud-sun.svg" width="34" alt=""><br>
 <b>Weather-aware scoring</b><br>
 <sub>Open-Meteo forecasts calibrated against ERA5 reanalysis, rather than raw cloud percentages taken at face value.</sub>
 </td>
 </tr>
 <tr>
 <td valign="top">
-<img src="docs/assets/readme/icons/puzzle.png" width="56" alt=""><br>
+<img src="docs/assets/readme/icons/blocks.svg" width="34" alt=""><br>
 <b>Conflict-free scheduling</b><br>
 <sub>Exact dynamic programs for weighted interval scheduling, nightly capacity, setup gaps and multi-night budgets.</sub>
 </td>
 <td valign="top">
-<img src="docs/assets/readme/icons/scroll.png" width="56" alt=""><br>
+<img src="docs/assets/readme/icons/file-text.svg" width="34" alt=""><br>
 <b>Reproducible inputs</b><br>
 <sub>Dated TLE archives and configurable rejection of stale element sets.</sub>
 </td>
 <td valign="top">
-<img src="docs/assets/readme/icons/calendar.png" width="56" alt=""><br>
+<img src="docs/assets/readme/icons/calendar-days.svg" width="34" alt=""><br>
 <b>Practical exports</b><br>
 <sub>Terminal timetable, CSV, JSON and iCalendar (<code>.ics</code>) files.</sub>
 </td>
 </tr>
 <tr>
 <td valign="top">
-<img src="docs/assets/readme/icons/laptop.png" width="56" alt=""><br>
+<img src="docs/assets/readme/icons/monitor.svg" width="34" alt=""><br>
 <b>Observation console</b><br>
 <sub>Night ranking, pass timelines, weather context, decision explanations, a field run sheet and a live countdown.</sub>
 </td>
 <td valign="top">
-<img src="docs/assets/readme/icons/brain.png" width="56" alt=""><br>
+<img src="docs/assets/readme/icons/brain.svg" width="34" alt=""><br>
 <b>Learned sky nowcast (optional)</b><br>
 <sub>A pixel gradient-boosted segmenter reads cloud fraction from a whole-sky image for the next hour. A U-Net is included for comparison.</sub>
 </td>
 <td valign="top">
-<img src="docs/assets/readme/icons/moon.png" width="56" alt=""><br>
+<img src="docs/assets/readme/icons/moon-star.svg" width="34" alt=""><br>
 <b>Learned brightness (optional)</b><br>
 <sub>Gradient-boosted trees predict apparent magnitude, trained on measured magnitudes from IAU CPS SCORE.</sub>
 </td>
@@ -126,7 +126,7 @@ of observations, available as a **command-line tool**, a **Python library** and 
 
 <a id="quick-start"></a>
 
-## <img src="docs/assets/readme/icons/compass.png" width="34" align="top" alt=""> Quick Start
+## <img src="docs/assets/readme/icons/compass.svg" width="24" align="absmiddle" alt=""> Quick Start
 
 SkyPass requires Python 3.9 or newer. The core data sources, CelesTrak and
 Open-Meteo, do not require API keys.
@@ -231,7 +231,7 @@ for observation in result.schedule.selected:
 
 <a id="web-console"></a>
 
-## <img src="docs/assets/readme/icons/laptop.png" width="34" align="top" alt=""> Web Console
+## <img src="docs/assets/readme/icons/monitor.svg" width="24" align="absmiddle" alt=""> Web Console
 
 The web interface uses the same Python planning engine as the command line.
 
@@ -290,7 +290,7 @@ Vite serves the UI at [http://localhost:5173](http://localhost:5173) and proxies
 
 <a id="how-it-works"></a>
 
-## <img src="docs/assets/readme/icons/gear.png" width="34" align="top" alt=""> How It Works
+## <img src="docs/assets/readme/icons/workflow.svg" width="24" align="absmiddle" alt=""> How It Works
 
 <p align="center">
   <img src="docs/assets/readme/funnel.svg" width="100%" alt="Visibility funnel from a live run for Chennai with 140 objects over 3 days: 1,299 geometric passes, 841 sunlit, 177 with the observer in darkness, 60 brighter than the limit, 14 above the score floor, 8 scheduled.">
@@ -315,11 +315,11 @@ month.
 
 <a id="research"></a>
 
-## <img src="docs/assets/readme/icons/chart.png" width="34" align="top" alt=""> What the research found
+## <img src="docs/assets/readme/icons/chart-column.svg" width="24" align="absmiddle" alt=""> What the research found
 
 <table>
 <tr>
-<td width="90" align="center"><img src="docs/assets/readme/icons/bullseye.png" width="64" alt=""></td>
+<td width="90" align="center"><img src="docs/assets/readme/icons/target.svg" width="40" alt=""></td>
 <td><b>A forecast pays when the planner may skip a night.</b><br>It cannot discriminate well within one night, because cloud is autocorrelated and pass quality varies more. Calibration raises the gain in every regime.</td>
 </tr>
 </table>
@@ -390,7 +390,7 @@ are in [docs/spacetrack-setup.md](docs/spacetrack-setup.md).
 > series can overlap with archived forecast data and produce misleadingly perfect
 > verification scores.
 
-## <img src="docs/assets/readme/icons/test.png" width="34" align="top" alt=""> Testing
+## <img src="docs/assets/readme/icons/flask-conical.svg" width="24" align="absmiddle" alt=""> Testing
 
 ```bash
 python -m pytest tests -q
@@ -432,7 +432,7 @@ subdirectory still share the same caches, archives and result directories.
 
 </details>
 
-## <img src="docs/assets/readme/icons/books.png" width="34" align="top" alt=""> Data Sources and Credits
+## <img src="docs/assets/readme/icons/book-open.svg" width="24" align="absmiddle" alt=""> Data Sources and Credits
 
 - [CelesTrak](https://celestrak.org/) for current GP orbital elements.
 - [AMSAT](https://www.amsat.org/tle/) for an independent element-provider comparison.
@@ -456,15 +456,15 @@ the IAU CPS.
 Space-Track credentials are read from environment variables or a git-ignored
 local file and are never written to generated outputs.
 
-<sub>README artwork: 3D icons from [Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji) (MIT, [licence](docs/assets/readme/icons/LICENSE-fluent-emoji.txt)). Rotating Earth from [NASA Goddard Space Flight Center](https://commons.wikimedia.org/wiki/File:Rotating_earth_animated_transparent.gif), image by Reto St&ouml;ckli (public domain).</sub>
+<sub>README artwork: icons from [Lucide](https://lucide.dev) (ISC, [licence](docs/assets/readme/icons/LICENSE-lucide.txt)). Rotating Earth from [NASA Goddard Space Flight Center](https://commons.wikimedia.org/wiki/File:Rotating_earth_animated_transparent.gif), image by Reto St&ouml;ckli (public domain).</sub>
 
-## <img src="docs/assets/readme/icons/scale.png" width="34" align="top" alt=""> Responsible Use
+## <img src="docs/assets/readme/icons/scale.svg" width="24" align="absmiddle" alt=""> Responsible Use
 
 SkyPass consumes publicly released orbital elements and public weather data. It
 is intended for education, amateur radio, civil optical observation and
 reproducible research.
 
-## <img src="docs/assets/readme/icons/antenna.png" width="34" align="top" alt=""> Authors
+## <img src="docs/assets/readme/icons/radio-tower.svg" width="24" align="absmiddle" alt=""> Authors
 
 - **Rohith Prem S**, Department of Computer Science and Engineering, Saveetha
   Engineering College, <rohithprem91@gmail.com>
