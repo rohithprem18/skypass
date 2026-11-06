@@ -27,6 +27,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "generated")
 IEEE_DIR = os.path.join(ROOT, "final_paper", "ieee")
 SPRINGER_TEX = os.path.join(ROOT, "final_paper", "springer", "skypass-sn.tex")
+SPRINGER_V2_TEX = os.path.join(ROOT, "final_paper", "springer_v2", "skypass-lncs.tex")
 
 MACROS: dict = {}
 
@@ -913,8 +914,10 @@ def publish():
             shutil.copy(os.path.join(OUT, name), os.path.join(dest, name))
         print(f"  -> final_paper/ieee/generated/ ({', '.join(names)})")
 
-    if os.path.exists(SPRINGER_TEX):
-        with open(SPRINGER_TEX, encoding="utf-8") as fh:
+    for tex in (SPRINGER_TEX, SPRINGER_V2_TEX):
+        if not os.path.exists(tex):
+            continue
+        with open(tex, encoding="utf-8") as fh:
             s = fh.read()
         marker = "%%== generated result values"
         begin = r"\begin{document}"
@@ -925,9 +928,9 @@ def publish():
                       "inlined ==%%\n%% Springer forbids \\input, so "
                       "generated/numbers.tex is pasted here.\n")
             s = s[:s.index(marker)] + header + numbers + "\n\n" + s[s.index(begin):]
-            with open(SPRINGER_TEX, "w", encoding="utf-8", newline="\n") as fh:
+            with open(tex, "w", encoding="utf-8", newline="\n") as fh:
                 fh.write(s)
-            print("  -> final_paper/springer/skypass-sn.tex (inlined macros)")
+            print(f"  -> {os.path.relpath(tex, ROOT)} (inlined macros)")
 
 
 if __name__ == "__main__":

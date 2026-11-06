@@ -10,6 +10,13 @@
 \definecolor{score}{HTML}{CC79A7}
 \definecolor{bad}{HTML}{D55E00}
 \definecolor{good}{HTML}{009E73}
+% One lettering size throughout, chosen to print at the paper's figure size.
+\makeatletter
+\renewcommand\tiny{\@setfontsize\tiny{8.9}{10.7}}
+\renewcommand\scriptsize{\@setfontsize\scriptsize{8.9}{10.7}}
+\renewcommand\footnotesize{\@setfontsize\footnotesize{8.9}{10.7}}
+\renewcommand\small{\@setfontsize\small{8.9}{10.7}}
+\makeatother
 \begin{document}
 \begin{tikzpicture}[font=\footnotesize, >={Latex[length=2mm, width=1.5mm]}]
 % ---------------------------------------------------------------- sunlight
@@ -56,7 +63,7 @@
 \fill[good] (S) circle (3pt);
 \node[good!70!black, font=\scriptsize\bfseries, anchor=south, align=center] at ($(S)+(0,0.12)$)
      {sunlit satellite\\[-1pt]\normalfont seen if $m \le 6$};
-\node[good!70!black, font=\scriptsize, anchor=south] at ($(S)+(-1.55,0.03)$) {to the Sun};
+\node[good!70!black, font=\scriptsize, anchor=north] at ($(S)+(-1.75,-0.04)$) {to the Sun};
 % ---------------------------------------------------------------- eclipsed satellite
 \coordinate (E) at (3.3,1.05);
 \draw[line width=0.6pt, bad!80, densely dashed] (O) -- (E);

@@ -21,7 +21,7 @@ journal's submission guidelines page on 17 Oct 2026.
 | Abstract | Structured, 150-250 words: Purpose, Methods, Results, Conclusion | 236 words, in that order, without labels (your earlier choice). See section 4, item 1. |
 | Keywords | 4-6 | 6. |
 | Declarations | Heading "Statements and Declarations" required; papers without it are returned as incomplete | Present: Funding, Competing interests, Ethics, Data and code availability. |
-| AI use | LLMs cannot be authors; use beyond copy editing must be described in the Methods | Statement is in Experimental Setup. You must confirm it is accurate. |
+| AI use | LLMs cannot be authors; use beyond copy editing must be described in the Methods | Statement is in Experimental Setup and covers the software, experiment scripts, figures and text. You must confirm it is accurate. |
 | Figures | Vector with embedded fonts, named Fig1, Fig2...; lettering ideally 8-12 pt, Helvetica/Arial preferred; no titles inside the artwork | Met after today's fixes, except lettering (7-8.5 pt, Computer Modern). These two are recommendations, not rules. |
 | Charges | No page or colour charges; free submission. Open access ("Open Choice") is optional and paid | Choose the **subscription (non-OA) route** and you pay nothing. A third-party listing gives the APC as about EUR 2,590; confirm on Springer's site only if the college will pay. |
 | Speed | Median about 41 days to first decision (journal-reported) | Expect 1.5-3 months to a first decision, longer with revisions. |
@@ -44,8 +44,8 @@ These must be done first. None of them is a writing task.
      college gave any grant, seed money or equipment, name it.
    - Competing interests: none.
    - AI statement (Experimental Setup): it says an assistant (Claude, Anthropic)
-     helped edit the text and wrote the scripts that build the manuscript. If AI
-     also helped write the SkyPass code, the experiments or the figures, say so.
+     helped write the software and experiment scripts, prepare the figures, and
+     edit the text. Adjust it if it does not describe your use.
      Under-declaring AI use is the risk here, not over-declaring.
 4. **Get ORCID iDs** for both authors (free, <https://orcid.org/register>). The
    journal asks for them; add them to the title page with `\orcid{...}` or enter

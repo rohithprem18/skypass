@@ -77,6 +77,8 @@
 \newcommand{\affilend}[1]{}% eats the class's trailing full stop after an affiliation
 %% 10 pt affiliations (the class uses 11 pt), so designation and department share a line.
 \makeatletter
+%% Bold title (the class sets it in medium weight).
+\def\Titlefont{\reset@font\fontsize{17bp}{22.5bp}\selectfont\bfseries\titraggedcenter}%
 \newcommand{\affilfont}{\fontsize{10bp}{12.5bp}\selectfont}
 %% The class leaves room after the affiliations for its "Corresponding author"
 %% line; with the e-mails moved into the affiliations that room is empty, so
@@ -317,8 +319,6 @@ Satellite~Pass Scheduling at Small Ground Stations}
 %% affiliation is designation and department, then institution and city, then
 %% the e-mail in typewriter type. \affilend swallows the full stop the class
 %% appends after every affiliation, which would otherwise follow the e-mail.
-%% The journal requires the corresponding author to be marked: \author* adds the
-%% asterisk, and the unnumbered \affil at the end says what it means.
 \author[1]{\pfx{Dr.} \fnm{R.} \sur{Selvakumar}}
 \author*[2]{\fnm{Rohith Prem} \sur{S.}}
 
@@ -452,7 +452,7 @@ is the mechanism by which the weather claim is evaluated.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\textwidth]{Fig1}
+\includegraphics[width=\textwidth]{Fig1}
 \caption{SkyPass architecture. Orbit geometry (blue) turns element sets into
 passes; the visibility score (purple) combines geometry, brightness and sky;
 the weather branch (green) calibrates the cloud forecast against ERA5
@@ -488,7 +488,7 @@ are sampled most finely.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\textwidth]{Fig2}
+\includegraphics[width=\textwidth]{Fig2}
 \caption{Pass extraction (illustrative curve). Elevation is sampled every $h$
 seconds (black). A sign change of elevation minus the \ang{10} mask between
 neighbouring samples (amber) brackets a rise or set, which bisection refines to
@@ -525,7 +525,7 @@ are dropped.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.76\textwidth]{Fig3}
+\includegraphics[width=\textwidth]{Fig3}
 \caption{Observation geometry (schematic, not to scale). A pass is observable when
 the satellite is sunlit, outside the conical Earth shadow, while the Sun is more
 than \ang{6} below the observer's horizon. Its apparent magnitude then depends
@@ -588,7 +588,7 @@ follow form one session.
 \label{sec:learned}
 \begin{figure}[tbp]
 \centering
-\includegraphics[width=0.76\textwidth]{Fig4}
+\includegraphics[width=\textwidth]{Fig4}
 \caption{The cloud-segmentation U-Net. The encoder halves the image three times
 while doubling the channels, the decoder restores the resolution, and skip
 connections carry fine detail across. A 1$\times$1 convolution gives the
@@ -658,9 +658,10 @@ images; the photometric baselines are the sphere model with its tabulated
 standard magnitudes and with one standard magnitude per family fitted on the
 training data.
 
-A generative AI assistant (Claude, Anthropic) was used to help edit and
-restructure the manuscript text and to write the scripts that build it; the
-authors reviewed all such output and take responsibility for the content.
+A generative AI assistant (Claude, Anthropic) was used to help write the
+software and experiment scripts, prepare the figures, and edit and restructure
+the manuscript text; the authors reviewed all such output and take
+responsibility for the content.
 
 % ===========================================================================
 \section{Results}
@@ -683,10 +684,10 @@ transits that peak barely above the mask.
 \begin{figure}[htbp]
 \centering
 \begin{minipage}[b]{0.49\textwidth}\centering
-  \includegraphics[width=\linewidth]{Fig5a}\\[-1pt]{\small (a)}
+  \includegraphics{Fig5a}\\[-1pt]{\small (a)}
 \end{minipage}\hfill
 \begin{minipage}[b]{0.49\textwidth}\centering
-  \includegraphics[width=\linewidth]{Fig5b}\\[-1pt]{\small (b)}
+  \includegraphics{Fig5b}\\[-1pt]{\small (b)}
 \end{minipage}
 \caption{(a) Mean timing difference at acquisition, culmination and loss of
 signal, against the \SI{1}{\second} dense scan and against Skyfield; whiskers
@@ -734,7 +735,7 @@ is a local property rather than a universal constant.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{Fig6}
+\includegraphics{Fig6}
 \caption{Skill of the archived cloud forecast against ERA5, pooled over
 \SkillStationsWord{} stations. (a) Heidke skill score of the clear-hour decision
 by lead time, with persistence and climatology baselines. (b) Mean absolute
@@ -757,7 +758,7 @@ and a window budget that lets the station skip nights.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.88\textwidth]{Fig7}
+\includegraphics[width=\textwidth]{Fig7}
 \caption{The two operating rules, illustrated (not data). Each column is one
 night split into evening, midnight and late; cloud tends to persist through a
 night. Under a nightly quota the forecast can only reorder passes within a
@@ -786,10 +787,10 @@ unfavourable exchange when pass quality is the more variable factor.
 \begin{figure}[htbp]
 \centering
 \begin{minipage}[b]{0.49\textwidth}\centering
-  \includegraphics[width=\linewidth]{Fig8a}\\[-1pt]{\small (a)}
+  \includegraphics{Fig8a}\\[-1pt]{\small (a)}
 \end{minipage}\hfill
 \begin{minipage}[b]{0.49\textwidth}\centering
-  \includegraphics[width=\linewidth]{Fig8b}\\[-1pt]{\small (b)}
+  \includegraphics{Fig8b}\\[-1pt]{\small (b)}
 \end{minipage}
 \caption{(a) Gain under a nightly quota against forecast lead time, for the
 forecast-driven planner and the oracle. (b) Fitted forecast reliability per
@@ -799,7 +800,7 @@ station; a perfectly reliable forecast would lie on the dotted diagonal.}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{Fig9}
+\includegraphics{Fig9}
 \caption{Weather-awareness is worth nothing to a station obliged to observe
 every night, and a great deal to one that may choose its nights. (a) Gain over
 the weather-blind exact planner under the same budget, threshold value model;
@@ -864,7 +865,7 @@ against the seconds to minutes propagation needs (Fig.~\ref{fig:sched}b).
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{Fig10}
+\includegraphics{Fig10}
 \caption{(a) Mean objective of greedy selection rules as a percentage of the
 exact optimum over \SchedTrials{} random instances. (b) Run time of the exact
 dynamic program against the number of candidate passes, with a linear
@@ -885,7 +886,7 @@ below \ang{-6} there in the planned week.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.94\textwidth]{Fig11}
+\includegraphics{Fig11}
 \caption{Visibility funnel for the demonstration station: of \DemoGeometric{}
 geometric passes over \DemoHorizon{} days, \DemoScheduled{} survive to the
 timetable. Cloud enters the score as a continuous weight rather than a hard
@@ -918,7 +919,7 @@ one camera.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{Fig12}
+\includegraphics{Fig12}
 \caption{Cloud segmentation of whole-sky images. Top: two held-out WSISEG
 images with their labels and the predictions of the tuned colour-ratio rule, the
 pixel classifier and the U-Net (cloud white, sky blue, undefined pixels
@@ -944,7 +945,7 @@ represent.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{Fig13}
+\includegraphics{Fig13}
 \caption{Learned satellite brightness on \BrightObs{} SCORE observations of
 \BrightSats{} satellites. (a) Mean absolute magnitude error for satellites absent
 from training (grouped cross-validation, dark bars) and for observations after

@@ -7,6 +7,13 @@
 \definecolor{plan}{HTML}{E69F00}
 \definecolor{outc}{HTML}{D55E00}
 \definecolor{src}{HTML}{666666}
+% One lettering size throughout, chosen to print at the paper's figure size.
+\makeatletter
+\renewcommand\tiny{\@setfontsize\tiny{7.8}{9.4}}
+\renewcommand\scriptsize{\@setfontsize\scriptsize{7.8}{9.4}}
+\renewcommand\footnotesize{\@setfontsize\footnotesize{7.8}{9.4}}
+\renewcommand\small{\@setfontsize\small{7.8}{9.4}}
+\makeatother
 \begin{document}
 \begin{tikzpicture}[x=0.78cm, y=0.7cm, font=\footnotesize,
   every node/.append style={execute at begin node={\hyphenpenalty=10000}}]

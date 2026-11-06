@@ -8,6 +8,13 @@
 \colorlet{clear}{orbit!24}
 \colorlet{partly}{src!30}
 \colorlet{overcast}{src!65}
+% One lettering size throughout, chosen to print at the paper's figure size.
+\makeatletter
+\renewcommand\tiny{\@setfontsize\tiny{8.6}{10.3}}
+\renewcommand\scriptsize{\@setfontsize\scriptsize{8.6}{10.3}}
+\renewcommand\footnotesize{\@setfontsize\footnotesize{8.6}{10.3}}
+\renewcommand\small{\@setfontsize\small{8.6}{10.3}}
+\makeatother
 \begin{document}
 \begin{tikzpicture}[font=\footnotesize]
 \node[anchor=east, align=right] at (-0.2,-0.45) {\textbf{Nightly quota}\\{\scriptsize\color{src}three every night}};
@@ -119,16 +126,16 @@
 \fill[clear] (9.72,-2.65) rectangle (10.64,-2.35);
 \fill[plan] (10.18,-2.50) circle (2.6pt);
 \node[anchor=west, align=left, font=\scriptsize] at (10.75,-2.20) {10 of 15\\observations\\clear};
-\node[font=\scriptsize, text=src] at (0.46,0.22) {night 1};
-\node[font=\scriptsize, text=src] at (1.54,0.22) {night 2};
-\node[font=\scriptsize, text=src] at (2.62,0.22) {night 3};
-\node[font=\scriptsize, text=src] at (3.70,0.22) {night 4};
-\node[font=\scriptsize, text=src] at (4.78,0.22) {night 5};
-\node[font=\scriptsize, text=src] at (5.86,0.22) {night 6};
-\node[font=\scriptsize, text=src] at (6.94,0.22) {night 7};
-\node[font=\scriptsize, text=src] at (8.02,0.22) {night 8};
-\node[font=\scriptsize, text=src] at (9.10,0.22) {night 9};
-\node[font=\scriptsize, text=src] at (10.18,0.22) {night 10};
+\node[font=\scriptsize, text=src] at (0.46,0.22) {1};
+\node[font=\scriptsize, text=src] at (1.54,0.22) {2};
+\node[font=\scriptsize, text=src] at (2.62,0.22) {3};
+\node[font=\scriptsize, text=src] at (3.70,0.22) {4};
+\node[font=\scriptsize, text=src] at (4.78,0.22) {5};
+\node[font=\scriptsize, text=src] at (5.86,0.22) {6};
+\node[font=\scriptsize, text=src] at (6.94,0.22) {7};
+\node[font=\scriptsize, text=src] at (8.02,0.22) {8};
+\node[font=\scriptsize, text=src] at (9.10,0.22) {9};
+\node[font=\scriptsize, text=src] at (10.18,0.22) {10};
 \fill[clear] (0.00,-3.22) rectangle (0.35,-2.98);
 \node[anchor=west, font=\scriptsize] at (0.42,-3.10) {clear};
 \fill[partly] (1.50,-3.22) rectangle (1.85,-2.98);

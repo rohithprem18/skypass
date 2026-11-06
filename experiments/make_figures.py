@@ -55,6 +55,20 @@ plt.rcParams.update({
 })
 plt.rcParams.update(FONT_PROFILES[FONT])
 
+# --uniform SIZE prints every label, tick, legend and annotation at one size.
+UNIFORM = None
+
+
+def FS(size):
+    """Font size for an explicit label: its own, unless --uniform is set."""
+    return UNIFORM or size
+
+
+def HT(height):
+    """Chart height: ten per cent shorter in the uniform layout, to hold the page count."""
+    return 0.9 * height if UNIFORM else height
+
+
 # Colour-blind-safe qualitative palette (Okabe-Ito).
 C = {"blue": "#0072B2", "orange": "#E69F00", "green": "#009E73",
      "red": "#D55E00", "purple": "#CC79A7", "grey": "#666666",
@@ -93,7 +107,7 @@ def fig_forecast_skill():
     pers = d["pooled_baselines"].get("persistence_24h", {})
     clim = d["pooled_baselines"].get("climatology", {})
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.3))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, HT(2.3)))
 
     ax1.plot(leads, hss, "o-", color=C["blue"], lw=1.4, ms=4,
              label="NWP forecast")
@@ -120,6 +134,8 @@ def fig_forecast_skill():
     ax2.set_ylabel("MAE of cloud fraction")
     ax2.set_title("(b) continuous error")
     ax2.legend(frameon=False, loc="lower right")
+    if WIDE < 5.5:
+        fig.subplots_adjust(wspace=0.36)
     _save(fig, "fig_forecast_skill")
 
 
@@ -141,8 +157,8 @@ def fig_site_skill():
     ax.axhline(0, color="black", lw=0.6)
     ax.set_xlabel("forecast lead time (days)")
     ax.set_ylabel("Heidke skill score")
-    ax.set_title("Forecast skill by site (mean cloud in brackets)", fontsize=8)
-    ax.legend(frameon=False, ncol=2, fontsize=6, loc="upper center",
+    ax.set_title("Forecast skill by site (mean cloud in brackets)", fontsize=FS(8))
+    ax.legend(frameon=False, ncol=2, fontsize=FS(6), loc="upper center",
               bbox_to_anchor=(0.5, -0.28), handlelength=1.6,
               columnspacing=1.2, borderaxespad=0.0)
     _save(fig, "fig_site_skill")
@@ -202,7 +218,7 @@ def fig_budget_modes():
         labels = {"nightly-quota": "quota", "budget-75pct": "75%",
                   "budget-50pct": "50%", "budget-25pct": "25%"}
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.05 if compact else 2.5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.05 if compact else HT(2.5)))
     xs = list(range(len(order)))
     w = 0.38
     sky = [bm[k]["gain_clear_pct"] for k in order]
@@ -218,7 +234,7 @@ def fig_budget_modes():
     if not compact:
         ax1.set_xlabel("observing budget for the window")
     ax1.set_title("(a) value of the forecast")
-    ax1.legend(frameon=False, fontsize=6 if compact else None)
+    ax1.legend(frameon=False, fontsize=FS(6) if compact else None)
 
     blind = [100 * bm[k]["success_rate_blind"] for k in order]
     sp = [100 * bm[k]["success_rate_skypass_prob"] for k in order]
@@ -231,13 +247,16 @@ def fig_budget_modes():
     if compact:
         ax2.set_ylabel("passes under clear sky (%)")
         ax2.set_title("(b) clear-sky share")
-        fig.supxlabel("share of nights the window budget allows", fontsize=7, y=-0.07)
+        fig.supxlabel("share of nights the window budget allows", fontsize=FS(7), y=-0.07)
         fig.subplots_adjust(wspace=0.42)
     else:
-        ax2.set_ylabel("scheduled passes under clear sky (%)")
+        ax2.set_ylabel("passes under clear sky (%)" if WIDE < 5.5
+                       else "scheduled passes under clear sky (%)")
         ax2.set_xlabel("observing budget for the window")
         ax2.set_title("(b) share of passes under clear sky")
-    ax2.legend(frameon=False, fontsize=6 if compact else None)
+        if WIDE < 5.5:
+            fig.subplots_adjust(wspace=0.32)
+    ax2.legend(frameon=False, fontsize=FS(6) if compact else None)
     _save(fig, "fig_budget_modes")
 
 
@@ -250,7 +269,7 @@ def fig_lead_sweep():
     leads = sorted(int(k) for k in sw)
     gain = [sw[str(l)]["gain_clear_pct"] for l in leads]
     orc = [sw[str(l)]["oracle_gain_clear_pct"] for l in leads]
-    fig, ax = plt.subplots(figsize=(COL, 2.2))
+    fig, ax = plt.subplots(figsize=(COL, HT(2.2)))
     ax.plot(leads, orc, "s--", color=C["green"], lw=1.2, ms=3.5,
             label="oracle (observed sky)")
     ax.plot(leads, gain, "o-", color=C["blue"], lw=1.4, ms=4,
@@ -261,8 +280,8 @@ def fig_lead_sweep():
     # The sweep runs in the nightly-quota regime, where the gain is ~0 at every
     # lead. Naming that is the honest title: nothing here decays, because there
     # is no gain to decay from.
-    ax.set_title("Under a nightly quota, no lead time helps", fontsize=8)
-    ax.legend(frameon=False, fontsize=6.5, loc="center right")
+    ax.set_title("Under a nightly quota, no lead time helps", fontsize=FS(8))
+    ax.legend(frameon=False, fontsize=FS(6.5), loc="center right")
     _save(fig, "fig_lead_sweep")
 
 
@@ -271,7 +290,7 @@ def fig_calibration():
     if not d:
         return
     sites = d["sites"]
-    fig, ax = plt.subplots(figsize=(COL, 2.4))
+    fig, ax = plt.subplots(figsize=(COL, HT(2.4)))
     xs = [i / 50 for i in range(51)]
     cols = [C["blue"], C["orange"], C["green"], C["red"], C["purple"],
             C["sky"], C["grey"]]
@@ -288,7 +307,11 @@ def fig_calibration():
     ax.set_title("Forecast reliability is far from the diagonal")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
-    ax.legend(frameon=True, framealpha=0.92, edgecolor="none", fontsize=6)
+    if UNIFORM:      # below the axes, so it hides none of the fitted lines
+        ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.2),
+                  ncol=2, columnspacing=1.0, handlelength=1.4)
+    else:
+        ax.legend(frameon=True, framealpha=0.92, edgecolor="none", fontsize=FS(6))
     _save(fig, "fig_calibration")
 
 
@@ -300,7 +323,7 @@ def fig_scheduler():
     c = d["part_c_scaling"]
 
     compact = WIDE < 4.5
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.0 if compact else 2.3))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(WIDE, 2.0 if compact else HT(2.3)))
 
     # Two decimals matter here: greedy-on-the-score reaches 99.95%, which at one
     # decimal prints as "100.0" and would read as exact when it is not.
@@ -322,10 +345,11 @@ def fig_scheduler():
     ax1.set_xlabel("% of the exact optimum" if compact
                    else "mean objective, % of the exact optimum")
     ax1.set_title("(a) greedy rules" if compact
+                  else "(a) greedy rules against the optimum" if WIDE < 5.5
                   else "(a) proxy rules lose value; score-greedy does not")
     for b, v in zip(bars, vals + [100.0]):
         ax1.text(v - 0.5, b.get_y() + b.get_height() / 2, f"{v:.2f}",
-                 va="center", ha="right", fontsize=5.5 if compact else 6, color="white")
+                 va="center", ha="right", fontsize=FS(5.5) if compact else 6, color="white")
 
     ns = [r["n"] for r in c]
     ms = [1000 * r["mean_s"] for r in c]
@@ -335,8 +359,9 @@ def fig_scheduler():
     ax2.set_xlabel("candidate passes $n$")
     ax2.set_ylabel("time (ms)" if compact else "scheduling time (ms)")
     ax2.set_title("(b) DP run time" if compact
+                  else "(b) exact DP scales linearly" if WIDE < 5.5
                   else "(b) exact DP scales linearly in practice")
-    ax2.legend(frameon=False, fontsize=6 if compact else None,
+    ax2.legend(frameon=False, fontsize=FS(6) if compact else None,
                loc="upper left")
     fig.subplots_adjust(wspace=0.5 if compact else 0.42)
     _save(fig, "fig_scheduler")
@@ -372,7 +397,7 @@ def fig_funnel():
         txt = f"{v:,}" if prev is None else f"{v:,}\n({100.0 * v / vals[0]:.1f}%)"
         ax.annotate(txt, (b.get_x() + b.get_width() / 2, max(v, floor)),
                     xytext=(0, 3), textcoords="offset points",
-                    ha="center", va="bottom", fontsize=7.5, zorder=3)
+                    ha="center", va="bottom", fontsize=FS(7.5), zorder=3)
     ax.set_ylabel("passes (log scale)")
     ax.set_ylim(floor, max(vals) * 6.0)
     ax.set_axisbelow(True)
@@ -386,7 +411,7 @@ def fig_weight_sensitivity():
         return
     rows = d["part_b_weight_sensitivity"]
     w = [r["w_elev"] for r in rows]
-    fig, ax = plt.subplots(figsize=(COL, 2.2))
+    fig, ax = plt.subplots(figsize=(COL, HT(2.2)))
     ax.plot(w, [r["jaccard_vs_default"] for r in rows], "o-", color=C["blue"],
             lw=1.4, ms=4, label="Jaccard vs $w_e=0.5$")
     ax.set_xlabel("elevation weight $w_e$  ($w_d = 1 - w_e$)")
@@ -424,9 +449,9 @@ def fig_accuracy():
     keys = ["d_aos_s", "d_tca_s", "d_los_s"]
     have_b = "d_aos_s" in b
 
-    fig, ax = plt.subplots(figsize=(COL, 2.35))
+    fig, ax = plt.subplots(figsize=(COL, HT(2.35)))
     xs = list(range(len(groups)))
-    w = 0.34
+    w = 0.46 if UNIFORM else 0.34   # wide enough for the printed values
 
     series = [(a, C["orange"], "vs. 1 s dense scan", -w / 2)]
     if have_b:
@@ -445,7 +470,7 @@ def fig_accuracy():
         for x, m in zip(pos, means):
             ax.annotate(f"{m:.3f}", (x, m), xytext=(0, -2.5),
                         textcoords="offset points", ha="center", va="top",
-                        fontsize=5.8, color="white", zorder=4)
+                        fontsize=FS(5.8), color="white", zorder=4)
 
     ax.set_yscale("log")
     lo = min(min(s[0][k]["mean"] for k in keys) for s in series)
@@ -488,21 +513,21 @@ def fig_tle_age():
         means.append(v["d_tca_s"]["mean"])
         p95s.append(v["d_tca_s"]["p95"])
 
-    fig, ax = plt.subplots(figsize=(COL, 2.5))
+    fig, ax = plt.subplots(figsize=(COL, HT(2.5)))
     ax.plot(mids, p95s, "s--", color=C["orange"], lw=1.1, ms=3.4, label="p95")
     ax.plot(mids, means, "o-", color=C["blue"], lw=1.5, ms=4.2, label="mean")
     if floor:
         # The numerical noise floor: below this line the algorithm, not the
         # elements, would be the limiting term.
         ax.axhline(floor, color=C["grey"], ls=":", lw=1.1)
-        ax.annotate("numerical floor (vs. Skyfield)", (mids[-1], floor),
+        ax.annotate("numerical floor" if UNIFORM else "numerical floor (vs. Skyfield)", (mids[-1], floor),
                     xytext=(0, 2), textcoords="offset points",
-                    fontsize=5.8, color=C["grey"], ha="right", va="bottom")
+                    fontsize=FS(5.8), color=C["grey"], ha="right", va="bottom")
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlabel("element-set age at prediction time (days)")
     ax.set_ylabel("culmination-time error (s)")
-    ax.set_title("Elements dominate beyond a few days", fontsize=8)
+    ax.set_title("Elements dominate beyond a few days", fontsize=FS(8))
     ax.set_axisbelow(True)
     ax.legend(frameon=False, loc="upper left")
     _save(fig, "fig_tle_age")
@@ -512,7 +537,7 @@ def _placeholder(name):
     """Emit a visibly-blank figure so a partially-run study still compiles."""
     fig, ax = plt.subplots(figsize=(COL, 1.4))
     ax.text(0.5, 0.5, f"[{name}: experiment not yet run]", ha="center",
-            va="center", fontsize=8, color=C["grey"])
+            va="center", fontsize=FS(8), color=C["grey"])
     ax.set_axis_off()
     _save(fig, name)
 
@@ -538,11 +563,11 @@ def fig_brightness():
     for bars, vals in ((b1, g), (b2, t)):
         for b, v in zip(bars, vals):
             ax1.annotate(f"{v:.2f}", (b.get_x() + b.get_width() / 2, v), xytext=(0, 2),
-                         textcoords="offset points", ha="center", va="bottom", fontsize=6.5)
+                         textcoords="offset points", ha="center", va="bottom", fontsize=FS(6.5))
     ax1.set_xticks(x, labels)
     ax1.set_ylabel("mean absolute error (mag)")
-    ax1.set_ylim(0, max(g + t) * 1.25)
-    ax1.legend(frameon=False, fontsize=6.5, loc="upper right")
+    ax1.set_ylim(0, max(g + t) * (1.5 if WIDE < 5.5 else 1.25))
+    ax1.legend(frameon=False, fontsize=FS(6.5), loc="upper right")
     ax1.set_title("(a) prediction error")
     imp = d["permutation_importance_mae"]
     order = sorted(imp, key=imp.get)
@@ -588,7 +613,7 @@ def fig_cloudcam():
             for s in ax.spines.values():
                 s.set_visible(False)
             if r == 0:
-                ax.set_title(titles[c], fontsize=7.5)
+                ax.set_title(titles[c], fontsize=FS(7.5))
     axm = fig.add_subplot(gs[n, :])
     keys = ("ratio_fixed", "ratio_tuned", "pixel_gbm", "unet")
     names = ("R/B = 0.6", "tuned R/B", "pixel GBM", "U-Net")
@@ -601,15 +626,15 @@ def fig_cloudcam():
     b2 = axr.bar(x + w / 2, fmae, w, color=C["orange"], label="cloud-fraction error (pp)")
     for b, v in zip(b1, iou):
         axm.annotate(f"{v:.3f}", (b.get_x() + b.get_width() / 2, v), xytext=(0, 1),
-                     textcoords="offset points", ha="center", va="bottom", fontsize=6.5)
+                     textcoords="offset points", ha="center", va="bottom", fontsize=FS(6.5))
     for b, v in zip(b2, fmae):
         axr.annotate(f"{v:.1f}", (b.get_x() + b.get_width() / 2, v), xytext=(0, 1),
-                     textcoords="offset points", ha="center", va="bottom", fontsize=6.5)
+                     textcoords="offset points", ha="center", va="bottom", fontsize=FS(6.5))
     axm.set_xticks(x, names)
     axm.set_ylim(0, 1.45); axm.set_ylabel("cloud IoU")
     axr.set_ylim(0, max(fmae) * 1.6); axr.set_ylabel("fraction error (pp)")
     axr.grid(False)
-    axm.legend(handles=[b1, b2], frameon=False, fontsize=6.5, loc="upper center", ncol=2)
+    axm.legend(handles=[b1, b2], frameon=False, fontsize=FS(6.5), loc="upper center", ncol=2)
     _save(fig, "fig_cloudcam")
 
     # Column-width strip of the first two examples, for a two-column paper
@@ -630,7 +655,7 @@ def fig_cloudcam():
             for s in ax.spines.values():
                 s.set_visible(False)
             if r == 0:
-                ax.set_title(titles[c], fontsize=6.5)
+                ax.set_title(titles[c], fontsize=FS(6.5))
     _save(fig, "fig_cloudcam_strip")
 
 
@@ -672,7 +697,14 @@ if __name__ == "__main__":
     ap.add_argument("--col", type=float, default=None,
                     help="layout width in inches for the single-panel figures, "
                          "e.g. half the text width when two are set side by side")
+    ap.add_argument("--uniform", type=float, default=None,
+                    help="print all chart lettering at this one size (points)")
     a = ap.parse_args()
+    if a.uniform:
+        UNIFORM = a.uniform
+        plt.rcParams.update({k: a.uniform for k in (
+            "font.size", "axes.titlesize", "axes.labelsize", "legend.fontsize",
+            "xtick.labelsize", "ytick.labelsize")})
     if a.wide:
         WIDE = a.wide
     if a.col:

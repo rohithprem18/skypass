@@ -52,7 +52,8 @@ tests/            71 deterministic unit tests, no network (ML tests skip without
 results/          Experiment outputs (JSON + console logs) — the papers' only data source
 generated/        Result macros (numbers.tex) and tables, built by make_tables.py
 figures/          Generated vector figures (PDF tracked; PNG previews gitignored)
-final_paper/      The only manuscripts: ieee/ (6 pp), springer/ (18 pp), reports/ (audit)
+final_paper/      The only manuscripts: ieee/ (6 pp), springer/ (18 pp, journal),
+                  springer_v2/ (18 pp, LNCS layout), reports/ (audit)
 tle_archive/      Dated element-set archives (tracked on purpose)
 cache/            Cached Open-Meteo responses, ML datasets and trained models under
                   cache/ml/ (gitignored, regenerated on demand)
@@ -205,7 +206,9 @@ Preset stations span cloud climates on purpose: chennai, bengaluru (monsoon), le
    uses `fig_tle_age`, `fig_budget_modes`, `fig_scheduler` and `fig_cloudcam_strip` in
    `final_paper/ieee/figures/` (`--font times --wide 3.45`: the two-panel charts switch to a
    compact single-column layout below 4.5 in) plus an inline colour TikZ architecture.
-   The Springer copy uses flat files `Fig1`-`Fig13` (`--font cm --wide 6.0 --col 2.75`,
+   The Springer copy uses flat files `Fig1`-`Fig13` (`--font cm --wide 5.15 --col 2.5 --uniform 7`,
+   charts included at natural size so all figure lettering prints at 7 pt; the TikZ diagrams set
+   one size in each `.tex` to print at 7 pt at full text width,
    renamed by first citation): Fig1 arch, Fig2 passfind, Fig3 geometry, Fig4 unet
    (TikZ, from `experiments/diagrams/build_diagrams.py`), Fig5a accuracy, Fig5b
    tle_age, Fig6 forecast_skill, Fig7 quota_budget (TikZ), Fig8a lead_sweep, Fig8b
@@ -248,6 +251,10 @@ the folder's *contents*; compile with pdfLaTeX).
 | Title | SkyPass: Exact Weather-Aware Pass Scheduling with Learned Sky and Brightness Models | SkyPass: A Machine Learning and Exact Optimisation Framework for Weather-Aware Satellite Pass Scheduling at Small Ground Stations |
 
 - Springer allows **one `.tex` file** (no `\input`): macros are inlined, figures flat.
+- `final_paper/springer_v2/` is the same paper in Springer LNCS layout (`llncs`, 155 x 235 mm,
+  matching the authors' reference paper): figures at `--font cm --wide 4.8 --col 2.35 --uniform 6.5`,
+  `splncs04-cited.bst` numbers references by first citation, `make_tables.py` refreshes its
+  macros. Text edits to `springer/` do not propagate; apply them to both.
 - **Layout is uniform on purpose.** Springer: a preamble override centres one text block on
   every page (sn-jnl hard-codes two-sided mode, so the `oneside` option alone does nothing)
   and the class's `\flushbottom` is left in force: do not add `\raggedbottom` back. Its
@@ -256,7 +263,7 @@ the folder's *contents*; compile with pdfLaTeX).
   turned into 60-85 pt gaps above headings), adds `\parskip` stretch and tightens the
   float separations; keep it. Use `\mathbf{1}` for indicators (`\mathbb{1}` has no glyph).
   Springer title page follows the authors' LNCS-style example: Dr. R. Selvakumar first,
-  e-mails inside each `\affil` (no `\email`, so no "Corresponding author" line), 10 pt
+  e-mails inside each `\affil` (no `\email`; an unnumbered `\affil` says "*Corresponding author"), 10 pt
   `\affilfont`, `\hb` line breaks, `\affilend` eats the class's trailing full stop, and a
   redefined `\abstract` with `\kern-52pt` closes the gap the missing e-mail line leaves.
   IEEE uses `\IEEEaftertitletext{\vspace{-1.2\baselineskip}}` to tighten the title block.
@@ -265,8 +272,9 @@ the folder's *contents*; compile with pdfLaTeX).
 - Prose rules from this file apply. Neither paper uses bold run-in paragraph labels
   (the user asked for them to be removed); the Springer abstract is one unlabelled
   paragraph in Purpose / Methods / Results / Conclusion order, without the word "must".
-- Both carry an AI-use statement (Springer: Experimental Setup; IEEE: Acknowledgements)
-  that the authors must confirm. The Springer copy has no author-contributions section
+- All copies carry an AI-use statement (Springer: Experimental Setup; springer_v2 and IEEE:
+  Acknowledgment) that the authors must confirm. The journal title page marks Rohith Prem S.
+  as corresponding author; springer_v2 follows the reference paper and marks none. The Springer copy has no author-contributions section
   (removed at the user's request).
 - `final_paper/reports/` holds the audit: change log (C1-C19, P1-P11, V1-V7), claim
   matrix, citation audit, validation report, compliance checklist, peer review and

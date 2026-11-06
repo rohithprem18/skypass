@@ -7,6 +7,7 @@ produced by an evidence audit against `results/*.json` and the code.
 |---|---|---|---|
 | `ieee/` | IEEEtran conference, 2 columns | 6 | 30 |
 | `springer/` | Springer Nature `sn-jnl` (SN Computer Science), 1 column | 18 | 30 |
+| `springer_v2/` | Springer LNCS conference layout (`llncs`), 155 x 235 mm page | 18 | 30 |
 | `reports/` | Audit deliverables | | |
 
 Earlier versions (the 13-page IEEE and 29-page Springer papers, the uncorrected
@@ -25,6 +26,12 @@ folder) and upload to Overleaf or the journal system; compile with pdfLaTeX.
   requires), `references.bib`, `sn-jnl.cls`, `sn-mathphys-num.bst`,
   `Fig1.pdf`-`Fig13.pdf` (Computer Modern lettering; Fig1-4 and Fig7 are colour
   TikZ diagrams from `experiments/diagrams/`).
+
+* `springer_v2/`: `skypass-lncs.tex`, `references.bib`, `llncs.cls`,
+  `splncs04-cited.bst` (the Springer style with sorting removed, so references
+  are numbered by first citation), `Fig1.pdf`-`Fig13.pdf`. Same text and numbers
+  as `springer/`, in the layout of the authors' LNCS reference paper. It suits a
+  Springer conference; SN Computer Science itself needs `springer/`.
 
 The compiled `skypass.pdf` / `skypass-sn.pdf` in each folder are local
 (Tectonic/XeTeX) builds for reading; regenerate them on the target system.
@@ -57,4 +64,5 @@ in `springer/skypass-sn.tex` (Springer forbids `\input`).
 
 Figures: `python experiments/make_figures.py --font times --wide 3.45 --out <dir>` for IEEE
 (compact single-column charts),
-`--font cm --wide 6.0 --out <dir>` for Springer (then rename to `FigN.pdf`).
+`--font cm --wide 5.15 --col 2.5 --uniform 7 --out <dir>` for Springer (then rename to
+`FigN.pdf`; `--wide 4.8 --col 2.35 --uniform 6.5` for `springer_v2/`).

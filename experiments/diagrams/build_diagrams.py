@@ -46,6 +46,13 @@ def quota_budget_tex() -> str:
 \colorlet{clear}{orbit!24}
 \colorlet{partly}{src!30}
 \colorlet{overcast}{src!65}
+% One lettering size throughout, chosen to print at the paper's figure size.
+\makeatletter
+\renewcommand\tiny{\@setfontsize\tiny{8.6}{10.3}}
+\renewcommand\scriptsize{\@setfontsize\scriptsize{8.6}{10.3}}
+\renewcommand\footnotesize{\@setfontsize\footnotesize{8.6}{10.3}}
+\renewcommand\small{\@setfontsize\small{8.6}{10.3}}
+\makeatother
 \begin{document}
 \begin{tikzpicture}[font=\footnotesize]"""]
     for name, note, y0, used in rows:
@@ -70,7 +77,7 @@ def quota_budget_tex() -> str:
                    rf"{{{hits} of {total}\\observations\\clear}};")
     for n in range(10):
         out.append(rf"\node[font=\scriptsize, text=src] at ({n * dx + cell_w / 2:.2f},0.22) "
-                   rf"{{night {n + 1}}};")
+                   rf"{{{n + 1}}};")
     ly = -1.75 - 3 * cell_h - 0.45
     legend = [("clear", "clear", 1.5), ("partly", "partly cloudy", 2.6),
               ("overcast", "overcast", 2.0)]
